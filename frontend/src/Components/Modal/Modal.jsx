@@ -2,15 +2,16 @@ import React, { useEffect, useState } from 'react';
 import './Modal.css';
 import axios from 'axios'; 
 import { useNavigate } from 'react-router-dom'; 
-import { toast } from 'react-toastify'; 
+import { toast, ToastContainer } from 'react-toastify'; 
 import Nextwhite from '../../Assets/Nextwhite.svg'; 
 import Previouswhite from '../../Assets/Previouswhite.svg'; 
 import Allbuttons from '../../Components/Allbuttons/Allbuttons'; 
 
-const Modal = ({ student, onClose }) => {
+const Modal = ({ student, onClose , userId}) => {
     
     const navigate = useNavigate(); 
     const [activeSection, setActiveSection] = useState("personal");
+    const [editableStudent, setEditableStudent] = useState(student);
     
     useEffect(() => {
       
@@ -29,25 +30,42 @@ const Modal = ({ student, onClose }) => {
         ? { backgroundColor: "#007bff", color: "#fff" }
         : {};
     };
+
     const onSubmit = async () => {
-     
-      try { 
-          const response = await axios.post('/api/student', student, { 
-              headers: { 'Content-Type': 'multipart/form-data' } 
-          }); 
-          console.log('Form submitted successfully:', response.data); 
+      const method = userId != null ? 'put' : 'post';
+      const url = userId != null ? `/api/student/update/${userId}` : '/api/student';
+      
+      try {
+          const response = await axios({
+              method,
+              url,
+              data: editableStudent,
+              headers: { 'Content-Type': 'multipart/form-data' }
+          });
+  
           localStorage.clear();
-          toast("Registration Successful"); 
-          await new Promise((resolve) => setTimeout(resolve, 1000)); 
-          navigate('/login-page'); 
+          
+          if (userId != null) {
+            console.log(response.data);
+            toast("Student details updated Successfully");
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+          } else {
+              console.log('Form submitted successfully:', response.data);
+              toast("Registration Successful");
+              await new Promise((resolve) => setTimeout(resolve, 1000));
+              navigate('/login-page');
+          }
       } catch (error) {
-  
-        console.error('Error submitting form:', error);
-        toast.error('Something went wrong');
-        console.log(error);
-  
+          console.error('Error submitting form:', error);
+          toast.error(error.response?.data?.message || 'Something went wrong');
+      } finally {
+          onClose();
       }
-      onClose();
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEditableStudent({ ...editableStudent, [name]: value });
   };
   
     return (
@@ -165,13 +183,13 @@ const Modal = ({ student, onClose }) => {
                         <td>
                           <strong>Income:</strong>
                         </td>
-                        <td>{student.income}</td>
+                        <td> <input type="text" name="income" value={editableStudent.income} onChange={handleChange} /> </td>
                       </tr>
                       <tr>
                         <td>
                           <strong>Parents Status:</strong>
                         </td>
-                        <td>{student.parentsStatus}</td>
+                        <td><input type="text" name="parentsStatus" value={editableStudent.parentsStatus} onChange={handleChange} /></td>
                       </tr>
                       <tr>
                         <td>
@@ -429,7 +447,7 @@ const Modal = ({ student, onClose }) => {
                         <td>
                           <strong>Semester:</strong>
                         </td>
-                        <td>{student.semester}</td>
+                        <td><input type="text" name="semester" value={editableStudent.semester} onChange={handleChange} /></td>
                       </tr>
                       <tr>
                         <td>
@@ -477,13 +495,14 @@ const Modal = ({ student, onClose }) => {
                         <td>
                           <strong>Student Status:</strong>
                         </td>
-                        <td>{student.studentStatus}</td>
+                        <td><input type="text" name="studentStatus" value={editableStudent.studentStatus} onChange={handleChange} /></td>
                       </tr>
                     </tbody>
                   </table>
                   <div className='registration_form_buttons' id="navigate_button_next_personal" >
               <Allbuttons   value="Previous" image={Previouswhite} target={() => handleSectionClick("education")}/>
               <Allbuttons  value="Submit" image={Nextwhite} target={onSubmit}/>
+              <ToastContainer />
               </div>
               </div>
                 
