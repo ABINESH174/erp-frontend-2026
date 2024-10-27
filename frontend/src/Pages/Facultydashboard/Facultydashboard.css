@@ -9,7 +9,7 @@
 .faculty_dashboard_container {
     display: flex;
     margin-bottom: 50px;
-    margin-top: 10px;
+    margin-top: -10px;
 }
 
 .student_sampledata_container {
@@ -139,11 +139,54 @@
     right: 0;
 }
 
-.carditem_container{
-   
-}
 
 .dept_batch, .sub_sem{
     display: flex;
     justify-content: space-between;
+}
+
+.search-container{
+    width: 300px;
+}
+#student_search{
+    all: unset;
+    border: 1px solid #004B79;
+    padding: 5px 20px 5px 16px;
+    border-radius: 5px;
+}
+.student_table_options{
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px ;
+}
+.export_option_popup{
+    position: fixed; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    background-color: rgb(241, 241, 241);
+    padding: 30px 80px 50px 80px;
+    width: 500px;
+    border-radius: 20px;
+    
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+.export_buttons{
+    display:flex ;
+    margin-top: 30px;
+    justify-content: space-between;
+    align-items: center;
+}
+/* #export_submit{
+
+} */
+#export_popup_title{
+    text-align: center;
+    margin-bottom: 30px;
+}
+#export_cancel{
+    all: unset;
+    padding: 3px 20px;
+    border-radius: 5px;
+    border: 1px solid #000;
 }
