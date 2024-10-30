@@ -1,45 +1,44 @@
-/* Updated CSS for Facultydashboard */
-
-/* Profile Links */
 .profile-links {
     width: 200px;
     height: fit-content;
-    gap: 20px; /* Adjusted gap for better spacing */
-    display: flex; /* Ensure flex display for children */
-    flex-direction: column; /* Stack items vertically */
+    gap: 20px; 
+    display: flex; 
+    flex-direction: column; 
 }
 
-/* Faculty Dashboard Container */
 .faculty_dashboard_container {
     display: flex;
     margin-bottom: 50px;
-    margin-top: 10px;
+    margin-top: -10px;
 }
 
-/* Student Sample Data Container */
 .student_sampledata_container {
     margin-left: 30px;
-    flex-grow: 1; /* Allow it to take available space */
+    flex-grow: 1; 
 }
 
-/* Navigation */
 .nav {
-    display: flex; /* Ensure flex display */
-    justify-content: flex-end; /* Align items to the end */
+    display: flex; 
+    justify-content: flex-end; 
 }
 
-/* Faculty Profile */
+
+.class_add_button{
+    margin-top: -10px;
+    align-content: center;
+
+}
+
 .faculty-profile {
     text-align: right;
     background-color: #ade0ff;
     padding: 26px;
     width: fit-content;
     border-radius: 16px;
-    display: flex; /* Use flex for layout */
-    flex-direction: column; /* Stack items vertically */
+    display: flex; 
+    flex-direction: column; 
 }
 
-/* Profile Details */
 .faculty_profile_details {
     align-items: center;
     display: flex;
@@ -47,75 +46,66 @@
     position: absolute;
 }
 
-/* Student Info */
 .student_info {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Space between items */
-    padding: 10px; /* Add padding for better spacing */
-    border-bottom: 1px solid #ddd; /* Add border for separation */
+    justify-content: space-evenly; 
+    padding: 10px; 
+    border-bottom: 1px solid #ddd;
 }
 
-/* Profile Name */
 .profile_name {
-    width: 100%; /* Ensure full width */
+    width: 100%; 
 }
 
-/* Faculty Profile Items */
 .faculty-profile > * {
     padding-top: 8px;
 }
 
-/* Profile Icon */
 .faculty_profile_icon {
     cursor: pointer;
     display: flex;
     padding: 10px;
     margin: 10px 18px;
-    border-radius: 50%; /* Make it circular */
+    border-radius: 50%; 
     background: linear-gradient(109deg, rgba(1, 119, 193, 0.7) -3%, rgba(0, 102, 165, 0.9) 48%, #004B79 103%);
 }
 
-/* Profile Icon Size */
 #profile_icon {
-    width: 30px; /* Increased size for better visibility */
-    height: 30px; /* Ensure height for circular shape */
+    width: 30px; 
+    height: 30px; 
 }
 
-/* Footer */
 #one {
-    position: relative; /* Changed to relative for better layout */
-    width: 100%; /* Ensure full width */
-    padding: 10px; /* Add padding */
-    background-color: #f1f1f1; /* Light background for footer */
-    text-align: center; /* Center text */
+    /* position: relative; 
+    width: 100%;
+    padding: 10px;
+    background-color: #f1f1f1; 
+    text-align: center;  */
+    padding-bottom: 200px;
 }
 
-/* Student Table Styles */
 .student_table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px; /* Add margin for spacing */
+    margin-top: 20px; 
 }
 
 .student_table th, .student_table td {
     padding: 12px;
     text-align: left;
-    border-bottom: 1px solid #ddd; /* Add border for separation */
+    border-bottom: 1px solid #ddd; 
 }
 
 .student_table th {
-    background-color: #007bff; /* Header background */
-    color: white; /* Header text color */
+    background-color: #007bff; 
+    color: white; 
 }
 
-
-
-/* Student Details Table */
 .student_detail_table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px; /* Add margin for spacing */
+    margin-top: 20px; 
 }
 
 .student_detail_table td {
@@ -123,3 +113,80 @@
     border-bottom: 1px solid #ddd; /* Add border for separation */
 }
 
+
+.card-container{
+    display: flex;
+    padding: 10px;
+
+    justify-content: space-around;
+
+}
+.card {
+    background-color: #004B79;
+    width: 300px;
+    padding: 10px;
+    border-radius: 20px;
+    color: white;
+    
+}
+.card li{
+    list-style: none;
+}
+
+#faculty_footer{
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+
+.dept_batch, .sub_sem{
+    display: flex;
+    justify-content: space-between;
+}
+
+.search-container{
+    width: 300px;
+}
+#student_search{
+    all: unset;
+    border: 1px solid #004B79;
+    padding: 5px 20px 5px 16px;
+    border-radius: 5px;
+}
+.student_table_options{
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px ;
+}
+.export_option_popup{
+    position: fixed; 
+    top: 50%; 
+    left: 50%; 
+    transform: translate(-50%, -50%); 
+    background-color: rgb(241, 241, 241);
+    padding: 30px 80px 50px 80px;
+    width: 500px;
+    border-radius: 20px;
+    
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+.export_buttons{
+    display:flex ;
+    margin-top: 30px;
+    justify-content: space-between;
+    align-items: center;
+}
+/* #export_submit{
+
+} */
+#export_popup_title{
+    text-align: center;
+    margin-bottom: 30px;
+}
+#export_cancel{
+    all: unset;
+    padding: 3px 20px;
+    border-radius: 5px;
+    border: 1px solid #000;
+}

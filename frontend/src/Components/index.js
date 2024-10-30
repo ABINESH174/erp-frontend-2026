@@ -6,4 +6,5 @@ export {default as Modal}from './Modal/Modal'
 export {default as Formtitleone}from './Formtitle/Formtitle'
 export {default as Allbuttons}from './Allbuttons/Allbuttons'
 export {default as Allfields}from './Allfields/Allfields'
-export {default as Facultyfields}from './Facultyfield/Facultyfields'
+export {default as Facultyfields}from './Facultyfields/Facultyfields'
+

@@ -39,7 +39,7 @@ function Bonafide() {
                     </div>
                 )}
             </div>
-            <Footer id="one" />
+            <Footer  />
         </div>
     );
 }

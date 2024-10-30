@@ -1,19 +1,13 @@
 .faculty_registration_container{
-    padding: 0px 100px;
-    gap:20px;
-    grid-row-gap: 35px;
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    margin: auto;
+    gap: 20px;
 }
 
 
-.faculty_firstname,.faculty_lastname{
-    grid-column:span 1;
-}
-.faculty_discipline,.faculty_mobilenumber{
-    grid-column:span 1;
-}
-#hi{
+#faculty_form_submit_button{
+    margin: auto;
     margin-top: 20px;
 }

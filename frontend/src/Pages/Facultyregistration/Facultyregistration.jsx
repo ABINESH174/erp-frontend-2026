@@ -30,6 +30,7 @@ function Facultyregistration() {
       console.log('Form submitted successfully:', response.data);
       localStorage.clear();
       toast("Registration Successful");
+      localStorage.clear();
       await new Promise((resolve) => setTimeout(resolve, 1000));
       navigate('/login-page');
     } catch (error) {
@@ -94,11 +95,12 @@ function Facultyregistration() {
               formData.faculty==="Yes" && (
               <Allfields fieldtype="text" value="Handling batch" inputname="handlingBatch" formData={formData} setFormData={setFormData} />)
              }
+             <div id='faculty_form_submit_button'>
+             <Allbuttons value="submit" image={Nextwhite} />
+             </div>
                     
         </div>
-       
-       <Allbuttons value="submit" image={Nextwhite} />
-    
+
       </form>
     </div>
   );

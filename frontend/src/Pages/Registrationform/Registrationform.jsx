@@ -14,6 +14,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const PersonalForm = () => { 
     const location = useLocation(); 
+
     const MAX_FILE_SIZE = 20 * 1024;
     const handleSectionClick = (section) => { 
         setDisplaySection(section); 
@@ -504,7 +505,7 @@ const PersonalForm = () => {
       )}
 
             <div className="income">
-              <Allfields fieldtype="text" value="Parent/Guardian Anual Income" inputname="income"  formData={formData} setFormData={setFormData} />
+              <Allfields fieldtype="text" value="Parent/Guardian Annual Income" inputname="income"  formData={formData} setFormData={setFormData} />
             </div>
   
              {formData.community!=="OC" && (
