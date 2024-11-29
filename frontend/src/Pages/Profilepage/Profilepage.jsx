@@ -570,10 +570,6 @@ function StudentDisplay() {
               <p className="profile_lables">Discipline</p>
               <p className="field_bckground">{studentWithFiles.discipline}</p>
             </div>
-            <div className="profile_discipline">
-              <p className="profile_lables">Class</p>
-              <p className="field_bckground">{studentWithFiles.section}</p>
-            </div>
             <div className="profile_batch">
               <p className="profile_lables">Course Completion Year</p>
               <p className="field_bckground">
