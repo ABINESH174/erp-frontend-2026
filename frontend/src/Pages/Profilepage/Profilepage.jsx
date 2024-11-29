@@ -24,7 +24,9 @@ function StudentDisplay() {
   const handleLogoutClick = () => {
     navigate('/login-page');
   };
-  
+  const handleBonafideClick = () => {
+    navigate('/bonafide-page');
+  };
   const handleMenuClick = () => {
     setIsVisible(!isVisible);
   };
@@ -180,6 +182,7 @@ function StudentDisplay() {
           </ul>
 
           <Allbuttons value="Logout" image={Logout} target={handleLogoutClick}/>
+          <Allbuttons value="Bonafide"  target={handleBonafideClick}/>
         </div>
 
 

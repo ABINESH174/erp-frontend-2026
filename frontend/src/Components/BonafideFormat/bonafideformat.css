@@ -1,0 +1,31 @@
+header{
+    display: flex;
+    margin: 10px;
+    }
+    header:hover{
+        cursor: default;
+    }
+    #header-line{
+        background-color: #002133;
+        width: 96%;
+        height: 2px;
+        margin: auto;
+    }
+    .clg-name{
+        text-align: center;
+        font-family: outfit,popins;
+        font-size: clamp(12px,3vw,16px);
+        color: #002133;
+        margin: auto;
+    }
+    .clglogo{
+        width: 110px;   
+    }
+    
+    @media (width<=600px) {
+        .clglogo{
+            width: 90px;   
+        }
+       
+    }
+    

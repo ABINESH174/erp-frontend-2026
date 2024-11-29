@@ -7,10 +7,10 @@ footer{
     border-radius:10px 10px 0px 0px ;
     display: flex;
     justify-content: space-between;
-    /* position: absolute; */
+    position: absolute;
     left: 0;
     bottom: 0;
-    right: 0;
+    right: 0; 
 }
 footer:hover{
     cursor: default;
@@ -24,5 +24,4 @@ footer:hover{
 }
 .clg-contact{
     margin-left: 20px;
-
 }

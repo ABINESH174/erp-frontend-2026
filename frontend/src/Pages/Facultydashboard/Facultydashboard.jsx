@@ -179,12 +179,12 @@ function Facultydashboard() {
       )}
       
       {/* Button to open Add Class Modal */}
-      <Allbuttons value="Add Class" target={openAddClass} />
+      {/* <Allbuttons value="Add Class" target={openAddClass} /> */}
 
       {/* Facultyfields as a popup */}
-      {openAddClassModal && (
+      {/* {openAddClassModal && (
         <Facultyfields email={faculty.email} onClose={closeAddClassModal} />
-      )}
+      )} */}
 
       {openAddClassModal && (
         <Facultyfields email={faculty.email} onClose={closeModal} />

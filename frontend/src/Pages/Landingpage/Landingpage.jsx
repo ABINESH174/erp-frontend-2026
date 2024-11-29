@@ -24,8 +24,8 @@ function Landingpage() {
     </div>
     <div className="empty"></div>
     
-    
     <Footer />
+    
     </div>
   )
 }
