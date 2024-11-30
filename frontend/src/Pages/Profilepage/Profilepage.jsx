@@ -16,6 +16,7 @@ function StudentDisplay() {
   console.log(location);
 
   const [studentWithFiles, setStudentWithFiles] = useState();
+  const [studentId, setStudentId] = useState(location.state.userId);
   const [isVisible, setIsVisible] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -25,7 +26,7 @@ function StudentDisplay() {
     navigate('/login-page');
   };
   const handleBonafideClick = () => {
-    navigate('/bonafide-page');
+    navigate('/bonafide-page',{state: {studentId}});
   };
   const handleMenuClick = () => {
     setIsVisible(!isVisible);
@@ -68,7 +69,6 @@ function StudentDisplay() {
   useEffect(() => {
     const fetchStudentWithFiles = async () => {
         try {
-            const studentId = location.state.userId; 
             console.log("Fetching data for Student ID:", studentId);
             
             const response = await axios.get(
