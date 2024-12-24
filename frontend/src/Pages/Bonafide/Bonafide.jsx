@@ -92,19 +92,18 @@ function Bonafide() {
             return;
         }
 
-        const updatedFilesDto = { ...uploads.fileUploads };
-
         try {
-            // Replace with actual student ID from location state if needed
-            const studentId = location.state.studentId;
-            console.log("Fetching data for Student ID:", studentId);
-            
+            const studentId = location.state?.studentId || "12345"; // Replace with actual logic
+            const formData = new FormData();
+                formData.append('registerNo', studentId);
+                formData.append('purpose', uploads.selectedScholarship);
+                Object.entries(uploads.fileUploads).forEach(([key, file]) => {
+                    formData.append(key, file);
+                });
             const response = await axios.post(
-                `/api/student/${studentId}/update-files`,
-                updatedFilesDto,
+                `/api/bonafide`,formData,
                 { headers: { "Content-Type": "application/json" } }
             );
-            
             alert("Files uploaded successfully!");
         } catch (error) {
             console.error("Error uploading files:", error);
@@ -169,17 +168,13 @@ function Bonafide() {
                             </div>
                         </>
                     )}
-                    {(uploads.selectedScholarship === "busPass" || uploads.selectedScholarship === "passport") && (
-                        <div className="file-upload">
-                            <label>Upload File</label>
-                            <input type="file" onChange={handleFileChange('file')} />
-                        </div>
-                    )}
+                    {/* <div className="file-upload">
+                        <label>Upload File</label>
+                        <input type="file" onChange={handleFileChange('file')} />
+                    </div> */}
                     <button onClick={handleSubmit}>Submit</button>
                 </div>
             )}
-            
-            {/* Uncomment Footer if needed */}
             {/* <Footer /> */}
         </div>
     );
