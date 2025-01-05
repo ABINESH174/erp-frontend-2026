@@ -39,16 +39,21 @@ function Bonafide() {
         fileUploads: {}
     });
 
+   
     const handleCardClick = (optionId) => {
+        const title = options.find(option => option.id === optionId)?.title || "";
+    
         setUploads(prev => ({
             ...prev,
             selectedOption: optionId,
-            scholarshipTypes: optionId === "stateScholarship" ? stateScholarships : 
-                             optionId === "centralScholarship" ? centralScholarships : [],
+            selectedScholarship: (optionId === "stateScholarship" || optionId === "centralScholarship") ? "" : title, // Set for other cases, leave blank for state/central
+            scholarshipTypes: optionId === "stateScholarship" ? stateScholarships :
+                              optionId === "centralScholarship" ? centralScholarships : [],
             showModal: optionId === "stateScholarship" || optionId === "centralScholarship"
         }));
     };
-
+    
+    
     const handleScholarshipSelect = (type) => {
         setUploads(prev => ({
             ...prev,
@@ -154,35 +159,34 @@ function Bonafide() {
                 </div>
             )}
 
-            {uploads.selectedScholarship && (
-                <div className="file-upload-section">
-                    <h3>Upload required documents for {uploads.selectedScholarship}</h3>
-                    <div className="file-upload">
-                        <label>Student ID Card</label>
-                        <input type="file" onChange={handleFileChange('studentIdCard')} />
-                    </div>
-                    {((uploads.selectedScholarship === "Labour Welfare") ||(uploads.selectedScholarship === "Farmer Welfare") || (uploads.selectedScholarship === "Tailor Welfare") )&& (
-                        <>
-                            <div className="file-upload">
-                                <label>Aadhar Card</label>
-                                <input type="file" onChange={handleFileChange('aadharCard')} />
-                            </div>
-                            <div className="file-upload">
-                                <label>Smart Card</label>
-                                <input type="file" onChange={handleFileChange('smartCard')} />
-                            </div>
-                            <div className="file-upload">
-                                <label>Welfare Proof Document</label>
-                                <input type="file" onChange={handleFileChange('welfareId')} />
-                            </div>
-                        </>
-                    )}
-                    
-                    <button onClick={handleSubmit}>Submit</button>
-                    <ToastContainer />
-                    
+{uploads.selectedScholarship && (
+    <div className="file-upload-section">
+        <h3>Upload required documents for {uploads.selectedScholarship}</h3>
+        <div className="file-upload">
+            <label>Student ID Card</label>
+            <input type="file" onChange={handleFileChange('studentIdCard')} />
+        </div>
+        {["Labour Welfare", "Farmer Welfare", "Tailor Welfare"].includes(uploads.selectedScholarship) && (
+            <>
+                <div className="file-upload">
+                    <label>Aadhar Card</label>
+                    <input type="file" onChange={handleFileChange('aadharCard')} />
                 </div>
-            )}
+                <div className="file-upload">
+                    <label>Smart Card</label>
+                    <input type="file" onChange={handleFileChange('smartCard')} />
+                </div>
+                <div className="file-upload">
+                    <label>Welfare Proof Document</label>
+                    <input type="file" onChange={handleFileChange('welfareId')} />
+                </div>
+            </>
+        )}
+        <button onClick={handleSubmit}>Submit</button>
+        <ToastContainer />
+    </div>
+)}
+
             {/* <Footer /> */}
         </div>
     );
