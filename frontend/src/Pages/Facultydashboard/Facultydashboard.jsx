@@ -12,7 +12,6 @@ import Add from '../../Assets/add.svg';
 import Logout from '../../Assets/logout.svg';
 import axios from 'axios';
 import * as XLSX from 'xlsx'; // Import XLSX for exporting
-
 function Facultydashboard() {
   const [faculty, setFaculty] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -28,7 +27,6 @@ function Facultydashboard() {
     emailid: true,
     mobileNumber: false,
   });
-  
   const location = useLocation();
   const navigate = useNavigate();
   const facultyId = location.state.userId;
@@ -140,7 +138,6 @@ function Facultydashboard() {
     setOpenProfile(!openProfile);
     setOpenModal(false);
   };
-
   if (loading) {
     return <p>Loading faculty data...</p>;
   }
@@ -180,11 +177,18 @@ function Facultydashboard() {
           </div>
         </div>
       )}
+      
+      {/* Button to open Add Class Modal */}
+      {/* <Allbuttons value="Add Class" target={openAddClass} /> */}
+
+      {/* Facultyfields as a popup */}
+      {/* {openAddClassModal && (
+        <Facultyfields email={faculty.email} onClose={closeAddClassModal} />
+      )} */}
 
       {openAddClassModal && (
         <Facultyfields email={faculty.email} onClose={closeModal} />
       )}
-
       
 
       {/* Field Selection for Export Popup */}

@@ -1,45 +1,193 @@
 import React, { useState } from 'react';
+import { useLocation , useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from 'react-toastify';
 import './Bonafide.css';
 import Header from '../../Components/Header/Header';
 import Footer from '../../Components/Footer/Footer';
+import axios from 'axios';
 
 function Bonafide() {
-    const [displaySection, setDisplaySection] = useState("");
+    const location = useLocation();
+    const navigate =useNavigate();
+    
+    const options = [
+        { title: "Bonafide for Central Scholarship", id: "centralScholarship" },
+        { title: "Bonafide for State Scholarship", id: "stateScholarship" },
+        { title: "Bonafide for Internship", id: "internship" },
+        { title: "Bonafide for Bus Pass", id: "busPass" },
+        { title: "Bonafide for Passport", id: "passport" }
+    ];
 
-    const handleSectionChange = (event) => {
-        setDisplaySection(event.target.value);
+    const stateScholarships = [
+        "Labour Welfare",
+        "Tailor Welfare",
+        "Farmer Welfare",
+        "Educational Support"
+    ];
+
+    const centralScholarships = [
+        "Pragati",
+        "Saksham",
+        "Swanath Scholarship"
+    ];
+
+    const [uploads, setUploads] = useState({
+        selectedOption: "",
+        showModal: false,
+        scholarshipTypes: [],
+        selectedScholarship: "",
+        fileUploads: {}
+    });
+
+   
+    const handleCardClick = (optionId) => {
+        const title = options.find(option => option.id === optionId)?.title || "";
+    
+        setUploads(prev => ({
+            ...prev,
+            selectedOption: optionId,
+            selectedScholarship: (optionId === "stateScholarship" || optionId === "centralScholarship") ? "" : title, // Set for other cases, leave blank for state/central
+            scholarshipTypes: optionId === "stateScholarship" ? stateScholarships :
+                              optionId === "centralScholarship" ? centralScholarships : [],
+            showModal: optionId === "stateScholarship" || optionId === "centralScholarship"
+        }));
+    };
+    
+    
+    const handleScholarshipSelect = (type) => {
+        setUploads(prev => ({
+            ...prev,
+            selectedScholarship: type,
+            showModal: false
+        }));
+    };
+
+    const handleFileChange = (name) => (e) => {
+        const { target: { files } } = e;
+        const file = files[0];
+
+        if (file) {
+            convertFileToBase64(file).then(base64 => {
+                setUploads(prev => ({
+                    ...prev,
+                    fileUploads: { ...prev.fileUploads, [name]: base64 }
+                }));
+            });
+        }
+    };
+
+    const convertFileToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    };
+
+    const validateFiles = () => {
+        if (
+            uploads.selectedScholarship === "Labour Welfare" ||
+            uploads.selectedScholarship === "Farmer Welfare" ||
+            uploads.selectedScholarship === "Tailor Welfare"
+        ) {
+            const requiredFiles = ["aadharCard", "welfareId", "smartCard"];
+            return requiredFiles.every(fileType => uploads.fileUploads[fileType]);
+        }
+        return !!uploads.fileUploads["studentIdCard"]; // Ensure the check is explicit and returns a boolean
+    };
+    
+
+    const handleSubmit = async () => {
+        if (!validateFiles()) {
+            toast.error("Please upload all required files.");
+            return;
+        }
+
+        try {
+            const userId = location.state?.studentId || "12345"; // Replace with actual logic
+            const formData = new FormData();
+                formData.append('registerNo', userId);
+                formData.append('purpose', uploads.selectedScholarship);
+                Object.entries(uploads.fileUploads).forEach(([key, file]) => {
+                    formData.append(key, file);
+                });
+            const response = await axios.post(
+                `/api/bonafide`,formData,
+                { headers: { "Content-Type": "application/json" } }
+            );
+            toast("Files uploaded successfully!");
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            navigate('/profile-page',{state: {userId}})
+        } catch (error) {
+            toast.error("File upload failed. Please try again.");
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+        }
     };
 
     return (
-        <div>
+        <div className="bonafide-container">
             <Header />
-            <div>
-                <p>Select an option:</p>
-                <select id="two" onChange={handleSectionChange}>
-                    <option value="" selected disabled>Select</option>
-                    <option value="Scholarship">Bonafide for Scholarship</option>
-                    <option value="Buspass">Bonafide for Buspass</option>
-                </select>
+            <div className="bonafide-content">
+                <h2>Select a Bonafide Option</h2>
+                <div className="bonafide-cards">
+                    {options.map((option) => (
+                        <div 
+                            key={option.id} 
+                            className="bonafide-card" 
+                            onClick={() => handleCardClick(option.id)}
+                        >
+                            <h3>{option.title}</h3>
+                        </div>
+                    ))}
+                </div>
             </div>
 
-            <div>
-                {displaySection === "Scholarship" && (
-                    <div>
-                        <select id="two" onChange={handleSectionChange}>
-                            <option value="" selected disabled>Select</option>
-                            <option value="Labour Welfare Scholarship ">Bonafide for Scholarship</option>
-                            <option value="Pragati">Bonafide for Buspass</option>
-                         </select>
+            {uploads.showModal && (
+                <div className="modal-overlay" onClick={() => setUploads(prev => ({ ...prev, showModal: false }))}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <h3>Select Type of Scholarship</h3>
+                        <ul>
+                            {uploads.scholarshipTypes.map((type) => (
+                                <li key={type} onClick={() => handleScholarshipSelect(type)}>
+                                    {type}
+                                </li>
+                            ))}
+                        </ul>
+                        <button onClick={() => setUploads(prev => ({ ...prev, showModal: false }))}>Close</button>
                     </div>
-                )}
+                </div>
+            )}
 
-                {displaySection === "Buspass" && (
-                    <div>
-                       
-                    </div>
-                )}
-            </div>
-            <Footer  />
+{uploads.selectedScholarship && (
+    <div className="file-upload-section">
+        <h3>Upload required documents for {uploads.selectedScholarship}</h3>
+        <div className="file-upload">
+            <label>Student ID Card</label>
+            <input type="file" onChange={handleFileChange('studentIdCard')} />
+        </div>
+        {["Labour Welfare", "Farmer Welfare", "Tailor Welfare"].includes(uploads.selectedScholarship) && (
+            <>
+                <div className="file-upload">
+                    <label>Aadhar Card</label>
+                    <input type="file" onChange={handleFileChange('aadharCard')} />
+                </div>
+                <div className="file-upload">
+                    <label>Smart Card</label>
+                    <input type="file" onChange={handleFileChange('smartCard')} />
+                </div>
+                <div className="file-upload">
+                    <label>Welfare Proof Document</label>
+                    <input type="file" onChange={handleFileChange('welfareId')} />
+                </div>
+            </>
+        )}
+        <button onClick={handleSubmit}>Submit</button>
+        <ToastContainer />
+    </div>
+)}
+
+            {/* <Footer /> */}
         </div>
     );
 }

@@ -100,7 +100,7 @@ function Facultyregistration() {
              </div>
                     
         </div>
-    
+
       </form>
     </div>
   );

@@ -69,7 +69,6 @@ const PersonalForm = () => {
         registerNo : location.state.userId, 
         programme: null, 
         discipline: null, 
-        section:null,
         batch: null, 
         admissionNumber: null, 
         regulation: null, 
@@ -800,17 +799,6 @@ const PersonalForm = () => {
               </select>
             </div>
 
-            {(formData.discipline==="Mechanical Engineering"|| formData.discipline==="Electrical and Electronics Engineering" ) && (
-                 <div className="section">
-                 <label htmlFor="section">Class</label>
-                 <select className="dropdown" name="section"  value={formData.section || ''} onChange={handleOtherField}>
-                   <option value=''>Select</option>
-                   <option value="Class A">Class A</option>
-                   <option value="Class B" >Class B</option>
-                 </select>
-               </div>
-              )}
-
             <div className="regulation" >
                <label htmlFor="regulation">Regulation</label>
                <select className="dropdown" name="regulation" value={formData.regulation || ''} onChange={handleOtherField} >
@@ -835,7 +823,7 @@ const PersonalForm = () => {
               <div className="radio">
                 <div className="radio-spacing"><input type="radio" name="courseType" value="Regular" onChange={handleOtherField} checked={formData.courseType === 'Regular'} /> Regular</div>
                 <div className="radio-spacing"><input type="radio" name="courseType" value="Lateral" onChange={handleOtherField} checked={formData.courseType === 'Lateral'} /> Lateral</div>
-                <div className="radio-spacing"><input type="radio" name="courseType" value="Regular-Transfer" onChange={handleOtherField} checked={formData.courseType === 'Regular-Transfer'} /> Regular-Transfer</div>
+                <div className="radio-spacing"><input type="radio" name="courseType" value="Regular_Transfer" onChange={handleOtherField} checked={formData.courseType === 'Regular-Transfer'} /> Regular-Transfer</div>
               </div>
             </div>
             <div className="umis_id">
@@ -873,7 +861,7 @@ const PersonalForm = () => {
                 <option value="Pursuing" >Pursuing</option>
                 <option value="Terminated" >Terminated</option>
                 <option value="Discontinued">Discontinued</option>
-                <option value="Passed Out" >Passed Out</option>
+                <option value="PassedOut" >PassedOut</option>
               </select>
             </div>
            

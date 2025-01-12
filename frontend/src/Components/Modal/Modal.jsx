@@ -429,14 +429,6 @@ const Modal = ({ student, onClose , userId}) => {
                         </td>
                         <td>{student.discipline}</td>
                       </tr>
-                      {student.section &&(
-                        <tr>
-                        <td>
-                          <strong>Class:</strong>
-                        </td>
-                        <td>{student.section}</td>
-                      </tr>
-                      )}
                       <tr>
                         <td>
                           <strong>Course Completion Year:</strong>

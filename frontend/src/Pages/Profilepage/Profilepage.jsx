@@ -16,6 +16,7 @@ function StudentDisplay() {
   console.log(location);
 
   const [studentWithFiles, setStudentWithFiles] = useState();
+  const [studentId, setStudentId] = useState(location.state.userId);
   const [isVisible, setIsVisible] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -24,7 +25,9 @@ function StudentDisplay() {
   const handleLogoutClick = () => {
     navigate('/login-page');
   };
-  
+  const handleBonafideClick = () => {
+    navigate('/bonafide-page',{state: {studentId}});
+  };
   const handleMenuClick = () => {
     setIsVisible(!isVisible);
   };
@@ -66,7 +69,6 @@ function StudentDisplay() {
   useEffect(() => {
     const fetchStudentWithFiles = async () => {
         try {
-            const studentId = location.state.userId; 
             console.log("Fetching data for Student ID:", studentId);
             
             const response = await axios.get(
@@ -180,6 +182,7 @@ function StudentDisplay() {
           </ul>
 
           <Allbuttons value="Logout" image={Logout} target={handleLogoutClick}/>
+          <Allbuttons value="Bonafide"  target={handleBonafideClick}/>
         </div>
 
 
@@ -566,10 +569,6 @@ function StudentDisplay() {
             <div className="profile_discipline">
               <p className="profile_lables">Discipline</p>
               <p className="field_bckground">{studentWithFiles.discipline}</p>
-            </div>
-            <div className="profile_discipline">
-              <p className="profile_lables">Class</p>
-              <p className="field_bckground">{studentWithFiles.section}</p>
             </div>
             <div className="profile_batch">
               <p className="profile_lables">Course Completion Year</p>
