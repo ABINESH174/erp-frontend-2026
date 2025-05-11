@@ -3,7 +3,9 @@
 }
 #login-title{
     text-align: center;
-    color: #fff;
+    color:white;
+    font-size: 38px;
+    font-weight: 700;
 }
 #login-title:hover{
     cursor: default;
@@ -15,7 +17,9 @@
     justify-content: center;
     height: 100vh;
     background: linear-gradient(153deg, rgba(1, 119, 193, 0.7) 13%, rgba(0, 94, 152, 0.8724) 46%, #004B79 92%);
+
 }
+
 .login-mailid{
     margin-top: 30px;
 }
@@ -23,18 +27,31 @@
     margin-top: 20px;
 }
 
-.Loginform{
+.Loginform {
     margin: auto;
     width: 400px;
     height: fit-content;
     border-radius: 30px;
-    opacity: 0.95;
+    opacity: 0;
     background: rgba(255, 255, 255, 0.27);
     box-sizing: border-box;
     border: 1px solid rgba(255, 255, 255, 0.68);
     backdrop-filter: blur(3.6px);
-    /* box-shadow: 5px 5px 20px  0.1px #fff; */
+    
+    animation: fadeIn 0.8s ease-in-out forwards;
+    transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
 }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(80px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.Loginform:hover {
+    /* transform: scale(1.05) rotate(2deg); */
+    box-shadow: 0px 10px 20px rgba(255, 255, 255, 0.2);
+}
+
 .form{
     color: #fafafa;
     margin: 10%;
@@ -47,11 +64,46 @@
 }
 #forgotpassword{
     text-decoration: none;
-   
 }
+
+.password-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .password-box input {
+    width: 100%;
+    padding: 10px;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    
+  }
+  
+  input:focus, input:active {
+    border-color: #ccc !important;  
+    background-color: white !important; 
+    outline: none;
+  }
+  
+  .eye-icon {
+    position: absolute;
+    right: 12px;
+    cursor: pointer;
+    font-size: 20px;
+    color: rgba(1, 119, 193, 0.7) ;
+  }
+  
+  .eye-icon:hover {
+    color: #097fc4;
+  }
 .login-button-space{
     text-align:center;
     margin-top: 15px;
+    
 }
 .or{
     margin-top: 20px;

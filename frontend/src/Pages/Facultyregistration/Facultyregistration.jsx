@@ -26,7 +26,7 @@ function Facultyregistration() {
     try {
       const response = await axios.post('/api/faculty/post', formData, {
         headers: { 'Content-Type': 'application/json' }
-      });
+      }); 
       console.log('Form submitted successfully:', response.data);
       localStorage.clear();
       toast("Registration Successful");
@@ -83,7 +83,7 @@ function Facultyregistration() {
           </div>
 
           
-          <div className="faculty">
+          {/* <div className="faculty">
                <label htmlFor="Faculty">Faculty</label>
                <div className="radio" >
                  <div className="radio-spacing"><input type="radio" name="faculty" value="Yes" onChange={handleOtherField} checked={formData.faculty === 'Yes'}/> Yes</div>
@@ -93,8 +93,18 @@ function Facultyregistration() {
              </div>
              {
               formData.faculty==="Yes" && (
-              <Allfields fieldtype="text" value="Handling batch" inputname="handlingBatch" formData={formData} setFormData={setFormData} />)
-             }
+                <div className="dropdown-field-faculty">
+                  <label htmlFor="handlingBatch">Handling Batch</label>
+                  <select name="handlingBatch" className='dropdown' value={formData.handlingBatch || ''} onChange={handleOtherField}>
+                    <option value=''>Select</option>
+                    <option value="1st Year">2026</option>
+                    <option value="2nd Year">2027</option>
+                    <option value="3rd Year">2028</option>
+                    <option value="4th Year">2028</option>
+                  </select>
+                </div>
+              )
+             } */}
              <div id='faculty_form_submit_button'>
              <Allbuttons value="submit" image={Nextwhite} />
              </div>

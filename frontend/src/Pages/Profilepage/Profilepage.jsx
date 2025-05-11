@@ -141,7 +141,7 @@ function StudentDisplay() {
       <Header />
       <div className="nav">
      
-        {/* <button className="bonafide_button" onClick={handleBonafideClick}>Bonafide</button> */}
+        {/* <button classN ame="bonafide_button" onClick={handleBonafideClick}>Bonafide</button> */}
         <button className="menu" onClick={handleMenuClick}>
           <img src={Menu} alt="" />
         </button>
@@ -625,7 +625,7 @@ function StudentDisplay() {
         )}
       </div>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

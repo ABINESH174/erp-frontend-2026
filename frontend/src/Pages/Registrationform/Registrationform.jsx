@@ -808,7 +808,13 @@ const PersonalForm = () => {
                </select>
              </div>
             <div className="batch">
-              <Allfields fieldtype="text" value="Course Completion Year" inputname="batch"  formData={formData} setFormData={setFormData} />
+              <label htmlFor="batch">Course Completion Year</label>
+              <select className="dropdown" name="batch"  value={formData.batch || ''} onChange={handleOtherField}>
+              <option value=''>Select</option>
+              <option value="2025" >2025</option> 
+              <option value="2026" >2026</option>
+              <option value="2027" >2027</option>
+              </select>
             </div>
             <div className="admission_no">
               <Allfields fieldtype="text" value="Admission Number" inputname="admissionNumber"  formData={formData} setFormData={setFormData} />

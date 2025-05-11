@@ -5,6 +5,9 @@ import { useNavigate } from 'react-router-dom'
 import { Loginbutton } from '../../Components';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FaRegEye } from "react-icons/fa";
+import { IoMdEyeOff } from "react-icons/io";
+
 
 function Loginpage() {
 
@@ -12,6 +15,14 @@ function Loginpage() {
   const [userId, setuserId] = useState('');
   const [password, setPassword] = useState('');
   const navigate =useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+ 
+
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword);
+    document.getElementById("password").focus();
+
+  };
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -66,15 +77,22 @@ function Loginpage() {
               <label className='login-mailid' htmlFor="userId" >User Id</label>
               <input type="text" id='input-mail' onChange={e => setuserId(e.target.value)}  />
               <label className='login-password' htmlFor="Password">Password</label>
-              <input type="password" onChange={e => setPassword(e.target.value)} />
+              <div className="password-box">
+              <input type={showPassword ? "text" : "password"} id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                {showPassword ? (
+                  <IoMdEyeOff  className="eye-icon" onClick={handleTogglePassword} />
+                ) : (
+                  <FaRegEye className="eye-icon" onClick={handleTogglePassword} />
+                )}
+              </div>
+
               {/* <a href="#" id='forgotpassword'> <p className='forgotpassword'>Forgot password?</p></a> */}
               <div className='login-button-space'>
                 <Loginbutton ></Loginbutton>        
               </div>
             </form>
 
-            <p className='or'> </p>
-            {/* <p className='or new-register'>Create new account</p> */}
+            
           </div>
         </div>
       </div>
