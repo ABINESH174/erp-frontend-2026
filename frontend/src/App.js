@@ -3,6 +3,8 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Landingpage, Loginpage, Registrationform, Profilepage, Bonafide, Facultyregistration, Facultydashboard, Headofthedepartmentdashboard,FacultyInfohod,StudentInfohod} from './Pages';
 import BonafideStudent from './Components/Bonafidestudent/BonafideStudent';
+import BonafideStatus from './Pages/Bonafidestatuspage/Bonafidestatus';
+
 
 
 function App() {
@@ -17,6 +19,7 @@ function App() {
         <Route path="/hod-dashboard" element={<Headofthedepartmentdashboard />} />
         <Route path="/faculty-registration" element={<Facultyregistration />} />
         <Route path="/bonafide-page" element={<Bonafide />} />
+        <Route path="/bonafide-status-page" element={<BonafideStatus />} />
         <Route path="/facultyinfohod-page" element={<FacultyInfohod />} />
         <Route path="/studentinfohod-page" element={<StudentInfohod />} />
         <Route path="/bonafide-student" element={<BonafideStudent/>} />
