@@ -3,7 +3,6 @@ import axios from "axios";
 import "./Profilepage.css";
 import { useLocation,useNavigate } from "react-router-dom";
 import Header from "../../Components/Header/Header.jsx";
-import Footer from "../../Components/Footer/Footer.jsx";
 import Allbuttons from "../../Components/Allbuttons/Allbuttons.jsx";
 import Logout from '../../Assets/logout.svg';
 import Menu from '../../Assets/menu.svg';
@@ -28,6 +27,10 @@ function StudentDisplay() {
   const handleBonafideClick = () => {
     navigate('/bonafide-page',{state: {studentId}});
   };
+  const handleBonafideStatusClick = () => {
+    navigate('/bonafide-status-page', { state: {studentId} });
+  };
+  
   const handleMenuClick = () => {
     setIsVisible(!isVisible);
   };
@@ -183,13 +186,9 @@ function StudentDisplay() {
 
           <Allbuttons value="Logout" image={Logout} target={handleLogoutClick}/>
           <Allbuttons value="Bonafide"  target={handleBonafideClick}/>
+          <Allbuttons value="Bonafide Status" target={handleBonafideStatusClick} />
         </div>
-
-
-
-
-
-
+        
       <div className="profile">
       {isVisible && (
        <div className="hi">
