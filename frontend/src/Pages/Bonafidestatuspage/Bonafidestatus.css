@@ -18,8 +18,8 @@ table {
   width: 90%;
   border-collapse: collapse;
   background-color: rgba(0, 157, 255, 0.05);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-     border: 1px solid black; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid black; 
   border-radius: 10px;
   overflow: hidden;
   
@@ -27,7 +27,7 @@ table {
 
 th, td {
   padding: 12px 15px;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   text-align: center;
 }
 

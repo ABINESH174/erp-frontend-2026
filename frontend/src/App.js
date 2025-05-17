@@ -4,6 +4,8 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Landingpage, Loginpage, Registrationform, Profilepage, Bonafide, Facultyregistration, Facultydashboard, Headofthedepartmentdashboard,FacultyInfohod,StudentInfohod} from './Pages';
 import BonafideStudent from './Components/Bonafidestudent/BonafideStudent';
 import BonafideStatus from './Pages/Bonafidestatuspage/Bonafidestatus';
+import HodBonafideApproval from './Pages/HodBonafideApproval/HodBonafideApproval';
+import OfficeBearer from './Pages/OfficeBearer/OfficeBearer';
 
 
 
@@ -23,6 +25,9 @@ function App() {
         <Route path="/facultyinfohod-page" element={<FacultyInfohod />} />
         <Route path="/studentinfohod-page" element={<StudentInfohod />} />
         <Route path="/bonafide-student" element={<BonafideStudent/>} />
+        <Route path="/hod-bonafide-approval" element={<HodBonafideApproval/>} />
+        <Route path="/office-bearer-dashboard" element={<OfficeBearer/>} />
+
 
       </Routes>
     </div>
