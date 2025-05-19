@@ -60,6 +60,11 @@ function Loginpage() {
           await new Promise((resolve) => setTimeout(resolve, 1000));
           navigate('/hod-dashboard',{state: {userId}})
         }
+        else if(res.data === "Principal Authentication Successful"){
+        toast("Login Successful");
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        navigate('/principal-dashboard',{state: {userId}})
+        }
       })
       .catch(err => {
         console.log(err);
