@@ -63,10 +63,10 @@ function Bonafide() {
 
     const validateFiles = () => {
         if (["Labour Welfare", "Farmer Welfare", "Tailor Welfare"].includes(uploads.selectedScholarship)) {
-            const requiredFiles = ["aadharCard","welfareId", "smartCard", "studentIdCard"];
+            const requiredFiles = ["aadharCardFile","labourWelfareFile", "smartCardFile", "studentIdCardFile"];
             return requiredFiles.every(fileType => uploads.fileUploads[fileType]);
         }
-        return !!uploads.fileUploads["studentIdCard"];
+        return !!uploads.fileUploads["studentIdCardFile"];
     };
 
     const handleSubmit = async () => {
@@ -76,7 +76,7 @@ function Bonafide() {
         }
 
         try {
-            const userId = location.state?.studentId || "12345";
+            const userId = location.state?.studentId;
             const formData = new FormData();
             formData.append('registerNo', userId);
             formData.append('purpose', uploads.selectedScholarship);
@@ -88,6 +88,9 @@ function Bonafide() {
             Object.entries(uploads.fileUploads).forEach(([key, file]) => {
                 formData.append(key, file);
             });
+
+            formData.append('bonafideStatus', 'PENDING');
+            formData.append('date', new Date().toISOString().split('T')[0]);
 
             await axios.post('/api/bonafide/create', formData, {
                 headers: {
@@ -140,21 +143,21 @@ function Bonafide() {
                     <h3>Upload required documents for {uploads.selectedScholarship}</h3>
                     <div className="file-upload">
                         <label>Student ID Card</label>
-                        <input type="file" onChange={handleFileChange('studentIdCard')} />
+                        <input type="file" onChange={handleFileChange('studentIdCardFile')} />
                     </div>
                     {["Labour Welfare", "Farmer Welfare", "Tailor Welfare"].includes(uploads.selectedScholarship) && (
                         <>
                             <div className="file-upload">
                                 <label>Aadhar Card</label>
-                                <input type="file" onChange={handleFileChange('aadharCard')} />
+                                <input type="file" onChange={handleFileChange('aadharCardFile')} />
                             </div>
                             <div className="file-upload">
                                 <label>Smart Card</label>
-                                <input type="file" onChange={handleFileChange('smartCard')} />
+                                <input type="file" onChange={handleFileChange('smartCardFile')} />
                             </div>
                             <div className="file-upload">
                                 <label>Welfare Proof Document</label>
-                                <input type="file" onChange={handleFileChange('welfareId')} />
+                                <input type="file" onChange={handleFileChange('labourWelfareFile')} />
                             </div>
                         </>
                     )}

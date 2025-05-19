@@ -8,7 +8,7 @@ import axios from 'axios';
 import Allbuttons from '../../Components/Allbuttons/Allbuttons.jsx';
 import Logout from '../../Assets/logout.svg';
 
-function Headofthedepartmentdashboard() {
+function OfficeBearerDashboard() {
   const location = useLocation();
   const navigate = useNavigate();
   const [userId, setUserId] = useState('Headofthedepartment');
@@ -72,9 +72,9 @@ function Headofthedepartmentdashboard() {
 
         <div className="hod-content">
           <div className="hod-bar">
-            <h2>HOD Dashboard</h2>
+            <h2>Office Bearer Dashboard</h2>
             <h4>profile</h4>
-            <div className="bonafide-hod" onClick={() => navigate('/hod-bonafide-approval', { state: { userId: userId } })}>
+            <div className="bonafide-hod" onClick={() => navigate('/office-bearer-dashboard', { state: { userId: userId } })}>
             <h4>Bonafide</h4>
             
                         </div>
@@ -101,4 +101,4 @@ function Headofthedepartmentdashboard() {
   );
 }
 
-export default Headofthedepartmentdashboard;
+export default OfficeBearerDashboard;
