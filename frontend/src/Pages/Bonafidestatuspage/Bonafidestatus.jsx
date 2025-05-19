@@ -12,22 +12,25 @@ const BonafideStatus = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchBonafideDetails = async () => {
-      try {
-        const response = await axios.get(`/api/bonafide/getAllBonafidesByRegisterNo?registerNo=${registerNo}`);
-        setBonafideDetails(response.data.data || []);
-      } catch (err) {
+useEffect(() => {
+  const fetchBonafideDetails = async () => {
+    try {
+      const response = await axios.get(`/api/bonafide/getAllBonafidesByRegisterNo?registerNo=${registerNo}`);
+      setBonafideDetails(response.data.data || []);
+    } catch (err) {
+      if (err.response?.status !== 404) {
         setError('Failed to fetch bonafide details');
-      } finally {
-        setLoading(false);
+      } else {
+        setBonafideDetails([]); // clear data if 404
       }
-    };
-
-    if (registerNo) {
-      fetchBonafideDetails();
+    } finally {
+      setLoading(false);
     }
-  }, [registerNo]);
+  };
+
+  fetchBonafideDetails();
+}, [registerNo]);
+
 
   const handleDownload = (filePath, status) => {
     if (status === 'PRINCIPAL_APPROVED') {
@@ -64,7 +67,7 @@ const BonafideStatus = () => {
                 <td>{item.bonafideId}</td>
                 <td>{item.registerNo}</td>
                 <td>{item.purpose}</td>
-                <td>{item.bonafideStatus}</td>
+                <td style={{ color: !item.bonafideStatus ? 'green' : 'inherit' }}>{item.bonafideStatus || 'InReview'}</td>
                 <td>
                   {item.bonafideStatus === 'PRINCIPAL_APPROVED' ? (
                     <button onClick={() => handleDownload(item.filePath, item.status)}>Download</button>
@@ -77,7 +80,7 @@ const BonafideStatus = () => {
           </tbody>
         </table>
       ) : (
-        <div>No Bonafide Records </div>
+        <div>No Bonafide Applied </div>
       )}
     </div>
   );
