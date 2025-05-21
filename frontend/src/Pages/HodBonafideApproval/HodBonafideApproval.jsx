@@ -1,49 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import Header from '../Header/Header';
-import './BonafideStudent.css';
+import { useLocation } from 'react-router-dom'; 
+import { use } from 'react';
+// import Header from '../Header/Header';
 
-const BonafideStudent = () => {
+const HodBonafideApproval = () => {
   const navigate = useNavigate();
-
-  const [facultyId, setFacultyId] = useState(null);
+    const location = useLocation();
+  const [hodId, setHodId] = useState(null);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchFacultyIdAndBonafides = async () => {
-      setLoading(true);
-      setError(null);
-
-      try {
-        // ✅ Corrected key to match localStorage
-        const email = localStorage.getItem('facultyEmail');
-
-        if (!email) {
-          setError('User email not found. Please login again.');
-          setLoading(false);
-          return;
-        }
-
-        // Step 1: Get facultyId by email
-        const facultyRes = await axios.get(`http://localhost:8080/api/faculty/${email}`, {
-          headers: { Accept: 'application/json' },
-        });
-
-        const fetchedFacultyId = facultyRes.data.data.facultyId;
-        setFacultyId(fetchedFacultyId);
-
-        if (!fetchedFacultyId) {
-          setError('Faculty ID not found for this email.');
-          setLoading(false);
-          return;
-        }
-
-        // Step 2: Get pending bonafides
+    const handleFetchBonafides = async () => {
+    try {
+        console.log('HOD ID:', hodId);
         const bonafideRes = await axios.get(
-          `http://localhost:8080/api/faculty/get-pending-bonafides/${fetchedFacultyId}`,
+        `http://localhost:8080/api/hod/getFacultyApprovedBonafidesByHodId/${hodId}`,
           {
             headers: { Accept: 'application/json' },
           }
@@ -55,6 +30,48 @@ const BonafideStudent = () => {
           setData([]);
           setError('No bonafide requests found.');
         }
+        
+    } catch (error) {
+        
+    }
+}
+    handleFetchBonafides();
+  },[hodId]);
+    
+
+  useEffect(() => {
+    const fetchHodIdAndBonafides = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        // ✅ Corrected key to match localStorage
+        const email = localStorage.getItem('hodEmail');
+
+
+        if (!email) {
+          setError('User email not found. Please login again.');
+          setLoading(false);
+          return;
+        }
+
+        // Step 1: Get hodId by email
+        const hodRes = await axios.get(`http://localhost:8080/api/hod/getHodByEmail/${email}`, {
+          headers: { Accept: 'application/json' },
+        });
+        console.log(hodRes.data.data);
+
+        const fetchedHodId = hodRes.data.data.hodId;
+        setHodId(fetchedHodId);
+
+        if (!fetchedHodId) {
+          setError('Faculty ID not found for this email.');
+          setLoading(false);
+          return;
+        }
+
+        // Step 2: Get pending bonafides
+        
       } catch (err) {
         console.error('Error fetching data:', err);
         setError('Failed to fetch data from server.');
@@ -64,7 +81,7 @@ const BonafideStudent = () => {
       }
     };
 
-    fetchFacultyIdAndBonafides();
+    fetchHodIdAndBonafides();
   }, []);
 
   const handleBonafideStatus = async (bonafideId, registerNo, status) => {
@@ -80,13 +97,13 @@ const BonafideStudent = () => {
       alert(res.data.message || 'Status updated!');
 
       // Refresh bonafide list
-      if (!facultyId) {
+      if (!hodId) {
         setError('Faculty ID not found. Please login again.');
         return;
       }
 
       const refresh = await axios.get(
-        `http://localhost:8080/api/faculty/get-pending-bonafides/${facultyId}`
+        `http://localhost:8080/api/hod/getFacultyApprovedBonafidesByHodId/${hodId}`
       );
 
       if (refresh.data?.data?.length > 0) {
@@ -104,9 +121,9 @@ const BonafideStudent = () => {
 
   return (
     <div>
-      <Header />
-      <div className="bonafide-student">
-        <div className="topstud-container">
+      {/* <Header /> */}
+      <div className="hod-bonafide-student">
+        <div className="hod-topstud-container">
           <div className="name-bar">
             <h3 className="name-bar-title">Bonafide Notification Page</h3>
           </div>
@@ -143,7 +160,7 @@ const BonafideStudent = () => {
                             handleBonafideStatus(
                               item.bonafideId,
                               item.registerNo,
-                              'FACULTY_APPROVED'
+                              'HOD_APPROVED'
                             )
                           }
                         >
@@ -174,4 +191,5 @@ const BonafideStudent = () => {
   );
 };
 
-export default BonafideStudent;
+export default HodBonafideApproval
+;

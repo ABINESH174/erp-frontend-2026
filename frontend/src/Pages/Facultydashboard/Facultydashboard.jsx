@@ -168,7 +168,7 @@ function Facultydashboard() {
         <div className="full-container"><p className="faculty-heading-tag">faculty dashboard</p>
           <div className="faculty-side">
             <div className="faculty-profile-bar" onClick={toggleProfile}>
-             <BsPerson /><p>Faculty profile</p>
+             <BsPerson /><p>profile</p>
             </div>
 
             <div className="bonafide-view" onClick={() => navigate('/bonafide-student', { state: { userId: facultyId } })}>

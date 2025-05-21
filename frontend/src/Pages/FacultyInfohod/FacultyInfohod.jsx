@@ -6,7 +6,7 @@ function FacultyInfohod() {
   return (
     <div>
         <Header></Header>
-        
+        <h1>faculty</h1>
         <Footer></Footer>
     </div>
   )
