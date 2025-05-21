@@ -171,7 +171,7 @@ function Facultydashboard() {
              <BsPerson /><p>profile</p>
             </div>
 
-            <div className="bonafide-view" onClick={() => navigate('/hod-dashboard', { state: { userId: facultyId } })}>
+            <div className="bonafide-view" onClick={() => navigate('/bonafide-student', { state: { userId: facultyId } })}>
               <FaFileAlt />
 <p>Bonafide</p>
 
