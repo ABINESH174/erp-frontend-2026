@@ -19,6 +19,7 @@ import Logout from '../../Assets/logout.svg';
 import stud from '../../Assets/studenticondash.svg';
 import axios from 'axios';
 import * as XLSX from 'xlsx'; // Import XLSX for exporting
+import Logoutbtn from '../../Components/logoutbutton/Logoutbtn.jsx';
 function Facultydashboard() {
   const [faculty, setFaculty] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -171,11 +172,12 @@ function Facultydashboard() {
              <BsPerson /><p>profile</p>
             </div>
 
-            <div className="bonafide-view" onClick={() => navigate('/hod-dashboard', { state: { userId: facultyId } })}>
+            <div className="bonafide-view" onClick={() => navigate('/bonafide-student', { state: { userId: facultyId } })}>
               <FaFileAlt />
 <p>Bonafide</p>
 
             </div>
+            <Logoutbtn/>
           </div>
         </div>
         <div className="top-sidebox">

@@ -3,7 +3,11 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom'; 
 import { use } from 'react';
-// import Header from '../Header/Header';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Header from '../../Components/Header/Header';
+
+
 
 const HodBonafideApproval = () => {
   const navigate = useNavigate();
@@ -45,7 +49,6 @@ const HodBonafideApproval = () => {
       setError(null);
 
       try {
-        // ✅ Corrected key to match localStorage
         const email = localStorage.getItem('hodEmail');
 
 
@@ -94,7 +97,7 @@ const HodBonafideApproval = () => {
         }
       );
 
-      alert(res.data.message || 'Status updated!');
+      toast.success(res.data.message || 'Status updated!');
 
       // Refresh bonafide list
       if (!hodId) {
@@ -121,7 +124,7 @@ const HodBonafideApproval = () => {
 
   return (
     <div>
-      {/* <Header /> */}
+      <Header />
       <div className="hod-bonafide-student">
         <div className="hod-topstud-container">
           <div className="name-bar">
@@ -187,6 +190,7 @@ const HodBonafideApproval = () => {
           )}
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };
