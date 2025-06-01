@@ -54,7 +54,7 @@ useEffect(() => {
         <table>
           <thead>
             <tr>
-              <th>Bonafide ID</th>
+              <th>SNo</th>
               <th>Register No</th>
               <th>Purpose</th>
               <th>Status</th>
@@ -62,9 +62,9 @@ useEffect(() => {
             </tr>
           </thead>
           <tbody>
-            {bonafideDetails.map((item) => (
+            {bonafideDetails.map((item,index) => (
               <tr key={item.bonafideId}>
-                <td>{item.bonafideId}</td>
+                <td>{index+1}</td>
                 <td>{item.registerNo}</td>
                 <td>{item.purpose}</td>
                 <td style={{ color: !item.bonafideStatus ? 'green' : 'inherit' }}>{item.bonafideStatus || 'InReview'}</td>

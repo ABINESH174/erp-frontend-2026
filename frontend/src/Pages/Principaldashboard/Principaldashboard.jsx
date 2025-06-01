@@ -4,11 +4,12 @@ import Header from '../../Components/Header/Header';
 import './Principaldashboard.css';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { FaHome, FaClipboardList } from 'react-icons/fa';
+import { FaHome, FaClipboardList, FaUser } from 'react-icons/fa';
 
 const Principaldashboard = () => {
   const [bonafides, setBonafides] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [section, setSection] = useState('all');
 
   useEffect(() => {
     fetchBonafides();
@@ -48,15 +49,23 @@ const Principaldashboard = () => {
       );
     } catch (error) {
       toast.error('Failed to update status. Please try again.');
-      // Revert the optimistic UI update on error
-      fetchBonafides();
+      fetchBonafides(); // Revert optimistic update
     }
   };
 
   const approvedCount = bonafides.filter(b => b.bonafideStatus === 'PRINCIPAL_APPROVED').length;
+  const rejectedCount = bonafides.filter(b => b.bonafideStatus === 'REJECTED').length;
   const pendingCount = bonafides.filter(
     b => b.bonafideStatus !== 'PRINCIPAL_APPROVED' && b.bonafideStatus !== 'REJECTED'
   ).length;
+
+  const filteredBonafides = bonafides.filter(b => {
+    if (section === 'approved') return b.bonafideStatus === 'PRINCIPAL_APPROVED';
+    if (section === 'rejected') return b.bonafideStatus === 'REJECTED';
+    if (section === 'previousBonafides') return b.bonafideStatus === 'PRINCIPAL_APPROVED';
+    if (section === 'profile') return false;
+    return true;
+  });
 
   return (
     <div>
@@ -66,33 +75,46 @@ const Principaldashboard = () => {
         <div className="sidebar">
           <h2><FaHome /> Principal Panel</h2>
           <ul>
-            <li><FaClipboardList /> Total Requests: {bonafides.length}</li>
-            <li><FaClipboardList /> Approved: {approvedCount}</li>
-            <li><FaClipboardList /> Pending: {pendingCount}</li>
+            <li onClick={() => setSection('profile')}><FaUser /> Profile</li>
+            <li onClick={() => setSection('previousBonafides')}><FaClipboardList /> Previous Bonafides</li>
+            <li onClick={() => setSection('approved')}><FaClipboardList /> Approved ({approvedCount})</li>
+            <li onClick={() => setSection('rejected')}><FaClipboardList /> Rejected ({rejectedCount})</li>
+            <li onClick={() => setSection('all')}><FaClipboardList /> All Requests ({bonafides.length})</li>
           </ul>
         </div>
 
         <div className="content">
-          <h1>Bonafide Requests</h1>
-          {loading ? (
+          <h1>
+            {section === 'profile' && 'Profile'}
+            {section === 'previousBonafides' && 'Previous Bonafides'}
+            {section === 'approved' && 'Approved Bonafides'}
+            {section === 'rejected' && 'Rejected Bonafides'}
+            {section === 'all' && 'All Bonafide Requests'}
+          </h1>
+
+          {section === 'profile' ? (
+            <div className="profile-section">
+              <p>Welcome Principal. This section will display your profile details.</p>
+            </div>
+          ) : loading ? (
             <p>Loading...</p>
-          ) : bonafides.length === 0 ? (
+          ) : filteredBonafides.length === 0 ? (
             <p className="no-requests">No bonafide requests available.</p>
           ) : (
             <table className="request-table">
               <thead>
                 <tr>
-                  <th>ID</th>
+                  <th>S.No</th>
                   <th>Register No</th>
                   <th>Purpose</th>
                   <th>Status</th>
-                  <th>Action</th>
+                  {section === 'all' && <th>Action</th>}
                 </tr>
               </thead>
               <tbody>
-                {bonafides.map(b => (
+                {filteredBonafides.map((b, index) => (
                   <tr key={b.bonafideId}>
-                    <td>{b.bonafideId}</td>
+                    <td>{index + 1}</td>
                     <td>{b.registerNo}</td>
                     <td>{b.purpose}</td>
                     <td
@@ -110,32 +132,38 @@ const Principaldashboard = () => {
                         ? 'Rejected ❌'
                         : 'Pending'}
                     </td>
-                    <td>
-                      {b.bonafideStatus === 'PRINCIPAL_APPROVED' ? (
-                        <span className="status-fixed">✅ Approved</span>
-                      ) : b.bonafideStatus === 'REJECTED' ? (
-                        <span className="status-fixed">❌ Rejected</span>
-                      ) : (
-                        <>
-                          <button
-                            className="approve-btn"
-                            onClick={() =>
-                              handleUpdateStatus(b.bonafideId, b.registerNo, 'PRINCIPAL_APPROVED')
-                            }
-                          >
-                            Approve
-                          </button>
-                          <button
-                            className="reject-btn"
-                            onClick={() =>
-                              handleUpdateStatus(b.bonafideId, b.registerNo, 'REJECTED')
-                            }
-                          >
-                            Reject
-                          </button>
-                        </>
-                      )}
-                    </td>
+                    {section === 'all' && (
+                      <td>
+                        {b.bonafideStatus === 'PRINCIPAL_APPROVED' ? (
+                          <span className="status-fixed">✅ Approved</span>
+                        ) : b.bonafideStatus === 'REJECTED' ? (
+                          <span className="status-fixed">❌ Rejected</span>
+                        ) : (
+                          <>
+                            <button
+                              className="approve-btn"
+                              onClick={() => {
+                                if (window.confirm('Are you sure you want to approve this bonafide?')) {
+                                  handleUpdateStatus(b.bonafideId, b.registerNo, 'PRINCIPAL_APPROVED');
+                                }
+                              }}
+                            >
+                              Approve
+                            </button>
+                            <button
+                              className="reject-btn"
+                              onClick={() => {
+                                if (window.confirm('Are you sure you want to reject this bonafide?')) {
+                                  handleUpdateStatus(b.bonafideId, b.registerNo, 'REJECTED');
+                                }
+                              }}
+                            >
+                              Reject
+                            </button>
+                          </>
+                        )}
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
