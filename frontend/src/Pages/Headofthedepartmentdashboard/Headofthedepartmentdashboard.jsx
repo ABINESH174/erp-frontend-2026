@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import './Headofthedepartmentdashboard.css';
 import Header from '../../Components/Header/Header.jsx';
 import Footer from '../../Components/Footer/Footer.jsx';
 import Profileicon from '../../Assets/profile.svg';
 import axios from 'axios';
-import Allbuttons from '../../Components/Allbuttons/Allbuttons.jsx';
-import Logout from '../../Assets/logout.svg';
+import BatchCards from '../../Components/batchcomponent/BatchCards.jsx';
+import Logoutbtn from '../../Components/logoutbutton/Logoutbtn.jsx';
+
 
 function Headofthedepartmentdashboard() {
   const location = useLocation();
@@ -43,6 +44,19 @@ function Headofthedepartmentdashboard() {
   const gotostudentinfohod = () => {
     navigate('/studentinfohod-page', { state: { userId } });
   };
+  const getAcademicYear = () => {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const startMonth = 8; // August (0-indexed: Jan = 0, Aug = 8)
+
+    if (now.getMonth() >= startMonth) {
+      // Academic year starts this year
+      return `${currentYear}-${currentYear + 1}`;
+    } else {
+      // Academic year started last year
+      return `${currentYear - 1}-${currentYear}`;
+    }
+  };
 
   return (
     <div>
@@ -74,23 +88,14 @@ function Headofthedepartmentdashboard() {
           <div className="hod-bar">
             <h2>HOD Dashboard</h2>
             <h4>profile</h4>
-            <div className="bonafide-hod" onClick={() => navigate('/hod-bonafide-approval', { state: { userId: userId } })}>
-            <h4>Bonafide</h4>
-            
-                        </div>
-          </div>
-          <div className="welcome-bar">welcome ! head of the CSE department</div>
-          <div className="batchbox">
-            <div class="batch-card">
-              <h3>2022-2026</h3>
-            </div>
-            <div class="batch-card">
-              <h3>2023-2027</h3>
-            </div>
-            <div class="batch-card">
-              <h3>2024-2028</h3>
-            </div>
-          </div>
+            <h4 onClick={() => navigate('/hod-bonafide-approval', { state: { userId: userId } })}>Bonafide</h4>
+             <Logoutbtn/>
+          </div>                       
+
+          <div className="welcome-bar"><p>welcome ! head of the CSE department</p> <p className='acadamic-year'>Academic Year: <strong>{getAcademicYear()}</strong>
+</p></div>
+          <Outlet/>
+        
         </div>
       </div>
 

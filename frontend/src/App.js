@@ -6,6 +6,8 @@ import BonafideStudent from './Components/Bonafidestudent/BonafideStudent';
 import BonafideStatus from './Pages/Bonafidestatuspage/Bonafidestatus';
 import HodBonafideApproval from './Pages/HodBonafideApproval/HodBonafideApproval';
 import OfficeBearer from './Pages/OfficeBearer/OfficeBearer';
+import BatchesPage from './Pages/batches/BatchesPage';
+import BatchCards from './Components/batchcomponent/BatchCards';
 
 
 
@@ -19,7 +21,6 @@ function App() {
         <Route path="/profile-page" element={<Profilepage />} />
         <Route path="/faculty-dashboard" element={<Facultydashboard />} />
         <Route path="/hod-dashboard" element={<Headofthedepartmentdashboard />} />
-        <Route path="/principal-dashboard" element={<Principaldashboard />} />
         <Route path="/faculty-registration" element={<Facultyregistration />} />
         <Route path="/bonafide-page" element={<Bonafide />} />
         <Route path="/bonafide-status-page" element={<BonafideStatus />} />

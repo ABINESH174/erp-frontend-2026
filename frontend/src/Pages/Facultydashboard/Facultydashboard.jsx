@@ -19,6 +19,7 @@ import Logout from '../../Assets/logout.svg';
 import stud from '../../Assets/studenticondash.svg';
 import axios from 'axios';
 import * as XLSX from 'xlsx'; // Import XLSX for exporting
+import Logoutbtn from '../../Components/logoutbutton/Logoutbtn.jsx';
 function Facultydashboard() {
   const [faculty, setFaculty] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -176,6 +177,7 @@ function Facultydashboard() {
 <p>Bonafide</p>
 
             </div>
+            <Logoutbtn/>
           </div>
         </div>
         <div className="top-sidebox">

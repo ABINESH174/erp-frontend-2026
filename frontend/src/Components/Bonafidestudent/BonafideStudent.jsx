@@ -3,6 +3,10 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Header from '../Header/Header';
 import './BonafideStudent.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import BackButton from '../backbutton/BackButton';
+
 
 const BonafideStudent = () => {
   const navigate = useNavigate();
@@ -27,7 +31,7 @@ const BonafideStudent = () => {
           return;
         }
 
-        // Step 1: Get facultyId by email
+        //  Get facultyId by email
         const facultyRes = await axios.get(`http://localhost:8080/api/faculty/${email}`, {
           headers: { Accept: 'application/json' },
         });
@@ -41,7 +45,7 @@ const BonafideStudent = () => {
           return;
         }
 
-        // Step 2: Get pending bonafides
+        // Get pending bonafides
         const bonafideRes = await axios.get(
           `http://localhost:8080/api/faculty/get-pending-bonafides/${fetchedFacultyId}`,
           {
@@ -77,7 +81,7 @@ const BonafideStudent = () => {
         }
       );
 
-      alert(res.data.message || 'Status updated!');
+      toast.success(res.data.message || 'Status updated!');
 
       // Refresh bonafide list
       if (!facultyId) {
@@ -106,6 +110,24 @@ const BonafideStudent = () => {
     <div>
       <Header />
       <div className="bonafide-student">
+        <div className="bonafide-sidebar">
+          <div className="bonafide-sidebar-container">
+            <ul className="bonafide-sidebar-list" style={{ listStyleType: 'none' }}>
+              <li className="bonafide-sidebar-item">
+                Bonafides
+              </li>
+              <li className="bonafide-sidebar-item" >
+                Previous
+              </li>
+              <li className="bonafide-sidebar-item">
+                Approved
+              </li>
+              <li className="bonafide-sidebar-item">
+               Rejected
+              </li>
+            </ul>
+          </div>
+        </div>
         <div className="topstud-container">
           <div className="name-bar">
             <h3 className="name-bar-title">Bonafide Notification Page</h3>
@@ -117,6 +139,7 @@ const BonafideStudent = () => {
             <p className="error-message">{error}</p>
           ) : (
             <div className="bonafide-table-container">
+              <BackButton/>
               <table className="bonafide-table">
                 <thead>
                   <tr>
@@ -170,6 +193,7 @@ const BonafideStudent = () => {
           )}
         </div>
       </div>
+            <ToastContainer />
     </div>
   );
 };

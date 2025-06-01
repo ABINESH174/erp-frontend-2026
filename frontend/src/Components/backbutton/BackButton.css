@@ -1,0 +1,18 @@
+.back-button{
+    background-color: rgba(16, 47, 116, 0.871);
+    width: 7%;
+    height: 5vh;
+    font-size: 18px;
+    color: white;
+    padding: 2px;
+    overflow: hidden;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+.feather {
+    width: 20px;
+    height: 20px;
+}
