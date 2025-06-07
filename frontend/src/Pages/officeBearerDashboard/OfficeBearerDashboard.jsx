@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import './Headofthedepartmentdashboard.css';
 import Header from '../../Components/Header/Header.jsx';
 import Footer from '../../Components/Footer/Footer.jsx';
 import Profileicon from '../../Assets/profile.svg';
 import axios from 'axios';
 import Allbuttons from '../../Components/Allbuttons/Allbuttons.jsx';
 import Logout from '../../Assets/logout.svg';
+import BonafideCount from '../../Components/BonafideCounter/BonafideCount.jsx';
+import './OfficeBearerDashboard.css';
 
 function OfficeBearerDashboard() {
   const location = useLocation();
@@ -68,30 +69,32 @@ function OfficeBearerDashboard() {
       {/* <button onClick={gotostudentinfohod}>Student</button>
       <button onClick={gotofacultyinfohod}>Faculty</button> */}
 
-      <div className="hod-whole">          <div className="hod-top-dashboard"> </div>
+      <div className="ob-whole">        
+       
 
-        <div className="hod-content">
-          <div className="hod-bar">
+        <div className="ob-navbar-content">
+         
             <h2>Office Bearer Dashboard</h2>
-            <h4>profile</h4>
-            <div className="bonafide-hod" onClick={() => navigate('/office-bearer-dashboard', { state: { userId: userId } })}>
-            <h4>Bonafide</h4>
+            <p>profile</p>
+            <p onClick={() => navigate('/office-bearer-dashboard', { state: { userId: userId } })}>Bonafide</p>
+            {/* <span >{userId ? <BonafideCount  className='ob-bonafide-count'
+            emailKey="obEmail"
+            getIdApi={`http://localhost:8080/api/hod/getHodByEmail`}
+            getBonafideApi={`http://localhost:8080/api/hod/getFacultyApprovedBonafidesByHodId`}
+            statusFilter="HOD_APPROVED"
+            /> : 0}</span> */}
             
-                        </div>
+            
+            
+      
           </div>
-          <div className="welcome-bar">welcome ! head of the CSE department</div>
-          <div className="batchbox">
-            <div class="batch-card">
-              <h3>2022-2026</h3>
-            </div>
-            <div class="batch-card">
-              <h3>2023-2027</h3>
-            </div>
-            <div class="batch-card">
-              <h3>2024-2028</h3>
-            </div>
-          </div>
+          <div className="ob-top-dashboard">
+          <div className="ob-welcome-bar"><p>Welcome!</p></div>
+                   <h2>Office Bearer Dashboard</h2>
+
+
         </div>
+          
       </div>
 
       {/* <div className="Headofthedepartmentdashboard_footer">

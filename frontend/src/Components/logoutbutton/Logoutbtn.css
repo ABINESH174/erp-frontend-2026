@@ -1,0 +1,21 @@
+/* From Uiverse.io by vinodjangid07 */ 
+.logout-Btn {
+  height: 30px;
+  width: fit-content;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  border-radius: 10px;
+  border: none;
+  color: black ;
+  font-size: 15px;
+  align-items: center;
+  /* margin-left: 2rem; */
+}
+.logout-Btn:hover {
+  background-color: #ffffff;
+  cursor: pointer;
+}
+

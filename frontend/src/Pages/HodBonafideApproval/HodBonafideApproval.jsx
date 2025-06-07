@@ -3,15 +3,25 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom'; 
 import { use } from 'react';
-// import Header from '../Header/Header';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Header from '../../Components/Header/Header';
+import './HodBonafideApproval.css'; 
+import BackButton from '../../Components/backbutton/BackButton';
+import { Allbuttons } from '../../Components';
+import View from '../../Assets/eyewhite.svg';
+import BonafideViewModal from '../../Components/BonafideViewModal/BonafideViewModal';
+
 
 const HodBonafideApproval = () => {
   const navigate = useNavigate();
-    const location = useLocation();
+  const location = useLocation();
   const [hodId, setHodId] = useState(null);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedBonafide, setSelectedBonafide] = useState(null);
 
   useEffect(() => {
     const handleFetchBonafides = async () => {
@@ -45,7 +55,6 @@ const HodBonafideApproval = () => {
       setError(null);
 
       try {
-        // ✅ Corrected key to match localStorage
         const email = localStorage.getItem('hodEmail');
 
 
@@ -94,7 +103,7 @@ const HodBonafideApproval = () => {
         }
       );
 
-      alert(res.data.message || 'Status updated!');
+      toast.success(res.data.message || 'Status updated!');
 
       // Refresh bonafide list
       if (!hodId) {
@@ -119,30 +128,58 @@ const HodBonafideApproval = () => {
     }
   };
 
+    const handleViewClick = (item) => {
+    setSelectedBonafide(item);
+    setShowModal(true);
+  };
+
   return (
     <div>
-      {/* <Header /> */}
+      <Header />
       <div className="hod-bonafide-student">
-        <div className="hod-topstud-container">
-          <div className="name-bar">
-            <h3 className="name-bar-title">Bonafide Notification Page</h3>
+        <div className="hod-bonafide-navbar"> 
+           <ul className="hod-navlist" style={{ listStyleType: 'none' }}>
+              <li className="hodbonafide-navitem">
+                Bonafides
+              </li>
+              <li className="hodbonafide-navitem" >
+                Previous
+              </li>
+              <li className="hodbonafide-navitem">
+                Approved
+              </li>
+              <li className="hodbonafide-navitem">
+               Rejected
+              </li>
+            </ul>
           </div>
+        <div className="hod-topstud-container">
+          <div className="bonafide-header-bar">
+            
+            <h3 className="name-bar-title">HOD Bonafide Approval Page</h3>
+          </div>
+           <div className="bonafide-backbtn">
+                  <BackButton/>
+              </div>
 
           {loading ? (
             <p>Loading...</p>
           ) : error ? (
             <p className="error-message">{error}</p>
           ) : (
-            <div className="bonafide-table-container">
-              <table className="bonafide-table">
+            <div className="hod-bonafide-table-container">
+               
+              <table className="hod-bonafide-table">
                 <thead>
                   <tr>
                     <th>S.No</th>
                     <th>Register Number</th>
                     <th>Purpose</th>
+                    <th>Semester</th>
                     <th>Date of Apply</th>
-                    <th>Status</th>
+                    <th>Mobile Number</th>
                     <th>Action</th>
+                    <th>View Details</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -151,9 +188,10 @@ const HodBonafideApproval = () => {
                       <td>{index + 1}</td>
                       <td>{item.registerNo}</td>
                       <td>{item.purpose}</td>
+                      <td>{item.semester}</td>
                       <td>{item.date}</td>
-                      <td>{item.bonafideStatus}</td>
-                      <td className="action-buttons">
+                      <td>{item.mobileNumber}</td>
+                      <td className="hod-action-buttons">
                         <button
                           className="approve-btn"
                           onClick={() =>
@@ -179,6 +217,9 @@ const HodBonafideApproval = () => {
                           Reject
                         </button>
                       </td>
+                      <td className='hod-view-btn'>
+                        <Allbuttons value="View" image={View} target={() => handleViewClick(item)} />
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -186,10 +227,16 @@ const HodBonafideApproval = () => {
             </div>
           )}
         </div>
+        
       </div>
+      <BonafideViewModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        selectedBonafide={selectedBonafide}
+      />
+      <ToastContainer />
     </div>
   );
 };
 
-export default HodBonafideApproval
-;
+export default HodBonafideApproval;
