@@ -38,7 +38,6 @@ background: linear-gradient(to right, #0a2361,#061845,#325fa1,#25477d, #3b79d5, 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-size: 22px;
     font-weight: 400;
-    
   }
    .faculty-profile-bar{
     cursor: pointer;
@@ -50,6 +49,7 @@ background: linear-gradient(to right, #0a2361,#061845,#325fa1,#25477d, #3b79d5, 
     gap: 9px;
     font-size: 24px;
     padding-left: 14px;
+    
   }
     .faculty-profile-bar:hover{
       background: linear-gradient( to right, #ffffff,#ffffffda,#ffffff7e,#e7e4e486);
@@ -67,6 +67,8 @@ background: linear-gradient(to right, #0a2361,#061845,#325fa1,#25477d, #3b79d5, 
     width: 25rem;
     height: 3rem;
     padding-left: 14px;
+    /* background-color: chartreuse; */
+
    }
     .bonafide-view:hover{
       color: #000000c9;
@@ -302,3 +304,9 @@ background: linear-gradient(to right, #0a2361,#061845,#325fa1,#25477d, #3b79d5, 
     text-transform: capitalize;
   }
  
+.fa-logout{
+  margin-top: 12rem;
+  margin-left: 2rem;
+}
+
+/* bonafide-count status */

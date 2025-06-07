@@ -1,25 +1,26 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import './Facultydashboard.css';
-import { FaSearch } from 'react-icons/fa';
-import { Search } from "lucide-react";
-import { BsPerson } from "react-icons/bs";
-import { FaFileAlt } from "react-icons/fa";
-
-
+import { FaFileAlt } from 'react-icons/fa';
+import { BsPerson } from 'react-icons/bs';
+import { Search } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import * as XLSX from 'xlsx';
+
 import Header from '../../Components/Header/Header.jsx';
 import Footer from '../../Components/Footer/Footer.jsx';
 import Modal from '../../Components/Modal/Modal.jsx';
 import Allbuttons from '../../Components/Allbuttons/Allbuttons.jsx';
 import Facultyfields from '../../Components/Facultyfields/Facultyfields.jsx';
+import Logoutbtn from '../../Components/logoutbutton/Logoutbtn.jsx';
+
 import Profileicon from '../../Assets/profile.svg';
 import View from '../../Assets/eyewhite.svg';
 import Add from '../../Assets/add.svg';
 import Logout from '../../Assets/logout.svg';
 import stud from '../../Assets/studenticondash.svg';
-import axios from 'axios';
-import * as XLSX from 'xlsx'; // Import XLSX for exporting
-import Logoutbtn from '../../Components/logoutbutton/Logoutbtn.jsx';
+import BonafideCount from '../../Components/BonafideCounter/BonafideCount.jsx';
+
 function Facultydashboard() {
   const [faculty, setFaculty] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
@@ -35,6 +36,7 @@ function Facultydashboard() {
     emailid: true,
     mobileNumber: false,
   });
+
   const location = useLocation();
   const navigate = useNavigate();
   const facultyId = location.state.userId;
@@ -77,7 +79,6 @@ function Facultydashboard() {
     setSearchTerm(event.target.value);
   };
 
-  // Handle field selection
   const handleFieldChange = (event) => {
     const { name, checked } = event.target;
     setSelectedFields((prev) => ({
@@ -86,11 +87,9 @@ function Facultydashboard() {
     }));
   };
 
-  // Export selected fields to Excel
   const handleExport = () => {
     if (!faculty || !faculty.students) return;
 
-    // Filter the students based on selected fields
     const filteredStudents = faculty.students.map(student => {
       return Object.keys(selectedFields).reduce((acc, field) => {
         if (selectedFields[field]) {
@@ -103,11 +102,7 @@ function Facultydashboard() {
     const worksheet = XLSX.utils.json_to_sheet(filteredStudents);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Students");
-
-    // Export the workbook
     XLSX.writeFile(workbook, "Student_Details.xlsx");
-
-    // Close the popup after exporting
     setOpenExportPopup(false);
   };
 
@@ -146,47 +141,46 @@ function Facultydashboard() {
     setOpenProfile(!openProfile);
     setOpenModal(false);
   };
-  if (loading) {
-    return <p>Loading faculty data...</p>;
-  }
 
-  if (!faculty) {
-    return <p>No faculty data available.</p>;
-  }
+  if (loading) return <p>Loading faculty data...</p>;
+  if (!faculty) return <p>No faculty data available.</p>;
 
-  // Prepare data for rendering
   const subjectList = faculty.subject ? faculty.subject.split('#') : [];
   const semesterList = faculty.handlingSemester ? faculty.handlingSemester.split('#') : [];
   const deptList = faculty.handlingDept ? faculty.handlingDept.split('#') : [];
   const batchList = faculty.batch ? faculty.batch.split('#') : [];
-
   const maxLength = Math.max(subjectList.length, semesterList.length, deptList.length, batchList.length);
 
   return (
     <div>
       <Header />
       <div className="parent">
-        <div className="full-container"><p className="faculty-heading-tag">faculty dashboard</p>
+        <div className="full-container">
+          <p className="faculty-heading-tag">faculty dashboard</p>
           <div className="faculty-side">
             <div className="faculty-profile-bar" onClick={toggleProfile}>
-             <BsPerson /><p>profile</p>
+              <BsPerson /><p>profile</p>
             </div>
 
             <div className="bonafide-view" onClick={() => navigate('/bonafide-student', { state: { userId: facultyId } })}>
               <FaFileAlt />
-<p>Bonafide</p>
-
+              <p >Bonafide <span >{facultyId ? <BonafideCount facultyId={facultyId} /> : 0}</span></p>
             </div>
-            <Logoutbtn/>
+
+            <div className="fa-logout">
+              <Logoutbtn />
+            </div>
           </div>
         </div>
+
         <div className="top-sidebox">
           <div className="nav">
             <div className="student-count">
-              <img src={stud}/>
-              <h3>Students</h3></div>
-            <div className="student-number">   <p>{faculty.students ? faculty.students.length : 0}</p>
-
+              <img src={stud} alt="Student Icon" />
+              <h3>Students</h3>
+            </div>
+            <div className="student-number">
+              <p>{faculty.students ? faculty.students.length : 0}</p>
             </div>
 
             <div className="student-search-bar">
@@ -214,103 +208,51 @@ function Facultydashboard() {
                 <p className="field_background">{faculty.firstName} {faculty.lastName}</p>
                 <p className="field_background">{faculty.discipline}</p>
                 <p className="field_background">{faculty.email}</p>
-                <p className="field_background">  {faculty.mobileNumber}</p>
+                <p className="field_background">{faculty.mobileNumber}</p>
                 <Allbuttons value="Logout" image={Logout} target={handleLogoutClick} />
               </div>
             </div>
           )}
 
-          {/* Button to open Add Class Modal */}
-          {/* <Allbuttons value="Add Class" target={openAddClass} /> */}
-
-          {/* Facultyfields as a popup */}
-          {/* {openAddClassModal && (
-        <Facultyfields email={faculty.email} onClose={closeAddClassModal} />
-      )} */}
-
           {openAddClassModal && (
             <Facultyfields email={faculty.email} onClose={closeModal} />
           )}
 
-
-          {/* Field Selection for Export Popup */}
           {openExportPopup && (
             <div className="export_option_popup">
               <h3 id="export_popup_title">Select Fields to Export:</h3>
-              <label>
-                <input
-                  type="checkbox"
-                  name="firstName"
-                  checked={selectedFields.firstName}
-                  onChange={handleFieldChange}
-                />
-                Name
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="registerNo"
-                  checked={selectedFields.registerNo}
-                  onChange={handleFieldChange}
-                />
-                Register No
-              </label>
-              <label>
-                <input
-                  type="checkbox"
-                  name="emailid"
-                  checked={selectedFields.emailid}
-                  onChange={handleFieldChange}
-                />
-                Email ID
-              </label>
-              {faculty.students && faculty.students.length > 0 && (
-                <>
-                  {faculty.students[0].mobileNumber && (
-                    <label>
-                      <input
-                        type="checkbox"
-                        name="mobileNumber"
-                        checked={selectedFields.mobileNumber}
-                        onChange={handleFieldChange}
-                      />
-                      Mobile Number
-                    </label>
-                  )}
-                </>
+              <label><input type="checkbox" name="firstName" checked={selectedFields.firstName} onChange={handleFieldChange} /> Name</label>
+              <label><input type="checkbox" name="registerNo" checked={selectedFields.registerNo} onChange={handleFieldChange} /> Register No</label>
+              <label><input type="checkbox" name="emailid" checked={selectedFields.emailid} onChange={handleFieldChange} /> Email ID</label>
+              {faculty.students?.[0]?.mobileNumber && (
+                <label><input type="checkbox" name="mobileNumber" checked={selectedFields.mobileNumber} onChange={handleFieldChange} /> Mobile Number</label>
               )}
-
               <div className="export_buttons">
-                <div>
-                  <button id="export_cancel" onClick={() => setOpenExportPopup(false)}>Cancel</button>
-                </div>
-                <div>
-                  <Allbuttons value="Submit" target={handleExport} />
-                </div>
+                <button id="export_cancel" onClick={() => setOpenExportPopup(false)}>Cancel</button>
+                <Allbuttons value="Submit" target={handleExport} />
               </div>
             </div>
           )}
 
-          {/* Render Class Cards */}
           <div className="card-container">
             {[...Array(maxLength)].map((_, index) => (
               <Card
                 key={index}
                 title={`Class ${index + 1}`}
-                items={[subjectList[index] || 'N/A', deptList[index] || 'N/A', batchList[index] || 'N/A', semesterList[index] || 'N/A']}
+                items={[
+                  subjectList[index] || 'N/A',
+                  deptList[index] || 'N/A',
+                  batchList[index] || 'N/A',
+                  semesterList[index] || 'N/A'
+                ]}
               />
             ))}
           </div>
 
-
-          {/* Search Input and Export Button */}
           <div className="student_table_options">
             <button id="export_button" className="All-button" onClick={() => setOpenExportPopup(true)}>Export</button>
-
-
           </div>
 
-          {/* Render Student Table */}
           <div className="faculty_dashboard_container">
             {faculty.students && faculty.students.length > 0 ? (
               <table className="student_table">
@@ -350,8 +292,6 @@ function Facultydashboard() {
           )}
         </div>
       </div>
-
-      {/* <Footer /> */}
     </div>
   );
 }

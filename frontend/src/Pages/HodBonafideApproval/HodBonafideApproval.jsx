@@ -6,16 +6,21 @@ import { use } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from '../../Components/Header/Header';
-
+import './HodBonafideApproval.css'; 
+import BackButton from '../../Components/backbutton/BackButton';
+import { Allbuttons } from '../../Components';
+import View from '../../Assets/eyewhite.svg';
 
 
 const HodBonafideApproval = () => {
   const navigate = useNavigate();
-    const location = useLocation();
+  const location = useLocation();
   const [hodId, setHodId] = useState(null);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedBonafide, setSelectedBonafide] = useState(null);
 
   useEffect(() => {
     const handleFetchBonafides = async () => {
@@ -122,30 +127,58 @@ const HodBonafideApproval = () => {
     }
   };
 
+    const handleViewClick = (item) => {
+    setSelectedBonafide(item);
+    setShowModal(true);
+  };
+
   return (
     <div>
       <Header />
       <div className="hod-bonafide-student">
-        <div className="hod-topstud-container">
-          <div className="name-bar">
-            <h3 className="name-bar-title">Bonafide Notification Page</h3>
+        <div className="hod-bonafide-navbar"> 
+           <ul className="hod-navlist" style={{ listStyleType: 'none' }}>
+              <li className="hodbonafide-navitem">
+                Bonafides
+              </li>
+              <li className="hodbonafide-navitem" >
+                Previous
+              </li>
+              <li className="hodbonafide-navitem">
+                Approved
+              </li>
+              <li className="hodbonafide-navitem">
+               Rejected
+              </li>
+            </ul>
           </div>
+        <div className="hod-topstud-container">
+          <div className="bonafide-header-bar">
+            
+            <h3 className="name-bar-title">HOD Bonafide Approval Page</h3>
+          </div>
+           <div className="bonafide-backbtn">
+                  <BackButton/>
+              </div>
 
           {loading ? (
             <p>Loading...</p>
           ) : error ? (
             <p className="error-message">{error}</p>
           ) : (
-            <div className="bonafide-table-container">
-              <table className="bonafide-table">
+            <div className="hod-bonafide-table-container">
+               
+              <table className="hod-bonafide-table">
                 <thead>
                   <tr>
                     <th>S.No</th>
                     <th>Register Number</th>
                     <th>Purpose</th>
+                    <th>Semester</th>
                     <th>Date of Apply</th>
-                    <th>Status</th>
+                    <th>Mobile Number</th>
                     <th>Action</th>
+                    <th>View Details</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -154,9 +187,10 @@ const HodBonafideApproval = () => {
                       <td>{index + 1}</td>
                       <td>{item.registerNo}</td>
                       <td>{item.purpose}</td>
+                      <td>{item.semester}</td>
                       <td>{item.date}</td>
-                      <td>{item.bonafideStatus}</td>
-                      <td className="action-buttons">
+                      <td>{item.mobileNumber}</td>
+                      <td className="hod-action-buttons">
                         <button
                           className="approve-btn"
                           onClick={() =>
@@ -182,6 +216,9 @@ const HodBonafideApproval = () => {
                           Reject
                         </button>
                       </td>
+                      <td className='hod-view-btn'>
+                        <Allbuttons value="View" image={View} target={() => handleViewClick(item)} />
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -189,11 +226,64 @@ const HodBonafideApproval = () => {
             </div>
           )}
         </div>
+        
       </div>
+      {showModal && selectedBonafide && (
+        <div className="hod-modal-overlay">
+          <div className="hod-modal-content">
+  <button className="hod-modal-close-btn" onClick={() => setShowModal(false)}>Close</button>
+  <h3>Bonafide Request Details</h3>
+
+  {selectedBonafide.registerNo && (
+    <p><strong>Register No:</strong> {selectedBonafide.registerNo}</p>
+  )}
+  {selectedBonafide.name && (
+    <p><strong>Student Name:</strong> {selectedBonafide.name}</p>
+  )}
+  {selectedBonafide.emailId && (
+    <p><strong>Email ID:</strong> {selectedBonafide.emailId}</p>
+  )}
+  {selectedBonafide.purpose && (
+    <p><strong>Purpose:</strong> {selectedBonafide.purpose}</p>
+  )}
+  {selectedBonafide.date && (
+    <p><strong>Date:</strong> {selectedBonafide.date}</p>
+  )}
+  {selectedBonafide.mobileNumber && (
+    <p><strong>Mobile No:</strong> {selectedBonafide.mobileNumber}</p>
+  )}
+  {selectedBonafide.bonafideStatus && (
+    <p><strong>Status:</strong> {selectedBonafide.bonafideStatus}</p>
+  )}
+  {selectedBonafide.studentIdCardFilePath && (
+    <p><strong>Student Id Card:</strong> {selectedBonafide.studentIdCardFilePath}</p>
+  )}
+  {selectedBonafide.aadharCardFilePath && (
+    <p><strong>Aadhar Card:</strong> {selectedBonafide.aadharCardFilePath}</p>
+  )}
+  {selectedBonafide.welfareIdFilePath && (
+    <p><strong>Welfare Id:</strong> {selectedBonafide.welfareIdFilePath}</p>
+  )}
+  {selectedBonafide.smartCardFilePath && (
+    <p><strong>Smart Card:</strong> {selectedBonafide.smartCardFilePath}</p>
+  )}
+  {selectedBonafide.provisionalAllotmentFilePath && (
+    <p><strong>Provisional Allotment:</strong> {selectedBonafide.provisionalAllotmentFilePath}</p>
+  )}
+  {selectedBonafide.centralCommunityCertificateFilePath && (
+    <p><strong>Central Community Certificate:</strong> {selectedBonafide.centralCommunityCertificateFilePath}</p>
+  )}
+  {selectedBonafide.collegeFeeReceiptFilePath && (
+    <p><strong>College Fee Receipt:</strong> {selectedBonafide.collegeFeeReceiptFilePath}</p>
+  )}
+  </div>
+       </div>
+      )}
+  
+
       <ToastContainer />
     </div>
   );
 };
 
-export default HodBonafideApproval
-;
+export default HodBonafideApproval;
