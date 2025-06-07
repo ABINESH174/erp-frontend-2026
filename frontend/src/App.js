@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Landingpage, Loginpage, Registrationform, Profilepage, Bonafide, Facultyregistration, Facultydashboard, Headofthedepartmentdashboard,FacultyInfohod,StudentInfohod} from './Pages';
+import { Landingpage, Loginpage, Registrationform, Profilepage, Bonafide, Facultyregistration, Facultydashboard, Headofthedepartmentdashboard,FacultyInfohod,StudentInfohod,Principaldashboard} from './Pages';
 import BonafideStudent from './Components/Bonafidestudent/BonafideStudent';
 import BonafideStatus from './Pages/Bonafidestatuspage/Bonafidestatus';
 import HodBonafideApproval from './Pages/HodBonafideApproval/HodBonafideApproval';

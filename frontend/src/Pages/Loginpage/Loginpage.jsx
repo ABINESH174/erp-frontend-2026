@@ -65,11 +65,10 @@ function Loginpage() {
         localStorage.setItem('officeBearerEmail', userId);
         navigate('/office-bearer-dashboard', { state: { userId } });
       }
-        else if (res.data === "Office Bearer Authentication Successful") {
-        toast.success("Login Successful");
+      else if(res.data === "Principal Authentication Successful"){
+        toast("Login Successful");
         await new Promise((resolve) => setTimeout(resolve, 1000));
-        localStorage.setItem('officeBearerEmail', userId);
-        navigate('/office-bearer-dashboard', { state: { userId } });
+        navigate('/principal-dashboard',{state: {userId}})
         }
       else {
         toast.error("Login failed");
