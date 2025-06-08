@@ -89,10 +89,16 @@ function Headofthedepartmentdashboard() {
         <div className="hod-nav-sidebar">
             <h2>HOD Dashboard</h2>
           <div className="hod-navigation-bar">
-            <p><BsPerson />profile</p>
-            <p onClick={() => navigate('/hod-bonafide-approval', { state: { userId: userId } })}><FaFileAlt />
+            <p className='hod-nav-item'><BsPerson />profile</p>
+            <p className='hod-bonafide-nav-item' onClick={() => navigate('/hod-bonafide-approval', { state: { userId: userId } })}><FaFileAlt />
             Bonafide 
-            </p>
+             <span  className='hod-bonafide-count'>{userId ? <BonafideCount 
+            emailKey="hodEmail"
+            getIdApi={`http://localhost:8080/api/hod/getHodByEmail`}
+            getBonafideApi={`http://localhost:8080/api/hod/getFacultyApprovedBonafidesByHodId`}
+            statusFilter="FACULTY_APPROVED"
+            /> : 0}</span>
+           </p>
           </div> 
           <div > <Logoutbtn className='hod-logout' /></div>
         </div>

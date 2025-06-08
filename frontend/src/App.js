@@ -8,6 +8,7 @@ import HodBonafideApproval from './Pages/HodBonafideApproval/HodBonafideApproval
 import OfficeBearer from './Pages/OfficeBearer/OfficeBearer';
 import BatchesPage from './Pages/batches/BatchesPage';
 import BatchCards from './Components/batchcomponent/BatchCards';
+import OfficeBearerDashboard from './Pages/officeBearerDashboard/OfficeBearerDashboard';
 
 
 
@@ -32,6 +33,8 @@ function App() {
         <Route path="/bonafide-student" element={<BonafideStudent/>} />
         <Route path="/hod-bonafide-approval" element={<HodBonafideApproval/>} />
         <Route path="/office-bearer-dashboard" element={<OfficeBearer/>} />
+        <Route path="/principal-dashboard" element={<Principaldashboard/>} />
+
 
 
       </Routes>

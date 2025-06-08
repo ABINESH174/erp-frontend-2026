@@ -8,6 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import BackButton from '../backbutton/BackButton';
 import { Allbuttons } from '..';
 import View from '../../Assets/eyewhite.svg';
+import BonafideViewModal from '../BonafideViewModal/BonafideViewModal';
 
 const BonafideStudent = () => {
   const navigate = useNavigate();
@@ -169,44 +170,11 @@ const BonafideStudent = () => {
           )}
         </div>
       </div>
-
-      {showModal && selectedBonafide && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <button className="modal-close-btn" onClick={() => setShowModal(false)}>Close</button>
-            <h3>Bonafide Request Details</h3>
-            {Object.entries(selectedBonafide).map(([key, value]) => {
-              if (
-                value !== null &&
-                value !== '' &&
-                key !== 'bonafideId' &&
-                key !== 'studentId'
-              ) {
-                if (key.endsWith('FilePath')) {
-                  const label = key
-                    .replace(/FilePath$/, '')
-                    .replace(/([A-Z])/g, ' $1')
-                    .trim();
-                  return (
-                    <p key={key}>
-                      <strong>{label}:</strong> {value}
-                    </p>
-                  );
-                } else {
-                  const label = key.charAt(0).toUpperCase() + key.slice(1);
-                  return (
-                    <p key={key}>
-                      <strong>{label}:</strong> {value}
-                    </p>
-                  );
-                }
-              }
-              return null;
-            })}
-          </div>
-        </div>
-      )}
-
+      <BonafideViewModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        selectedBonafide={selectedBonafide}
+      />
       <ToastContainer />
     </div>
   );

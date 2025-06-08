@@ -67,7 +67,6 @@ background: linear-gradient(to right, #0a2361,#061845,#325fa1,#25477d, #3b79d5, 
     width: 25rem;
     height: 3rem;
     padding-left: 14px;
-    /* background-color: chartreuse; */
 
    }
     .bonafide-view:hover{
@@ -309,4 +308,18 @@ background: linear-gradient(to right, #0a2361,#061845,#325fa1,#25477d, #3b79d5, 
   margin-left: 2rem;
 }
 
-/* bonafide-count status */
+.counter-bonafide{
+  color:#FFFFF0; 
+  background-color:orangered;
+  width:fit-content;
+  height:fit-content;
+  padding: 2px 4px 2px 3px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 6.5rem;
+  margin-top: -1.5rem;
+}

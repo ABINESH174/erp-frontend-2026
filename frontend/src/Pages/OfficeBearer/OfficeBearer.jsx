@@ -7,6 +7,7 @@ import { Allbuttons, Header } from '../../Components';
 import View from '../../Assets/eyewhite.svg';
 import { ToastContainer, toast } from 'react-toastify';
 import BackButton from '../../Components/backbutton/BackButton';
+import BonafideViewModal from '../../Components/BonafideViewModal/BonafideViewModal';
 
 
 const OfficeBearer = () => {
@@ -194,62 +195,14 @@ const OfficeBearer = () => {
           )}
         </div>
       </div>
-      {showModal && selectedBonafide && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-  <button className="modal-close-btn" onClick={() => setShowModal(false)}>Close</button>
-  <h3>Bonafide Request Details</h3>
-
-  {selectedBonafide.registerNo && (
-    <p><strong>Register No:</strong> {selectedBonafide.registerNo}</p>
-  )}
-  {selectedBonafide.name && (
-    <p><strong>Student Name:</strong> {selectedBonafide.name}</p>
-  )}
-  {selectedBonafide.emailId && (
-    <p><strong>Email ID:</strong> {selectedBonafide.emailId}</p>
-  )}
-  {selectedBonafide.purpose && (
-    <p><strong>Purpose:</strong> {selectedBonafide.purpose}</p>
-  )}
-  {selectedBonafide.date && (
-    <p><strong>Date:</strong> {selectedBonafide.date}</p>
-  )}
-  {selectedBonafide.mobileNumber && (
-    <p><strong>Mobile No:</strong> {selectedBonafide.mobileNumber}</p>
-  )}
-  {selectedBonafide.bonafideStatus && (
-    <p><strong>Status:</strong> {selectedBonafide.bonafideStatus}</p>
-  )}
-  {selectedBonafide.studentIdCardFilePath && (
-    <p><strong>Student Id Card:</strong> {selectedBonafide.studentIdCardFilePath}</p>
-  )}
-  {selectedBonafide.aadharCardFilePath && (
-    <p><strong>Aadhar Card:</strong> {selectedBonafide.aadharCardFilePath}</p>
-  )}
-  {selectedBonafide.welfareIdFilePath && (
-    <p><strong>Welfare Id:</strong> {selectedBonafide.welfareIdFilePath}</p>
-  )}
-  {selectedBonafide.smartCardFilePath && (
-    <p><strong>Smart Card:</strong> {selectedBonafide.smartCardFilePath}</p>
-  )}
-  {selectedBonafide.provisionalAllotmentFilePath && (
-    <p><strong>Provisional Allotment:</strong> {selectedBonafide.provisionalAllotmentFilePath}</p>
-  )}
-  {selectedBonafide.centralCommunityCertificateFilePath && (
-    <p><strong>Central Community Certificate:</strong> {selectedBonafide.centralCommunityCertificateFilePath}</p>
-  )}
-  {selectedBonafide.collegeFeeReceiptFilePath && (
-    <p><strong>College Fee Receipt:</strong> {selectedBonafide.collegeFeeReceiptFilePath}</p>
-  )}
-</div>
-
-        </div>
-      )}
+      <BonafideViewModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        selectedBonafide={selectedBonafide}
+      />
         <ToastContainer />
     </div>
   );
 };
 
-export default OfficeBearer
-;
+export default OfficeBearer;

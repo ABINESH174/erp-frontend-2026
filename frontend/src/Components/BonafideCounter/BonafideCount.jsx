@@ -1,43 +1,47 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './BonafideCount.css'
 
-const BonafideCount = () => {
-  const [counts, setCounts] = useState({ pending: 0 });
+const BonafideCount = ({
+  emailKey = '',   // key in localStorage to get email
+  getIdApi,                    // API to get ID from email
+  getBonafideApi,              // API to get bonafides using ID
+  statusFilter = '',           // optional status filter (pending, approved, rejected)
+}) => {
+  const [count, setCount] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const facultyEmail = localStorage.getItem('facultyEmail'); 
 
   useEffect(() => {
     const fetchCounts = async () => {
-      if (!facultyEmail) {
-        console.warn('facultyEmail not found in localStorage');
+      const email = localStorage.getItem(emailKey);
+      if (!email) {
+        console.warn(`${emailKey} not found in localStorage`);
         return;
       }
 
       try {
-        const facultyRes = await axios.get(`http://localhost:8080/api/faculty/${facultyEmail}`);
-        const facultyData = facultyRes.data?.data;
+        // Get facultyId or hodId using email
+        const idRes = await axios.get(`${getIdApi}/${email}`);
+        const userId = idRes.data?.data?.facultyId || idRes.data?.data?.hodId;
+       
 
-        if (!facultyData || !facultyData.facultyId) {
-          console.error('facultyId not found');
+        if (!userId) {
+          console.error('User ID not found');
           return;
         }
 
-        const facultyId = facultyData.facultyId;
-
-        const bonafideRes = await axios.get(
-          `http://localhost:8080/api/faculty/get-pending-bonafides/${facultyId}`
-        );
-
+        // Get bonafide requests using ID
+        const bonafideRes = await axios.get(`${getBonafideApi}/${userId}`);
         const bonafides = Array.isArray(bonafideRes.data?.data) ? bonafideRes.data.data : [];
 
-        const pending = bonafides.filter(
-          (b) => b.bonafideStatus?.toLowerCase() === 'pending'
-        ).length;
+        // Optional status filtering
+        const filtered = statusFilter
+          ? bonafides.filter(
+              (b) => b.bonafideStatus?.toLowerCase() === statusFilter.toLowerCase()
+            )
+          : bonafides;
 
-        setCounts({ pending });
-        localStorage.setItem('bonafideCounts', JSON.stringify({ pending }));
+        setCount(filtered.length);
+        console.log(`Count of bonafides with status '${statusFilter}':`, filtered.length);
       } catch (err) {
         console.error('Error fetching bonafide count:', err);
       } finally {
@@ -46,13 +50,13 @@ const BonafideCount = () => {
     };
 
     fetchCounts();
-  }, [facultyEmail]);
+  }, [emailKey, getIdApi, getBonafideApi, statusFilter]);
 
   if (loading) return <div>Loading...</div>;
 
   return (
-    <div className="count-of-bonafide">
-      <p>{counts.pending}</p>
+    <div className='countOfBonafide'>
+      <p> {count}</p>
     </div>
   );
 };
