@@ -16,9 +16,9 @@
 }
 
 .sidebar h2 {
-  font-size: 24px;
+  font-size: 20px;
   margin-bottom: 30px;
-  color: #009dff;
+  color:black;
   text-align: center;
 }
 
@@ -28,8 +28,9 @@
 }
 
 .sidebar li {
-  margin: 15px 0;
-  font-size: 18px;
+  text-align: center;
+  margin: 40px 0;
+  font-size: 20px;
   font-weight: bold;
 }
 
@@ -40,9 +41,9 @@
 }
 
 .content h1 {
-  font-size: 28px;
+  font-size: 25px;
   margin-bottom: 20px;
-  color: #009dff;
+  color: black;
 }
 
 /* Table Styling */
@@ -71,21 +72,7 @@
   font-size: 16px;
 }
 
-/* Status Colors */
-.approved {
-  color: green;
-  font-weight: bold;
-}
 
-.rejected {
-  color: red;
-  font-weight: bold;
-}
-
-.pending {
-  color: #ffa500;
-  font-weight: bold;
-}
 
 /* Buttons */
 .approve-btn, .reject-btn {
@@ -99,16 +86,13 @@
 }
 
 .approve-btn {
-  background-color: #009dff;
+  background-color: green;
   color: white;
-}
 
-.approve-btn:hover {
-  background-color: #007acc;
 }
 
 .reject-btn {
-  background-color: #ff4d4d;
+  background-color: red;
   color: white;
 }
 
