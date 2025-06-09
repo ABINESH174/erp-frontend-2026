@@ -2,13 +2,20 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Header from '../../Components/Header/Header';
 import './Principaldashboard.css';
-import { toast, ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { FaHome, FaClipboardList } from 'react-icons/fa';
+import { FaHome, FaUser } from 'react-icons/fa';
+import Allbuttons from '../../Components/Allbuttons/Allbuttons';
+import BonafideViewModal from '../../Components/BonafideViewModal/BonafideViewModal';
+import Logoutbtn from '../../Components/logoutbutton/Logoutbtn.jsx';
+import View from '../../Assets/eyewhite.svg';
 
 const Principaldashboard = () => {
   const [bonafides, setBonafides] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedBonafide, setSelectedBonafide] = useState(null);
 
   useEffect(() => {
     fetchBonafides();
@@ -16,125 +23,121 @@ const Principaldashboard = () => {
 
   const fetchBonafides = async () => {
     try {
+      setLoading(true);
       const response = await axios.get('/api/principal/officeBearersApprovedBonafides');
-      setBonafides(response.data.data || []);
-    } catch (error) {
-      console.error('Error fetching bonafides:', error);
+      const data = response.data?.data || [];
+      setBonafides(data);
+      if (data.length === 0) {
+        setError('No bonafide requests found.');
+      } else {
+        setError(null);
+      }
+    } catch (err) {
+      console.error('Error fetching bonafides:', err);
+      setError('Failed to fetch bonafide requests.');
     } finally {
       setLoading(false);
     }
   };
 
   const handleUpdateStatus = async (bonafideId, registerNo, newStatus) => {
-    // Optimistically update UI
-    setBonafides(prev =>
-      prev.map(b =>
-        b.bonafideId === bonafideId ? { ...b, bonafideStatus: newStatus } : b
-      )
-    );
-
-    toast.info(
-      newStatus === 'PRINCIPAL_APPROVED' ? 'Approving bonafide...' : 'Rejecting bonafide...'
-    );
-
+    
     try {
-      const url = `/api/bonafide/updateBonafideWithBonafideStatus?bonafideId=${bonafideId}&registerNo=${registerNo}&status=${newStatus}`;
-      await axios.put(url);
+      await axios.put('/api/bonafide/updateBonafideWithBonafideStatus', null, {
+        params: {
+          bonafideId,
+          registerNo,
+          status: newStatus
+        }
+      });
 
       toast.success(
         newStatus === 'PRINCIPAL_APPROVED'
-          ? 'Bonafide approved successfully ✅'
-          : 'Bonafide rejected ❌'
+          ? 'Bonafide approved successfully '
+          : 'Bonafide rejected '
       );
-    } catch (error) {
-      toast.error('Failed to update status. Please try again.');
-      // Revert the optimistic UI update on error
+
       fetchBonafides();
+    } catch (err) {
+      console.error('Failed to update status:', err);
+      toast.error('Failed to update bonafide status.');
     }
   };
 
-  const approvedCount = bonafides.filter(b => b.bonafideStatus === 'PRINCIPAL_APPROVED').length;
-  const pendingCount = bonafides.filter(
-    b => b.bonafideStatus !== 'PRINCIPAL_APPROVED' && b.bonafideStatus !== 'REJECTED'
-  ).length;
+  const handleViewClick = (item) => {
+    setSelectedBonafide(item);
+    setShowModal(true);
+  };
 
   return (
     <div>
       <Header />
-      <ToastContainer position="top-right" autoClose={3000} />
+      <ToastContainer />
+
       <div className="principal-dashboard-container">
         <div className="sidebar">
-          <h2><FaHome /> Principal Panel</h2>
+          <h2> Principal Panel</h2>
           <ul>
-            <li><FaClipboardList /> Total Requests: {bonafides.length}</li>
-            <li><FaClipboardList /> Approved: {approvedCount}</li>
-            <li><FaClipboardList /> Pending: {pendingCount}</li>
+            <li><FaUser /> Profile</li>
+            <li>Bonafides</li>
+            <li>Approved</li>
+            <li>Rejected</li>
           </ul>
+            <div className="fa-logout">
+              <Logoutbtn />
+            </div>
         </div>
 
         <div className="content">
           <h1>Bonafide Requests</h1>
+
           {loading ? (
             <p>Loading...</p>
-          ) : bonafides.length === 0 ? (
-            <p className="no-requests">No bonafide requests available.</p>
+          ) : error ? (
+            <p className="error-message">{error}</p>
           ) : (
             <table className="request-table">
               <thead>
                 <tr>
-                  <th>ID</th>
+                  <th>S.No</th>
                   <th>Register No</th>
-                  <th>Purpose</th>
-                  <th>Status</th>
+                  <th>Name</th>
+                  <th>Department</th>
+                  <th>Semester</th>
+                  <th>Date of Apply</th>
                   <th>Action</th>
+                  <th>View Details</th>
                 </tr>
               </thead>
               <tbody>
-                {bonafides.map(b => (
-                  <tr key={b.bonafideId}>
-                    <td>{b.bonafideId}</td>
-                    <td>{b.registerNo}</td>
-                    <td>{b.purpose}</td>
-                    <td
-                      className={
-                        b.bonafideStatus === 'PRINCIPAL_APPROVED'
-                          ? 'approved'
-                          : b.bonafideStatus === 'REJECTED'
-                          ? 'rejected'
-                          : 'pending'
-                      }
-                    >
-                      {b.bonafideStatus === 'PRINCIPAL_APPROVED'
-                        ? 'Approved ✅'
-                        : b.bonafideStatus === 'REJECTED'
-                        ? 'Rejected ❌'
-                        : 'Pending'}
+                {bonafides.map((item, index) => (
+                  <tr key={item.bonafideId}>
+                    <td>{index + 1}</td>
+                    <td>{item.registerNo}</td>
+                    <td>{item.name}</td>
+                    <td>{item.department}</td>
+                    <td>{item.semester}</td>
+                    <td>{item.date}</td>
+                    <td>
+                      <button
+                        className="approve-btn"
+                        onClick={() =>
+                          handleUpdateStatus(item.bonafideId, item.registerNo, 'PRINCIPAL_APPROVED')
+                        }
+                      >
+                        Approve
+                      </button>
+                      <button
+                        className="reject-btn"
+                        onClick={() =>
+                          handleUpdateStatus(item.bonafideId, item.registerNo, 'REJECTED')
+                        }
+                      >
+                        Reject
+                      </button>
                     </td>
                     <td>
-                      {b.bonafideStatus === 'PRINCIPAL_APPROVED' ? (
-                        <span className="status-fixed">✅ Approved</span>
-                      ) : b.bonafideStatus === 'REJECTED' ? (
-                        <span className="status-fixed">❌ Rejected</span>
-                      ) : (
-                        <>
-                          <button
-                            className="approve-btn"
-                            onClick={() =>
-                              handleUpdateStatus(b.bonafideId, b.registerNo, 'PRINCIPAL_APPROVED')
-                            }
-                          >
-                            Approve
-                          </button>
-                          <button
-                            className="reject-btn"
-                            onClick={() =>
-                              handleUpdateStatus(b.bonafideId, b.registerNo, 'REJECTED')
-                            }
-                          >
-                            Reject
-                          </button>
-                        </>
-                      )}
+                      <Allbuttons value="View" image={View} target={() => handleViewClick(item)} />
                     </td>
                   </tr>
                 ))}
@@ -143,6 +146,12 @@ const Principaldashboard = () => {
           )}
         </div>
       </div>
+
+      <BonafideViewModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        selectedBonafide={selectedBonafide}
+      />
     </div>
   );
 };
