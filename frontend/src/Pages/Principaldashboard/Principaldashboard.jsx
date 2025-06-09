@@ -60,7 +60,7 @@ const Principaldashboard = () => {
       fetchBonafides();
     } catch (err) {
       console.error('Failed to update status:', err);
-      toast.error('Failed to update bonafide status.');
+      // toast.error('Failed to update bonafide status.');
     }
   };
 
@@ -115,7 +115,7 @@ const Principaldashboard = () => {
                     <td>{index + 1}</td>
                     <td>{item.registerNo}</td>
                     <td>{item.name}</td>
-                    <td>{item.department}</td>
+                    <td>{item.discipline}</td>
                     <td>{item.semester}</td>
                     <td>{item.date}</td>
                     <td>

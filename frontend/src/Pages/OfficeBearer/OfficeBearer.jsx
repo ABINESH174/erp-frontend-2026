@@ -100,7 +100,7 @@ const OfficeBearer = () => {
       }
     } catch (err) {
       console.error('Failed to update status:', err);
-      toast.error('Failed to update status.');
+      // toast.error('Failed to update status.');
     }
   };
     const handleViewClick = (item) => {
@@ -155,7 +155,7 @@ const OfficeBearer = () => {
                       <td>{item.registerNo}</td>
                       <td>{item.purpose}</td>
                       <td>{item.semester}</td>
-                      <td>{item.department}</td>
+                      <td>{item.discipline}</td>
                       <td>{item.date}</td>
                       <td>{item.bonafideStatus}</td>
                       <td className="action-buttons">

@@ -57,6 +57,7 @@ useEffect(() => {
               <th>SNo</th>
               <th>Register No</th>
               <th>Purpose</th>
+              <th>Applied Date</th>
               <th>Status</th>
               <th>Download</th>
             </tr>
@@ -67,6 +68,7 @@ useEffect(() => {
                 <td>{index+1}</td>
                 <td>{item.registerNo}</td>
                 <td>{item.purpose}</td>
+                <td>{item.date}</td>
                 <td style={{ color: !item.bonafideStatus ? 'green' : 'inherit' }}>{item.bonafideStatus || 'InReview'}</td>
                 <td>
                   {item.bonafideStatus === 'PRINCIPAL_APPROVED' ? (
