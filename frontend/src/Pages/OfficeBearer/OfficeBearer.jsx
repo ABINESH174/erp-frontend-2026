@@ -2,16 +2,24 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom'; 
-import { use } from 'react';
-// import Header from '../Header/Header';
+import './OfficeBearer.css';
+import { Allbuttons, Header } from '../../Components';
+import View from '../../Assets/eyewhite.svg';
+import { ToastContainer, toast } from 'react-toastify';
+import BackButton from '../../Components/backbutton/BackButton';
+import BonafideViewModal from '../../Components/BonafideViewModal/BonafideViewModal';
+
 
 const OfficeBearer = () => {
   const navigate = useNavigate();
-    const location = useLocation();
+  const location = useLocation();
   const [hodId, setHodId] = useState(null);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedBonafide, setSelectedBonafide] = useState(null);
+  
 
   useEffect(() => {
     const handleFetchBonafides = async () => {
@@ -54,22 +62,6 @@ const OfficeBearer = () => {
           return;
         }
 
-//         // Step 1: Get hodId by email
-//         const hodRes = await axios.get(`http://localhost:8080/api/hod/getHodByEmail/${email}`, {
-//           headers: { Accept: 'application/json' },
-//         });
-//         console.log(hodRes.data.data);
-
-//         const fetchedHodId = hodRes.data.data.hodId;
-//         setHodId(fetchedHodId);
-
-//         if (!fetchedHodId) {
-//           setError('Faculty ID not found for this email.');
-//           setLoading(false);
-//           return;
-//         }
-
-//         // Step 2: Get pending bonafides
         
       } catch (err) {
         console.error('Error fetching data:', err);
@@ -93,13 +85,7 @@ const OfficeBearer = () => {
         }
       );
 
-      alert(res.data.message || 'Status updated!');
-
-      // Refresh bonafide list
-      if (!hodId) {
-        setError('Faculty ID not found. Please login again.');
-        return;
-      }
+      toast.success(res.data.message || 'Status updated!');
 
       const refresh = await axios.get(
         `http://localhost:8080/api/bonafide/getHodApproved`
@@ -114,15 +100,27 @@ const OfficeBearer = () => {
       }
     } catch (err) {
       console.error('Failed to update status:', err);
-      alert('Failed to update status.');
+      toast.error('Failed to update status.');
     }
+  };
+    const handleViewClick = (item) => {
+    setSelectedBonafide(item);
+    setShowModal(true);
   };
 
   return (
     <div>
-      {/* <Header /> */}
-      <div className="hod-bonafide-student">
-        <div className="hod-topstud-container">
+      <Header/>
+      <div className="ob-bonafide-student">
+       <div className="ob-bonafide-sidebar-container">
+            <ul className="ob-bonafide-sidebar-list" style={{ listStyleType: 'none' }}>
+              <li className="ob-bonafide-sidebar-item">Bonafides</li>
+              <li className="ob-bonafide-sidebar-item">Previous</li>
+              <li className="ob-bonafide-sidebar-item">Approved</li>
+              <li className="ob-bonafide-sidebar-item">Rejected</li>
+            </ul>
+          </div>
+        <div className="ob-topstud-container">
           <div className="name-bar">
             <h3 className="name-bar-title">Bonafide Notification Page</h3>
           </div>
@@ -132,16 +130,22 @@ const OfficeBearer = () => {
           ) : error ? (
             <p className="error-message">{error}</p>
           ) : (
-            <div className="bonafide-table-container">
-              <table className="bonafide-table">
+            <div className="ob-bonafide-table-container">
+               <div className="bonafide-backbtn">
+                <BackButton />
+              </div>
+              <table className="ob-bonafide-table">
                 <thead>
                   <tr>
                     <th>S.No</th>
                     <th>Register Number</th>
                     <th>Purpose</th>
+                    <th>Semester</th>
+                    <th>Departmennt</th>
                     <th>Date of Apply</th>
                     <th>Status</th>
                     <th>Action</th>
+                    <th>View Details</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -150,6 +154,8 @@ const OfficeBearer = () => {
                       <td>{index + 1}</td>
                       <td>{item.registerNo}</td>
                       <td>{item.purpose}</td>
+                      <td>{item.semester}</td>
+                      <td>{item.department}</td>
                       <td>{item.date}</td>
                       <td>{item.bonafideStatus}</td>
                       <td className="action-buttons">
@@ -178,6 +184,9 @@ const OfficeBearer = () => {
                           Reject
                         </button>
                       </td>
+                       <td className='fa-view-btn'>
+                        <Allbuttons value="View" image={View} target={() => handleViewClick(item)} />
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -186,9 +195,14 @@ const OfficeBearer = () => {
           )}
         </div>
       </div>
+      <BonafideViewModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        selectedBonafide={selectedBonafide}
+      />
+        <ToastContainer />
     </div>
   );
 };
 
-export default OfficeBearer
-;
+export default OfficeBearer;

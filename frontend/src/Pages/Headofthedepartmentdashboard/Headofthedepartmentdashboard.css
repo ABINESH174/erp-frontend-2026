@@ -31,102 +31,153 @@
 
 }
 
-.hod-whole {
-    background-color: #28166f;
+
+/* break */
+.hod-outer-container{
     width: 99vw;
     height: 100vh;
-    display: flex;
-    padding: 33px 43px 30px 47px;
+    padding: 14px;
+    background-color:steelblue;
 }
-
-.hod-content {
-    background-color: #ffffff31;
-    width: 95%;
-    height: 91.2%;
-    position: absolute;
-    border-radius: 40px;
+.hod-whole {
+    background-color: #ffffff;
+    width: 100%;
+    height: 100%;
     display: flex;
-    align-items: center;
+    flex-direction: row;
+    border-radius: 15px;
 }
-
-.hod-bar {
+.hod-nav-sidebar{
     width: 15%;
-    height: 90%;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 30px;
     align-items: center;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+    background-color: #ffffff;
 }
-
-.hod-bar h2 {
-    color: white;
-    font-size: 23px;
-    font-weight: 600;
-    margin-bottom: 55px;
-    text-align: center;
+.hod-navigation-bar{
+    width: 85%;
+    height: 60%;
+    border-radius: 15px;
+    display: flex;  
+    flex-direction: column;
+    text-align:start;
+    gap: 20px;
+    margin-top: 30px;
 }
-
-.hod-bar h4 {
-    color: white;
-    font-size: 22px;
-    font-weight: 400;
-    text-transform: capitalize;
+.hod-navigation-bar .hod-nav-item{
     cursor: pointer;
-    width: 60%;
-    border-radius: 10px;
+    width: 100%;
+    padding: 8px ;
+    padding-left: 15px;
+    color:#004B79 ;
     display: flex;
-    justify-content: center;
+    flex-direction: row;
+}
+
+.hod-nav-sidebar h2{
+    width: 90%;
+    padding-right: 40px;
+    margin-left: 80px;
+    margin-top: 15px;
+    cursor: pointer;
+}
+.hod-navigation-bar .hod-nav-item{
+    font-size: 20px;
+    display: flex;
     align-items: center;
-    padding: 2px 4px 2px 4px;
+    margin-left: 10px;
+    gap: 10px;
+    text-transform: capitalize;
+    color:	#36454F;
+}
+
+.hod-navigation-bar .hod-bonafide-nav-item{
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    margin-left:10px;
+    gap: 10px;
+    text-transform: capitalize;
+    color:	#36454F;
+    cursor: pointer;
+    width: 100%;
+    padding: 8px ;
+    padding-left: 15px;
+    color:#004B79 ;
+    display: flex;
+    flex-direction: row;
+}
+
+.hod-navigation-bar .hod-nav-item:hover{
+    background-color: rgba(232, 50, 226, 0.651);
+    color:white;
+    width: 75%;
+    border-radius: 20px;
+}
+.hod-navigation-bar .hod-bonafide-nav-item:hover{
+    background-color: rgba(232, 50, 226, 0.651);
+    color:white;
+    width: 75%;
+    border-radius: 20px;
+}
+.welcome-bar{
+    width: 85%;
+    height: 10%;
+    background-color: rgb(249, 249, 249);
+    color: #2f251d;
+    border-bottom-left-radius: 10px;
+    padding: 10px 30px ;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+}
+.welcome-bar p{
+    font-size: 19px;
+    text-transform: capitalize;
+   }
+.acadamic-year{
+    display: flex;
+    flex-wrap: nowrap;
     gap: 10px;
 }
-.hod-bar h4:hover {
-    background-color: rgba(255, 255, 255, 0.289);
+.acadamic-year p{
+    font-weight: 600;
+    color:rgb(0, 166, 255)  ;
 }
 
- .welcome-bar{
-    background-color: whitesmoke;
-    width: 77%;
-    height: 6%;
-    position: absolute;
-    top: 0;
-    margin-left: 16rem;
-    padding: 10px 20px 10px 20px ;
-    font-size: 19px;
-    text-transform: capitalize;
-    font-weight: 400;
-    overflow: hidden;
-    display: flex;
-    flex-direction: row; 
-    justify-content: space-between;
-    align-items: center;
- }
-
-
-.hod-top-dashboard {
-    background-color: rgba(230, 230, 250, 0.601);
-    width: 82vw;
+.hod-inner-content{
+    width: 85%;
     height: 100%;
-    position: absolute;
-    left: 17.18%;
-    margin-top: -33px;
 }
-.bonafide-hod{
-    color: white;
-    font-size: 22px;
-    font-weight: 400;
-    text-transform: capitalize;
-    cursor: pointer;
-    width: 14rem;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2px 4px 2px 4px;
+.hod-content-space{
+    background-color:skyblue;
+    width: 100%;
+    height: 90%;
+    border-top-left-radius: 35px;
+    border-bottom-right-radius: 15px;
 }
-.hod-bar .hod-logout{
-    align-items:center;
-    margin-top: 17rem;
-    font-size: 19px;
-    font-weight: 400;
+.hod-logout{
+    width: fit-content;
+    height: fit-content;
+   
 }
+
+.hod-bonafide-nav-item .hod-bonafide-count{
+  color:#FFFFF0; 
+  background-color:orangered;
+  width:fit-content;
+  height:fit-content;
+  padding: 2px 4px 2px 3px;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+

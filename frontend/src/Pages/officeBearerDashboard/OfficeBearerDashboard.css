@@ -1,0 +1,89 @@
+/* break */
+
+.ob-whole {
+    background-color: rgb(255, 255, 255);
+    width: 99vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+}
+.ob-navbar-content{
+    width: 15%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    border-radius: 15px;
+    background-color:steelblue;
+    padding: 20px;
+}
+
+.ob-navbar-content p{
+    cursor: pointer;
+    width: 80%;
+    padding: 8px ;
+    text-align: center;
+    color: white;
+    font-size: 19px;
+}
+.ob-navbar-content p:hover{
+    background-color: rgba(255, 255, 255, 0.174);
+    color:white;
+    border-radius: 20px;
+}
+.ob-top-dashboard{
+    width: 85%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.ob-welcome-bar{
+    width: 85%;
+    height: 10%;
+    background-color: rgb(249, 249, 249);
+    color: #2f251d;
+    border-bottom-left-radius: 10px;
+    padding: 20px 30px ;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.ob-welcome-bar p{
+    font-size: 19px;
+    text-transform: capitalize;
+   }
+.acadamic-year{
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px;
+}
+.acadamic-year p{
+    font-weight: 600;
+    color:rgb(0, 166, 255)  ;
+}
+
+.hod-inner-content{
+    width: 85%;
+    height: 100%;
+}
+.hod-content-space{
+    background-color:skyblue;
+    width: 100%;
+    height: 90%;
+    border-top-left-radius: 35px;
+    border-bottom-right-radius: 15px;
+}
+.hod-logout{
+    width: fit-content;
+    height: fit-content;
+   
+}
+.ob-bonafide-count{
+
+}
+

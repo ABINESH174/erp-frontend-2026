@@ -1,5 +1,5 @@
-.bonafide-student{
-    background-color:steelblue;
+.ob-bonafide-student{
+    background-color:rgb(63, 124, 174);
     width: 99vw;
     height: 100vh;
     overflow: hidden;
@@ -10,7 +10,7 @@
     justify-content: center;
     margin-top: 2px;
 }  
-.bonafide-sidebar-container{
+.ob-bonafide-sidebar-container{
     width: 13%;
     height: 100%;
     padding: 0px 10px 0px 10px;
@@ -18,7 +18,7 @@
     flex-direction: column;
     text-align: start;
 }                          
-.bonafide-sidebar-list{
+.ob-bonafide-sidebar-list{
     width: 100%;
     height: fit-content;
     border-radius: 10px;
@@ -27,7 +27,7 @@
     gap: 20px;   
     margin-top: 8em;
 }
-.bonafide-sidebar-item{
+.ob-bonafide-sidebar-item{
     font-size: 18px;
     text-align:left;
     color: white;
@@ -35,22 +35,19 @@
     padding-left: 50px;
     cursor: pointer;
 }
-.bonafide-sidebar-item:hover{
+.ob-bonafide-sidebar-item:hover{
     background-color: rgba(255, 255, 255, 0.37);
     border-radius: 10px;
-    /* color:; */
 }
 
 
                                                    
-.topstud-container{
+.ob-topstud-container{
     height: 97vh;
     width:87vw;  
     border-radius: 10px;
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
     background-color: white;    
-    overflow: hidden;
-    
 }
 .name-bar{
     width: 100%;
@@ -62,21 +59,22 @@
     align-items: center;
     border-bottom: 2px solid steelblue;
 }
+.ob-bonafide-table{
+    width: 100%;
+    height: 100%;
+    margin-top: 30px;
 
-.bonafide-table-container{
-    max-height: 570px;
-    overflow-y: scroll;
-    margin-bottom: 20px;
 }
-.fa-bonafide-table{
-    width: 98%;
+.ob-bonafide-table table{
+    width: 100%;
+    height: 100%;
     border-collapse: collapse;
-    border-radius: 15px;
+    border-radius: 10px;
+    overflow: hidden;
 
 }
 
-
-.fa-bonafide-table thead th{
+.ob-bonafide-table thead th{
     background-color: #f2f2f2;
     padding: 10px;
     font-weight: bold;
@@ -84,19 +82,19 @@
     font-size: 16px;
     border-bottom: 2px solid #ddd;
 }
-.fa-bonafide-table tbody td{
+.ob-bonafide-table tbody td{
     text-align: center;
 }
-.fa-bonafide-table tbody tr:nth-child(even){
+.ob-bonafide-table tbody tr:nth-child(even){
     background-color: #f9f9f9;
 }
-.fa-bonafide-table tbody tr:hover{
+.ob-bonafide-table tbody tr:hover{
     background-color: #f1f1f1;
 }
-.fa-bonafide-table thead th, .fa-bonafide-table tbody td{
+.ob-bonafide-table thead th, .ob-bonafide-table tbody td{
     border: 1px solid #ddd;
 }
-.fa-view-btn{
+.ob-view-btn{
     display: block;
     padding:5px 2px 10px 40px;
 }
@@ -138,3 +136,65 @@
   
 }
 
+/* for bonafide modal  */
+
+.hod-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center; 
+  align-items: center;
+  z-index: 9999;
+}
+
+.hod-modal-content {
+  background: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.hod-modal-close-btn  {
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  float: right;
+  margin-bottom: 10px;
+  background-color: rgb(203, 6, 6);
+}
+.hod-modal-close-btn:hover{
+    background-color: red;
+}
+.hod-modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 1.5rem;
+  color: rgb(0, 0, 111);
+}
+
+.hod-modal-content p {
+  margin: 8px 0;
+  font-size: 1rem;
+  color: #555;
+  display: flex;
+  flex-direction: row;
+  text-align: start;
+  flex-wrap: nowrap;
+  gap: 10px;
+  margin-left: 20px;
+
+}
+
+.hod-modal-content p strong {
+  color: #222;
+}
