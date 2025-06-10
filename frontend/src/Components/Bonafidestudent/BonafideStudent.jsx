@@ -81,7 +81,7 @@ const BonafideStudent = () => {
       }
     } catch (err) {
       console.error('Failed to update status:', err);
-      toast.error('Failed to update status.');
+      // toast.error('Failed to update status.');
     }
   };
 

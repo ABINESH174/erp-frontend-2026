@@ -6,6 +6,9 @@ import Header from "../../Components/Header/Header.jsx";
 import Allbuttons from "../../Components/Allbuttons/Allbuttons.jsx";
 import Logout from '../../Assets/logout.svg';
 import Menu from '../../Assets/menu.svg';
+import bonafide from '../../Assets/bonafide.svg';
+import bonafidestatus from '../../Assets/bonafidestatus.svg';
+
 
 function StudentDisplay() {
 
@@ -185,8 +188,8 @@ function StudentDisplay() {
           </ul>
 
           <Allbuttons value="Logout" image={Logout} target={handleLogoutClick}/>
-          <Allbuttons value="Bonafide"  target={handleBonafideClick}/>
-          <Allbuttons value="Bonafide Status" target={handleBonafideStatusClick} />
+          <Allbuttons value="Bonafide" image={bonafide} target={handleBonafideClick}/>
+          <Allbuttons value="Bonafide Status" image={bonafidestatus} target={handleBonafideStatusClick} />
         </div>
         
       <div className="profile">
