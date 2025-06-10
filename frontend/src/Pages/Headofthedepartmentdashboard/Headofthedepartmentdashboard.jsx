@@ -9,6 +9,8 @@ import BatchCards from '../../Components/batchcomponent/BatchCards.jsx';
 import Logoutbtn from '../../Components/logoutbutton/Logoutbtn.jsx';
 import { BsPerson } from "react-icons/bs";
 import { FaFileAlt } from "react-icons/fa";
+import Logout from '../../Assets/logout.svg';
+import Allbuttons from '../../Components/Allbuttons/Allbuttons.jsx';
 import BonafideCount from '../../Components/BonafideCounter/BonafideCount.jsx';
 
 
@@ -64,7 +66,30 @@ function Headofthedepartmentdashboard() {
   return (
     <div>
       <Header />
-      {/* <div className="nav">
+    <div className="hod-outer-container">
+      <div className="hod-whole">          
+        <div className="hod-nav-sidebar">
+            <h2>HOD Dashboard</h2>
+          <div className="hod-navigation-bar">
+            <p className='hod-nav-item' onClick={() => setOpen(!open)}><BsPerson />profile</p>
+            <p className='hod-bonafide-nav-item' onClick={() => navigate('/hod-bonafide-approval', { state: { userId: userId } })}><FaFileAlt />
+            Bonafide 
+             <span  className='hod-bonafide-count'>{userId ? <BonafideCount 
+            emailKey="hodEmail"
+            getIdApi={`http://localhost:8080/api/hod/getHodByEmail`}
+            getBonafideApi={`http://localhost:8080/api/hod/getFacultyApprovedBonafidesByHodId`}
+            statusFilter="FACULTY_APPROVED"
+            /> : 0}</span>
+           </p>
+          </div> 
+          <div > <Logoutbtn className='hod-logout' /></div>
+        </div>
+        <div className="hod-inner-content">
+          <div className="headbar">
+        <div className="welcome-bar"><p>welcome ! head of the CSE department</p> 
+        <p className='acadamic-year'>Academic Year: <p>{getAcademicYear()}</p></p>
+        </div>
+         <div className="nav">
         <div className="faculty_profile_icon" onClick={() => setOpen(!open)}>
           <img id="profile_icon" src={Profileicon} alt="Profile Icon" />
         </div>
@@ -80,31 +105,9 @@ function Headofthedepartmentdashboard() {
             <Allbuttons value="Logout" image={Logout} target={handleLogoutClick} />
           </div>
         </div>
-      )} */}
+      )}
 
-      {/* <button onClick={gotostudentinfohod}>Student</button>
-      <button onClick={gotofacultyinfohod}>Faculty</button> */}
-    <div className="hod-outer-container">
-      <div className="hod-whole">          
-        <div className="hod-nav-sidebar">
-            <h2>HOD Dashboard</h2>
-          <div className="hod-navigation-bar">
-            <p className='hod-nav-item'><BsPerson />profile</p>
-            <p className='hod-bonafide-nav-item' onClick={() => navigate('/hod-bonafide-approval', { state: { userId: userId } })}><FaFileAlt />
-            Bonafide 
-             <span  className='hod-bonafide-count'>{userId ? <BonafideCount 
-            emailKey="hodEmail"
-            getIdApi={`http://localhost:8080/api/hod/getHodByEmail`}
-            getBonafideApi={`http://localhost:8080/api/hod/getFacultyApprovedBonafidesByHodId`}
-            statusFilter="FACULTY_APPROVED"
-            /> : 0}</span>
-           </p>
-          </div> 
-          <div > <Logoutbtn className='hod-logout' /></div>
-        </div>
-        <div className="hod-inner-content">
-        <div className="welcome-bar"><p>welcome ! head of the CSE department</p> <p className='acadamic-year'>Academic Year: <p>{getAcademicYear()}</p>
-</p></div> 
+         </div>
 <div className="hod-content-space">
            <Outlet/>
            </div>

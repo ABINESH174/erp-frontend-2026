@@ -122,11 +122,11 @@ const OfficeBearer = () => {
           </div>
         <div className="ob-topstud-container">
           <div className="name-bar">
-            <h3 className="name-bar-title">Bonafide Notification Page</h3>
+            <h3 className="name-bar-title"> OB Bonafide Notification Page</h3>
           </div>
 
           {loading ? (
-            <p>Loading...</p>
+            <p>Loading...</p>  
           ) : error ? (
             <p className="error-message">{error}</p>
           ) : (
