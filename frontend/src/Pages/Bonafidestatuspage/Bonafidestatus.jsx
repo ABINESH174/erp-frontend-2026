@@ -48,7 +48,7 @@ const BonafideStatus = () => {
 
   const handleDownload = (filePath, status) => {
     if (status === 'PRINCIPAL_APPROVED') {
-      const url = `http://localhost:8080/api/bonafide/downloadFile?filePath=${encodeURIComponent(filePath)}`;
+      const url = `http://localhost:8080/api/bonafide/downloadFile?filePath=${encodeURIComponent('C:/Users/Abinaya/Desktop/Abinesh.jpg')}`;
       const link = document.createElement('a');
       link.href = url;
       link.download = '';
@@ -74,15 +74,11 @@ const BonafideStatus = () => {
   };
 
   const handleSubmitReupload = async () => {
-    if (!selectedBonafide || Object.keys(filesToUpload).length === 0) {
-      toast.error("Please select files to reupload.");
-      return;
-    }
+    if (!selectedBonafide || Object.keys(filesToUpload).length === 0) return;
 
     const requiredFiles = purposeFileMap[selectedBonafide.purpose] || [];
-
-    // Check if required files are provided
     const missingFiles = requiredFiles.filter(fileKey => !filesToUpload[fileKey]);
+
     if (missingFiles.length > 0) {
       toast.error(`Please upload: ${missingFiles.join(', ')}`);
       return;
@@ -90,7 +86,6 @@ const BonafideStatus = () => {
 
     try {
       const formData = new FormData();
-      formData.append("bonafideId", selectedBonafide.bonafideId);
       formData.append("registerNo", selectedBonafide.registerNo);
       formData.append("purpose", selectedBonafide.purpose);
       formData.append("date", selectedBonafide.date);
@@ -105,15 +100,10 @@ const BonafideStatus = () => {
       });
 
       if (res.status === 201) {
-        toast.success("Files uploaded successfully!");
+        const deleteUrl = `http://localhost:8080/api/bonafide/deleteBonafide?registerNo=${selectedBonafide.registerNo}&bonafideId=${selectedBonafide.bonafideId}`;
+        await axios.delete(deleteUrl);
 
-        setBonafideDetails(prev =>
-          prev.map(item =>
-            item.bonafideId === selectedBonafide.bonafideId
-              ? { ...item, reuploadDone: true, bonafideStatus: "HOD_APPROVED" }
-              : item
-          )
-        );
+        await fetchBonafideDetails(); // Refresh list
 
         setShowModal(false);
       } else {
@@ -159,14 +149,10 @@ const BonafideStatus = () => {
                       <FaDownload style={{ marginRight: '5px' }} />Download
                     </button>
                   ) : item.bonafideStatus === 'OB_REJECTED' ? (
-                    item.reuploadDone ? (
-                      <button disabled>Files reuploaded</button>
-                    ) : (
-                      <div style={{ color: 'red' }}>
-                        <p>Reason: {item.rejectionMessage}</p>
-                        <button onClick={() => handleReuploadClick(item)}>Reupload</button>
-                      </div>
-                    )
+                    <div>
+                      <p style={{ color: 'red' }}>Reason: {item.rejectionMessage}</p>
+                      <button onClick={() => handleReuploadClick(item)}>Reupload</button>
+                    </div>
                   ) : (
                     <button disabled>Pending Approval</button>
                   )}
@@ -183,30 +169,12 @@ const BonafideStatus = () => {
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <h3>Reupload Required Files</h3>
-            {(purposeFileMap[selectedBonafide.purpose] || []).includes('studentIdCardFile') && (
-              <div className="file-upload">
-                <label>Student ID Card</label>
-                <input type="file" onChange={e => handleFileChange(e, 'studentIdCardFile')} />
+            {(purposeFileMap[selectedBonafide.purpose] || []).map(fileKey => (
+              <div className="file-upload" key={fileKey}>
+                <label>{fileKey.replace(/([A-Z])/g, ' $1')}</label>
+                <input type="file" onChange={e => handleFileChange(e, fileKey)} />
               </div>
-            )}
-            {(purposeFileMap[selectedBonafide.purpose] || []).includes('aadharCardFile') && (
-              <div className="file-upload">
-                <label>Aadhar Card</label>
-                <input type="file" onChange={e => handleFileChange(e, 'aadharCardFile')} />
-              </div>
-            )}
-            {(purposeFileMap[selectedBonafide.purpose] || []).includes('smartCardFile') && (
-              <div className="file-upload">
-                <label>Smart Card</label>
-                <input type="file" onChange={e => handleFileChange(e, 'smartCardFile')} />
-              </div>
-            )}
-            {(purposeFileMap[selectedBonafide.purpose] || []).includes('WelfareProofDocumentFile') && (
-              <div className="file-upload">
-                <label>Welfare Proof</label>
-                <input type="file" onChange={e => handleFileChange(e, 'WelfareProofDocumentFile')} />
-              </div>
-            )}
+            ))}
             <button onClick={handleSubmitReupload}>Submit</button>
             <button onClick={() => setShowModal(false)}>Cancel</button>
           </div>
