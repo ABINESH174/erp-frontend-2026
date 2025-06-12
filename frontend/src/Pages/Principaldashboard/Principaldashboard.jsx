@@ -9,6 +9,8 @@ import Allbuttons from '../../Components/Allbuttons/Allbuttons';
 import BonafideViewModal from '../../Components/BonafideViewModal/BonafideViewModal';
 import Logoutbtn from '../../Components/logoutbutton/Logoutbtn.jsx';
 import View from '../../Assets/eyewhite.svg';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';  // <-- Don't forget this!
 
 const Principaldashboard = () => {
   const [bonafides, setBonafides] = useState([]);
@@ -41,7 +43,6 @@ const Principaldashboard = () => {
   };
 
   const handleUpdateStatus = async (bonafideId, registerNo, newStatus) => {
-    
     try {
       await axios.put('/api/bonafide/updateBonafideWithBonafideStatus', null, {
         params: {
@@ -53,15 +54,47 @@ const Principaldashboard = () => {
 
       toast.success(
         newStatus === 'PRINCIPAL_APPROVED'
-          ? 'Bonafide approved successfully '
-          : 'Bonafide rejected '
+          ? 'Bonafide approved successfully.'
+          : 'Bonafide rejected successfully.'
       );
 
       fetchBonafides();
     } catch (err) {
       console.error('Failed to update status:', err);
-      // toast.error('Failed to update bonafide status.');
+      toast.error('Failed to update bonafide status.');
     }
+  };
+
+  const confirmApprove = (item) => {
+    confirmAlert({
+      title: 'Confirm Approval',
+      message: `Are you sure you want to approve bonafide for ${item.registerNo}?`,
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => handleUpdateStatus(item.bonafideId, item.registerNo, 'PRINCIPAL_APPROVED'),
+        },
+        {
+          label: 'Cancel'
+        }
+      ]
+    });
+  };
+
+  const confirmReject = (item) => {
+    confirmAlert({
+      title: 'Confirm Rejection',
+      message: `Are you sure you want to reject bonafide for ${item.registerNo}?`,
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => handleUpdateStatus(item.bonafideId, item.registerNo, 'REJECTED'),
+        },
+        {
+          label: 'Cancel'
+        }
+      ]
+    });
   };
 
   const handleViewClick = (item) => {
@@ -83,9 +116,9 @@ const Principaldashboard = () => {
             <li>Approved</li>
             <li>Rejected</li>
           </ul>
-            <div className="fa-logout">
-              <Logoutbtn />
-            </div>
+          <div className="fa-logout">
+            <Logoutbtn />
+          </div>
         </div>
 
         <div className="content">
@@ -119,20 +152,10 @@ const Principaldashboard = () => {
                     <td>{item.semester}</td>
                     <td>{item.date}</td>
                     <td>
-                      <button
-                        className="approve-btn"
-                        onClick={() =>
-                          handleUpdateStatus(item.bonafideId, item.registerNo, 'PRINCIPAL_APPROVED')
-                        }
-                      >
+                      <button className="approve-btn" onClick={() => confirmApprove(item)}>
                         Approve
                       </button>
-                      <button
-                        className="reject-btn"
-                        onClick={() =>
-                          handleUpdateStatus(item.bonafideId, item.registerNo, 'REJECTED')
-                        }
-                      >
+                      <button className="reject-btn" onClick={() => confirmReject(item)}>
                         Reject
                       </button>
                     </td>

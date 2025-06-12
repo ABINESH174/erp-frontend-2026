@@ -118,6 +118,11 @@
   transform: translateY(-2px);
 }
 
+.view-preview-btn:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
 /* Animation */
 @keyframes fadeIn {
   from {
