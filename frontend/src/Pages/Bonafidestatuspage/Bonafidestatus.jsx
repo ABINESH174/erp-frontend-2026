@@ -139,6 +139,7 @@ const BonafideStatus = () => {
               <th>SNo</th>
               <th>Register No</th>
               <th>Purpose</th>
+              <th>Applied Date</th>
               <th>Status</th>
               <th>Download</th>
             </tr>
@@ -149,6 +150,7 @@ const BonafideStatus = () => {
                 <td>{index + 1}</td>
                 <td>{item.registerNo}</td>
                 <td>{item.purpose}</td>
+                <td>{item.date}</td>
                 <td>{item.bonafideStatus}</td>
                 <td>
                   {item.bonafideStatus === 'PRINCIPAL_APPROVED' ? (

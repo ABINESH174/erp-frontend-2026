@@ -9,6 +9,8 @@ import BackButton from '../backbutton/BackButton';
 import { Allbuttons } from '..';
 import View from '../../Assets/eyewhite.svg';
 import BonafideViewModal from '../BonafideViewModal/BonafideViewModal';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 const BonafideStudent = () => {
   const navigate = useNavigate();
@@ -18,6 +20,7 @@ const BonafideStudent = () => {
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedBonafide, setSelectedBonafide] = useState(null);
+  const [processingId, setProcessingId] = useState(null);
 
   useEffect(() => {
     const fetchFacultyIdAndBonafides = async () => {
@@ -59,8 +62,27 @@ const BonafideStudent = () => {
     fetchFacultyIdAndBonafides();
   }, []);
 
+  const handleConfirmStatusChange = (bonafideId, registerNo, status) => {
+    confirmAlert({
+      title: 'Confirm',
+      message: `Are you sure you want to ${status === 'FACULTY_APPROVED' ? 'approve' : 'reject'} this bonafide?`,
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => handleBonafideStatus(bonafideId, registerNo, status)
+        },
+        {
+          label: 'Cancel',
+          onClick: () => {}
+        }
+      ]
+    });
+  };
+
   const handleBonafideStatus = async (bonafideId, registerNo, status) => {
     try {
+      setProcessingId(bonafideId);
+
       const res = await axios.put(
         'http://localhost:8080/api/bonafide/updateBonafideWithBonafideStatus',
         null,
@@ -69,19 +91,16 @@ const BonafideStudent = () => {
 
       toast.success(res.data.message || 'Status updated!');
 
-      const refresh = await axios.get(
-        `http://localhost:8080/api/faculty/get-pending-bonafides/${facultyId}`
-      );
+      setData(prevData => prevData.filter(item => item.bonafideId !== bonafideId));
 
-      setData(refresh.data?.data || []);
-      if (!refresh.data?.data?.length) {
+      if (data.length === 1) {
         setError('No bonafide requests found.');
-      } else {
-        setError(null);
       }
     } catch (err) {
       console.error('Failed to update status:', err);
       toast.error('Failed to update status.');
+    } finally {
+      setProcessingId(null);
     }
   };
 
@@ -96,9 +115,7 @@ const BonafideStudent = () => {
       <div className="bonafide-student">
         <div className="bonafide-sidebar-container">
           <ul className="bonafide-sidebar-list" style={{ listStyleType: 'none' }}>
-            <li className="bonafide-sidebar-item">
-              Bonafides 
-            </li>
+            <li className="bonafide-sidebar-item">Bonafides</li>
             <li className="bonafide-sidebar-item">Previous</li>
             <li className="bonafide-sidebar-item">Approved</li>
             <li className="bonafide-sidebar-item">Rejected</li>
@@ -109,18 +126,16 @@ const BonafideStudent = () => {
           <div className="name-bar">
             <h3 className="name-bar-title">Bonafide Notification Page</h3>
           </div>
-           <div className="bonafide-backbtn">
-                <BackButton />
-              </div>
+          <div className="bonafide-backbtn">
+            <BackButton />
+          </div>
 
           {loading ? (
             <p>Loading...</p>
           ) : error ? (
             <p className="error-message">{error}</p>
           ) : (
-            
             <div className="bonafide-table-container">
-             
               <table className="fa-bonafide-table">
                 <thead>
                   <tr>
@@ -144,19 +159,18 @@ const BonafideStudent = () => {
                       <td className="fa-action-buttons">
                         <button
                           className="approve-btn"
-                          onClick={() =>
-                            handleBonafideStatus(item.bonafideId, item.registerNo, 'FACULTY_APPROVED')
-                          }
+                          onClick={() => handleConfirmStatusChange(item.bonafideId, item.registerNo, 'FACULTY_APPROVED')}
+                          disabled={processingId === item.bonafideId}
                         >
-                          Approve
+                          {processingId === item.bonafideId ? 'Processing...' : 'Approve'}
                         </button>
+
                         <button
                           className="reject-btn"
-                          onClick={() =>
-                            handleBonafideStatus(item.bonafideId, item.registerNo, 'REJECTED')
-                          }
+                          onClick={() => handleConfirmStatusChange(item.bonafideId, item.registerNo, 'REJECTED')}
+                          disabled={processingId === item.bonafideId}
                         >
-                          Reject
+                          {processingId === item.bonafideId ? 'Processing...' : 'Reject'}
                         </button>
                       </td>
                       <td className="fa-view-btn">
@@ -170,11 +184,7 @@ const BonafideStudent = () => {
           )}
         </div>
       </div>
-      <BonafideViewModal
-        showModal={showModal}
-        setShowModal={setShowModal}
-        selectedBonafide={selectedBonafide}
-      />
+      <BonafideViewModal showModal={showModal} setShowModal={setShowModal} selectedBonafide={selectedBonafide} />
       <ToastContainer />
     </div>
   );

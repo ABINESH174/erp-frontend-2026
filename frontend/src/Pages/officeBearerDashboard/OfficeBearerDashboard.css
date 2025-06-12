@@ -67,22 +67,7 @@
     color:rgb(0, 166, 255)  ;
 }
 
-.hod-inner-content{
-    width: 85%;
-    height: 100%;
-}
-.hod-content-space{
-    background-color:skyblue;
-    width: 100%;
-    height: 90%;
-    border-top-left-radius: 35px;
-    border-bottom-right-radius: 15px;
-}
-.hod-logout{
-    width: fit-content;
-    height: fit-content;
-   
-}
+
 .ob-bonafide-count{
 
 }

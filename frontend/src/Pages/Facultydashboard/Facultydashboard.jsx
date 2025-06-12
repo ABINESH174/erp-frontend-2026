@@ -164,13 +164,18 @@ function Facultydashboard() {
 
             <div className="bonafide-view" onClick={() => navigate('/bonafide-student', { state: { userId: facultyId } })}>
               <FaFileAlt />
-              <p >Bonafide <span  className='counter-bonafide' >{facultyId ? <BonafideCount
-  emailKey="facultyEmail"
-  getIdApi="http://localhost:8080/api/faculty"
-  getBonafideApi="http://localhost:8080/api/faculty/get-pending-bonafides"
-  statusFilter="pending"
-/>
- : 0}</span></p>
+              <p >Bonafide 
+  {facultyId && (
+    <BonafideCount 
+      emailKey="facultyEmail"
+      getIdApi={`http://localhost:8080/api/faculty`}
+      getBonafideApi={`http://localhost:8080/api/faculty/get-pending-bonafides`}
+      statusFilter="PENDING"
+      render={(count) => count > 0 && (
+        <span className='counter-bonafide'>{count}</span>
+      )}
+    />
+  )}</p>
             </div>
 
             <div className="fa-logout">
