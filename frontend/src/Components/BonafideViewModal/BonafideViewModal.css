@@ -1,83 +1,156 @@
-/* for bonafide modal  */
-
+/* Modal Overlay */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+  background-color: rgba(0, 0, 0, 0.364);
   display: flex;
-  justify-content: center; 
+  justify-content: center;
   align-items: center;
   z-index: 9999;
+  transition: all 0.3s ease-in-out;
 }
 
+/* Modal Content */
 .modal-content {
-  background: #fff;
-  border-radius: 8px;
-  padding: 24px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 30px 25px;
   width: 90%;
-  max-width: 500px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  max-height: 80vh;
+  max-width: 650px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  position: relative;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
-.modal-content .modal-close-btn  {
+/* Close Button */
+.modal-content .modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background-color: #c90000;
   color: white;
   border: none;
   padding: 8px 14px;
-  border-radius: 4px;
+  border-radius: 5px;
   font-weight: bold;
+  font-size: 14px;
   cursor: pointer;
-  float: right;
-  margin-bottom: 10px;
-  background-color: rgb(203, 6, 6);
-}
-.modal-content .modal-close-btn:hover{
-    background-color: red;
-}
-.modal-content h3 {
-  margin-top: 0;
-  margin-bottom: 16px;
-  font-size: 1.5rem;
-  color: rgb(0, 0, 111);
+  transition: background-color 0.3s ease;
 }
 
+.modal-content .modal-close-btn:hover {
+  background-color: #ff0000;
+}
+
+/* Modal Title */
+.modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 24px;
+  font-size: 1.8rem;
+  color: #001064;
+  text-align: center;
+  border-bottom: 2px solid #ececec;
+  padding-bottom: 12px;
+}
+
+/* Normal Text Row (Key-Value) */
 .modal-content p {
-  margin: 8px 0;
-  font-size: 1rem;
-  color: #3e3c3c;
   display: flex;
   flex-direction: row;
   text-align: start;
-  flex-wrap: nowrap;
+  margin: 14px 0;
+  padding: 0 10px;
+  font-size: 1rem;
+  color: #333;
   gap: 10px;
-  margin-left: 20px;
-  margin-top: 10px;
+  word-break: break-word;
 }
 
 .modal-content p strong {
-  color: #222;
-}
-.view-downloader{
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    gap: 20px;
-    /* background-color: rebeccapurple; */
+  min-width: 140px;
+  font-weight: 600;
+  color: #111;
 }
 
-.view-downloader .view-download-btn {
-  display:flex;
+/* Downloader Buttons Row */
+.view-downloader {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  background-color: #4caf50;
+  text-align: start;
+  justify-content:flex-start;
+  gap: 20px;
+  margin: 10px 0;
+  flex-wrap: wrap;
+}
+.view-downloader .view-download-btn {
+  background:linear-gradient(135deg, green, rgb(108, 220, 108));
   color: white;
   text-decoration: none;
-  border-radius: 4px;
+  border: none;
+  border-radius: 6px;
   font-size: 14px;
   font-weight: 500;
+  padding: 10px 18px 8px 18px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
 }
-.view-downloader  .view-download-btn:hover {
-  background-color: #45a049;
+
+.view-downloader .view-preview-btn {
+  background:linear-gradient(135deg,rgb(0, 68, 255), rgb(46, 173, 193)) ;
+  color: white;
+  text-decoration: none;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 10px 18px 8px 18px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.view-download-btn:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .modal-content {
+    padding: 20px 16px;
+  }
+
+  .modal-content h3 {
+    font-size: 1.5rem;
+  }
+
+  .modal-content p {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .modal-content p strong {
+    min-width: auto;
+  }
+
+  .view-downloader {
+    flex-direction: column;
+    gap: 12px;
+  }
 }

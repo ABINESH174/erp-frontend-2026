@@ -10,7 +10,7 @@
     align-items: center;
     justify-content: center;
     gap: 5px;
-    background: linear-gradient(90deg,rgb(20, 56, 175) 0%,rgb(54, 83, 199)50%, rgb(12, 46, 180) 100%);
+    background: linear-gradient(90deg,rgb(13, 59, 138) 0%, rgb(37, 150, 195) 100%);
     margin-bottom: 10px;
 }
 .feather {

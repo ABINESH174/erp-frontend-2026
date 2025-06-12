@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom'; 
-import { use } from 'react';
+import { useLocation } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+
 import Header from '../../Components/Header/Header';
-import './HodBonafideApproval.css'; 
+import './HodBonafideApproval.css';
 import BackButton from '../../Components/backbutton/BackButton';
 import { Allbuttons } from '../../Components';
 import View from '../../Assets/eyewhite.svg';
 import BonafideViewModal from '../../Components/BonafideViewModal/BonafideViewModal';
-
 
 const HodBonafideApproval = () => {
   const navigate = useNavigate();
@@ -22,32 +23,33 @@ const HodBonafideApproval = () => {
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedBonafide, setSelectedBonafide] = useState(null);
+  const [processingId, setProcessingId] = useState(null);  // NEW: to track currently processing row
 
   useEffect(() => {
     const handleFetchBonafides = async () => {
-    try {
-        console.log('HOD ID:', hodId);
+      try {
         const bonafideRes = await axios.get(
-        `http://localhost:8080/api/hod/getFacultyApprovedBonafidesByHodId/${hodId}`,
-          {
-            headers: { Accept: 'application/json' },
-          }
+          `http://localhost:8080/api/hod/getFacultyApprovedBonafidesByHodId/${hodId}`,
+          { headers: { Accept: 'application/json' } }
         );
 
         if (bonafideRes.data?.data?.length > 0) {
           setData(bonafideRes.data.data);
+          setError(null);
         } else {
           setData([]);
           setError('No bonafide requests found.');
         }
-        
-    } catch (error) {
-        
+      } catch (error) {
+        console.error('Error fetching bonafides:', error);
+        setError('Error fetching bonafides');
+      }
+    };
+
+    if (hodId) {
+      handleFetchBonafides();
     }
-}
-    handleFetchBonafides();
-  },[hodId]);
-    
+  }, [hodId]);
 
   useEffect(() => {
     const fetchHodIdAndBonafides = async () => {
@@ -57,18 +59,16 @@ const HodBonafideApproval = () => {
       try {
         const email = localStorage.getItem('hodEmail');
 
-
         if (!email) {
           setError('User email not found. Please login again.');
           setLoading(false);
           return;
         }
 
-        // Step 1: Get hodId by email
-        const hodRes = await axios.get(`http://localhost:8080/api/hod/getHodByEmail/${email}`, {
-          headers: { Accept: 'application/json' },
-        });
-        console.log(hodRes.data.data);
+        const hodRes = await axios.get(
+          `http://localhost:8080/api/hod/getHodByEmail/${email}`,
+          { headers: { Accept: 'application/json' } }
+        );
 
         const fetchedHodId = hodRes.data.data.hodId;
         setHodId(fetchedHodId);
@@ -78,9 +78,6 @@ const HodBonafideApproval = () => {
           setLoading(false);
           return;
         }
-
-        // Step 2: Get pending bonafides
-        
       } catch (err) {
         console.error('Error fetching data:', err);
         setError('Failed to fetch data from server.');
@@ -93,7 +90,26 @@ const HodBonafideApproval = () => {
     fetchHodIdAndBonafides();
   }, []);
 
+  const handleConfirmStatusChange = (bonafideId, registerNo, status) => {
+    confirmAlert({
+      title: 'Confirm',
+      message: `Are you sure you want to ${status === 'HOD_APPROVED' ? 'approve' : 'reject'} this bonafide?`,
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => handleBonafideStatus(bonafideId, registerNo, status)
+        },
+        {
+          label: 'Cancel',
+          onClick: () => { /* do nothing */ }
+        }
+      ]
+    });
+  };
+
   const handleBonafideStatus = async (bonafideId, registerNo, status) => {
+    setProcessingId(bonafideId);  // disable buttons for this record
+
     try {
       const res = await axios.put(
         'http://localhost:8080/api/bonafide/updateBonafideWithBonafideStatus',
@@ -105,30 +121,18 @@ const HodBonafideApproval = () => {
 
       toast.success(res.data.message || 'Status updated!');
 
-      // Refresh bonafide list
-      if (!hodId) {
-        setError('Faculty ID not found. Please login again.');
-        return;
-      }
+      // Remove updated bonafide from list immediately for better UX
+      setData(prevData => prevData.filter(item => item.bonafideId !== bonafideId));
 
-      const refresh = await axios.get(
-        `http://localhost:8080/api/hod/getFacultyApprovedBonafidesByHodId/${hodId}`
-      );
-
-      if (refresh.data?.data?.length > 0) {
-        setData(refresh.data.data);
-        setError(null);
-      } else {
-        setData([]);
-        setError('No bonafide requests found.');
-      }
     } catch (err) {
       console.error('Failed to update status:', err);
-      // alert('Failed to update status.');
+      toast.error('Failed to update status.');
+    } finally {
+      setProcessingId(null);
     }
   };
 
-    const handleViewClick = (item) => {
+  const handleViewClick = (item) => {
     setSelectedBonafide(item);
     setShowModal(true);
   };
@@ -137,30 +141,21 @@ const HodBonafideApproval = () => {
     <div>
       <Header />
       <div className="hod-bonafide-student">
-        <div className="hod-bonafide-navbar"> 
-           <ul className="hod-navlist" style={{ listStyleType: 'none' }}>
-              <li className="hodbonafide-navitem">
-                Bonafides
-              </li>
-              <li className="hodbonafide-navitem" >
-                Previous
-              </li>
-              <li className="hodbonafide-navitem">
-                Approved
-              </li>
-              <li className="hodbonafide-navitem">
-               Rejected
-              </li>
-            </ul>
-          </div>
+        <div className="hod-bonafide-navbar">
+          <ul className="hod-navlist" style={{ listStyleType: 'none' }}>
+            <li className="hodbonafide-navitem">Bonafides</li>
+            <li className="hodbonafide-navitem">Previous</li>
+            <li className="hodbonafide-navitem">Approved</li>
+            <li className="hodbonafide-navitem">Rejected</li>
+          </ul>
+        </div>
         <div className="hod-topstud-container">
           <div className="bonafide-header-bar">
-            
             <h3 className="name-bar-title">HOD Bonafide Approval Page</h3>
           </div>
-           <div className="bonafide-backbtn">
-                  <BackButton/>
-              </div>
+          <div className="bonafide-backbtn">
+            <BackButton />
+          </div>
 
           {loading ? (
             <p>Loading...</p>
@@ -168,7 +163,6 @@ const HodBonafideApproval = () => {
             <p className="error-message">{error}</p>
           ) : (
             <div className="hod-bonafide-table-container">
-               
               <table className="hod-bonafide-table">
                 <thead>
                   <tr>
@@ -195,29 +189,23 @@ const HodBonafideApproval = () => {
                         <button
                           className="approve-btn"
                           onClick={() =>
-                            handleBonafideStatus(
-                              item.bonafideId,
-                              item.registerNo,
-                              'HOD_APPROVED'
-                            )
+                            handleConfirmStatusChange(item.bonafideId, item.registerNo, 'HOD_APPROVED')
                           }
+                          disabled={processingId === item.bonafideId}
                         >
                           Approve
                         </button>
                         <button
                           className="reject-btn"
                           onClick={() =>
-                            handleBonafideStatus(
-                              item.bonafideId,
-                              item.registerNo,
-                              'REJECTED'
-                            )
+                            handleConfirmStatusChange(item.bonafideId, item.registerNo, 'REJECTED')
                           }
+                          disabled={processingId === item.bonafideId}
                         >
                           Reject
                         </button>
                       </td>
-                      <td className='hod-view-btn'>
+                      <td className="hod-view-btn">
                         <Allbuttons value="View" image={View} target={() => handleViewClick(item)} />
                       </td>
                     </tr>
@@ -227,7 +215,6 @@ const HodBonafideApproval = () => {
             </div>
           )}
         </div>
-        
       </div>
       <BonafideViewModal
         showModal={showModal}

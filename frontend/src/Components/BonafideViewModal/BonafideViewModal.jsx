@@ -114,7 +114,7 @@ const BonafideViewModal = ({ showModal, setShowModal, selectedBonafide }) => {
                     Download
                   </button>
                   <button
-                    className="view-download-btn "
+                    className="view-preview-btn "
                     onClick={() => handlePreview(value)}
                   >
                     Preview

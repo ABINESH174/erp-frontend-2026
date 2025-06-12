@@ -72,15 +72,21 @@ function Headofthedepartmentdashboard() {
             <h2>HOD Dashboard</h2>
           <div className="hod-navigation-bar">
             <p className='hod-nav-item' onClick={() => setOpen(!open)}><BsPerson />profile</p>
-            <p className='hod-bonafide-nav-item' onClick={() => navigate('/hod-bonafide-approval', { state: { userId: userId } })}><FaFileAlt />
-            Bonafide 
-             <span  className='hod-bonafide-count'>{userId ? <BonafideCount 
-            emailKey="hodEmail"
-            getIdApi={`http://localhost:8080/api/hod/getHodByEmail`}
-            getBonafideApi={`http://localhost:8080/api/hod/getFacultyApprovedBonafidesByHodId`}
-            statusFilter="FACULTY_APPROVED"
-            /> : 0}</span>
-           </p>
+           <p className='hod-bonafide-nav-item' onClick={() => navigate('/hod-bonafide-approval', { state: { userId } })}>
+  <FaFileAlt /> Bonafide 
+  {userId && (
+    <BonafideCount 
+      emailKey="hodEmail"
+      getIdApi={`http://localhost:8080/api/hod/getHodByEmail`}
+      getBonafideApi={`http://localhost:8080/api/hod/getFacultyApprovedBonafidesByHodId`}
+      statusFilter="FACULTY_APPROVED"
+      render={(count) => count > 0 && (
+        <span className='hod-bonafide-count'>{count}</span>
+      )}
+    />
+  )}
+</p>
+
           </div> 
           <div > <Logoutbtn className='hod-logout' /></div>
         </div>
