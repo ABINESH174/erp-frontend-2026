@@ -8,7 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import BackButton from '../../Components/backbutton/BackButton';
 import BonafideViewModal from '../../Components/BonafideViewModal/BonafideViewModal';
 import { confirmAlert } from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css';  // Don't forget to import this
+import 'react-confirm-alert/src/react-confirm-alert.css';  
 
 const OfficeBearer = () => {
   const navigate = useNavigate();

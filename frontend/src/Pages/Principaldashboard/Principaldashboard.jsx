@@ -10,7 +10,7 @@ import BonafideViewModal from '../../Components/BonafideViewModal/BonafideViewMo
 import Logoutbtn from '../../Components/logoutbutton/Logoutbtn.jsx';
 import View from '../../Assets/eyewhite.svg';
 import { confirmAlert } from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css';  // <-- Don't forget this!
+import 'react-confirm-alert/src/react-confirm-alert.css'; 
 
 const Principaldashboard = () => {
   const [bonafides, setBonafides] = useState([]);
