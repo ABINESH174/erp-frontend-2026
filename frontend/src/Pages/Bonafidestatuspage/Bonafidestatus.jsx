@@ -21,9 +21,9 @@ const BonafideStatus = () => {
     'Bonafide for Bus Pass': ['studentIdCardFile'],
     'Bonafide for Passport': ['studentIdCardFile'],
     'Educational Support': ['studentIdCardFile'],
-    'Pragati':['studentIdCardFile'],
-    'Saksham':['studentIdCardFile'],
-    'Swanath Scholarship':['studentIdCardFile'],
+    'Pragati': ['studentIdCardFile'],
+    'Saksham': ['studentIdCardFile'],
+    'Swanath Scholarship': ['studentIdCardFile'],
     'Labour Welfare': ['studentIdCardFile', 'aadharCardFile', 'smartCardFile', 'WelfareProofDocumentFile'],
     'Tailor Welfare': ['studentIdCardFile', 'aadharCardFile', 'smartCardFile', 'WelfareProofDocumentFile'],
     'Farmer Welfare': ['studentIdCardFile', 'aadharCardFile', 'smartCardFile', 'WelfareProofDocumentFile'],
@@ -46,18 +46,14 @@ const BonafideStatus = () => {
     fetchBonafideDetails();
   }, [registerNo]);
 
-  const handleDownload = (filePath, status) => {
-    if (status === 'PRINCIPAL_APPROVED') {
-      const url = `http://localhost:8080/api/bonafide/downloadFile?filePath=${encodeURIComponent('C:/Users/Abinaya/Desktop/Abinesh.jpg')}`;
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = '';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } else {
-      alert('Your bonafide certificate is still pending approval.');
-    }
+  const handleDownload = (filePath) => {
+    const url = `http://localhost:8080/api/bonafide/downloadFile?filePath=${encodeURIComponent(filePath)}`;
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = ''; // You can specify a file name here if desired
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const handleFileChange = (e, fileKey) => {
@@ -103,7 +99,7 @@ const BonafideStatus = () => {
         const deleteUrl = `http://localhost:8080/api/bonafide/deleteBonafide?registerNo=${selectedBonafide.registerNo}&bonafideId=${selectedBonafide.bonafideId}`;
         await axios.delete(deleteUrl);
 
-        await fetchBonafideDetails(); // Refresh list
+        await fetchBonafideDetails();
 
         setShowModal(false);
       } else {
@@ -132,7 +128,7 @@ const BonafideStatus = () => {
               <th>Purpose</th>
               <th>Applied Date</th>
               <th>Status</th>
-              <th>Download</th>
+              <th>Download / Action</th>
             </tr>
           </thead>
           <tbody>
@@ -144,16 +140,27 @@ const BonafideStatus = () => {
                 <td>{item.date}</td>
                 <td>{item.bonafideStatus}</td>
                 <td>
-                  {item.bonafideStatus === 'PRINCIPAL_APPROVED' ? (
-                    <button onClick={() => handleDownload(item.filePath, item.bonafideStatus)}>
-                      <FaDownload style={{ marginRight: '5px' }} />Download
-                    </button>
-                  ) : item.bonafideStatus === 'OB_REJECTED' ? (
+                  {item.bonafideStatus === 'NOTIFIED' && (
+                    <>
+                      <p style={{ color: 'green', fontWeight: 'bold', marginBottom: '8px' }}>
+                        Bonafide ready student is asked to come and collect the bonafide certification from the office
+                      </p>
+                      <button onClick={() => handleDownload(item.filePath)}>
+                        <FaDownload style={{ marginRight: '5px' }} /> Download
+                      </button>
+                    </>
+                  )}
+
+                  {item.bonafideStatus === 'OB_REJECTED' && (
                     <div>
                       <p style={{ color: 'red' }}>Reason: {item.rejectionMessage}</p>
                       <button onClick={() => handleReuploadClick(item)}>Reupload</button>
                     </div>
-                  ) : (
+                  )}
+
+                  {
+                   item.bonafideStatus !== 'NOTIFIED' &&
+                   item.bonafideStatus !== 'OB_REJECTED' && (
                     <button disabled>Pending Approval</button>
                   )}
                 </td>
