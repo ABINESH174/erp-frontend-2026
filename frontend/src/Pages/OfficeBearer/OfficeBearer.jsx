@@ -154,8 +154,14 @@ const OfficeBearer = () => {
                   <table className="ob-bonafide-table">
                     <thead>
                       <tr>
-                        <th>S.No</th><th>Register Number</th><th>Purpose</th><th>Semester</th>
-                        <th>Department</th><th>Date of Apply</th><th>Action</th><th>View</th>
+                        <th>S.No</th>
+                        <th>Register Number</th>
+                        <th>Purpose</th>
+                        <th>Semester</th>
+                        <th>Department</th>
+                        <th>Date of Apply</th>
+                        <th>Action</th>
+                        <th>View</th>
                       </tr>
                     </thead>
                     <tbody>
