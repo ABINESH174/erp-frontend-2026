@@ -55,3 +55,23 @@ td button:disabled {
   font-weight: bold;
   margin-top: 10px;
 }
+.modal-content button {
+  padding: 8px 16px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.modal-content button:first-of-type {
+  background-color: #009dff; /* Light blue */
+  color: white;
+  margin-right: 10px; /* Space between Submit and Cancel */
+}
+
+.modal-content button:last-of-type {
+  background-color: #ddd;
+  color: black;
+}
+

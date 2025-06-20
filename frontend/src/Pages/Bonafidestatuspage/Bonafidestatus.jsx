@@ -3,42 +3,110 @@ import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import Header from '../../Components/Header/Header';
 import './Bonafidestatus.css';
+import { FaDownload } from 'react-icons/fa';
+import { toast, ToastContainer } from 'react-toastify';
 
 const BonafideStatus = () => {
   const location = useLocation();
-  // eslint-disable-next-line 
-  const [registerNo, setRegisterNo] = useState(location.state?.studentId || '');
+  const [registerNo] = useState(location.state?.studentId || '');
   const [bonafideDetails, setBonafideDetails] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedBonafide, setSelectedBonafide] = useState(null);
+  const [filesToUpload, setFilesToUpload] = useState({});
 
-useEffect(() => {
+  const purposeFileMap = {
+    'Bonafide for Internship': ['studentIdCardFile'],
+    'Bonafide for Bus Pass': ['studentIdCardFile'],
+    'Bonafide for Passport': ['studentIdCardFile'],
+    'Educational Support': ['studentIdCardFile'],
+    'Pragati': ['studentIdCardFile'],
+    'Saksham': ['studentIdCardFile'],
+    'Swanath Scholarship': ['studentIdCardFile'],
+    'Labour Welfare': ['studentIdCardFile', 'aadharCardFile', 'smartCardFile', 'WelfareProofDocumentFile'],
+    'Tailor Welfare': ['studentIdCardFile', 'aadharCardFile', 'smartCardFile', 'WelfareProofDocumentFile'],
+    'Farmer Welfare': ['studentIdCardFile', 'aadharCardFile', 'smartCardFile', 'WelfareProofDocumentFile'],
+  };
+
   const fetchBonafideDetails = async () => {
     try {
-      const response = await axios.get(`/api/bonafide/getAllBonafidesByRegisterNo?registerNo=${registerNo}`);
-      setBonafideDetails(response.data.data || []);
+      const res = await axios.get(`http://localhost:8080/api/bonafide/getAllBonafidesByRegisterNo?registerNo=${registerNo}`);
+      const updatedData = (res.data.data || []).map(item => ({ ...item, reuploadDone: item.reuploadDone || false }));
+      setBonafideDetails(updatedData);
     } catch (err) {
-      if (err.response?.status !== 404) {
-        setError('Failed to fetch bonafide details');
-      } else {
-        setBonafideDetails([]); // clear data if 404
-      }
+      if (err.response?.status !== 404) setError('Failed to fetch bonafide details');
+      else setBonafideDetails([]);
     } finally {
       setLoading(false);
     }
   };
 
-  fetchBonafideDetails();
-}, [registerNo]);
+  useEffect(() => {
+    fetchBonafideDetails();
+  }, [registerNo]);
 
+  const handleDownload = (filePath) => {
+    const url = `http://localhost:8080/api/bonafide/downloadFile?filePath=${encodeURIComponent(filePath)}`;
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = ''; // You can specify a file name here if desired
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
-  const handleDownload = (filePath, status) => {
-    if (status === 'PRINCIPAL_APPROVED') {
-      // Construct the URL for downloading the file
-      const url = `/api/bonafide/downloadFile?filePath=${encodeURIComponent(filePath)}`;
-      window.open(url, '_blank');
-    } else {
-      alert('Your bonafide certificate is still pending approval.');
+  const handleFileChange = (e, fileKey) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFilesToUpload(prev => ({ ...prev, [fileKey]: file }));
+    }
+  };
+
+  const handleReuploadClick = (item) => {
+    setSelectedBonafide(item);
+    setShowModal(true);
+    setFilesToUpload({});
+  };
+
+  const handleSubmitReupload = async () => {
+    if (!selectedBonafide || Object.keys(filesToUpload).length === 0) return;
+
+    const requiredFiles = purposeFileMap[selectedBonafide.purpose] || [];
+    const missingFiles = requiredFiles.filter(fileKey => !filesToUpload[fileKey]);
+
+    if (missingFiles.length > 0) {
+      toast.error(`Please upload: ${missingFiles.join(', ')}`);
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("registerNo", selectedBonafide.registerNo);
+      formData.append("purpose", selectedBonafide.purpose);
+      formData.append("date", selectedBonafide.date);
+      formData.append("bonafideStatus", "HOD_APPROVED");
+
+      Object.entries(filesToUpload).forEach(([key, file]) => {
+        formData.append(key, file);
+      });
+
+      const res = await axios.post("http://localhost:8080/api/bonafide/create", formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+
+      if (res.status === 201) {
+        const deleteUrl = `http://localhost:8080/api/bonafide/deleteBonafide?registerNo=${selectedBonafide.registerNo}&bonafideId=${selectedBonafide.bonafideId}`;
+        await axios.delete(deleteUrl);
+
+        await fetchBonafideDetails();
+
+        setShowModal(false);
+      } else {
+        toast.error("Reupload failed.");
+      }
+    } catch (err) {
+      toast.error("Error during reupload.");
     }
   };
 
@@ -46,6 +114,7 @@ useEffect(() => {
     <div className="bonafide-status">
       <Header />
       <h1>Bonafide Status</h1>
+      <ToastContainer />
       {error && <div className="error-message">{error}</div>}
 
       {loading ? (
@@ -59,21 +128,39 @@ useEffect(() => {
               <th>Purpose</th>
               <th>Applied Date</th>
               <th>Status</th>
-              <th>Download</th>
+              <th>Download / Action</th>
             </tr>
           </thead>
           <tbody>
-            {bonafideDetails.map((item,index) => (
+            {bonafideDetails.map((item, index) => (
               <tr key={item.bonafideId}>
-                <td>{index+1}</td>
+                <td>{index + 1}</td>
                 <td>{item.registerNo}</td>
                 <td>{item.purpose}</td>
                 <td>{item.date}</td>
-                <td style={{ color: !item.bonafideStatus ? 'green' : 'inherit' }}>{item.bonafideStatus || 'InReview'}</td>
+                <td>{item.bonafideStatus}</td>
                 <td>
-                  {item.bonafideStatus === 'PRINCIPAL_APPROVED' ? (
-                    <button onClick={() => handleDownload(item.filePath, item.status)}>Download</button>
-                  ) : (
+                  {item.bonafideStatus === 'NOTIFIED' && (
+                    <>
+                      <p style={{ color: 'green', fontWeight: 'bold', marginBottom: '8px' }}>
+                        Bonafide ready student is asked to come and collect the bonafide certification from the office
+                      </p>
+                      <button onClick={() => handleDownload(item.filePath)}>
+                        <FaDownload style={{ marginRight: '5px' }} /> Download
+                      </button>
+                    </>
+                  )}
+
+                  {item.bonafideStatus === 'OB_REJECTED' && (
+                    <div>
+                      <p style={{ color: 'red' }}>Reason: {item.rejectionMessage}</p>
+                      <button onClick={() => handleReuploadClick(item)}>Reupload</button>
+                    </div>
+                  )}
+
+                  {
+                   item.bonafideStatus !== 'NOTIFIED' &&
+                   item.bonafideStatus !== 'OB_REJECTED' && (
                     <button disabled>Pending Approval</button>
                   )}
                 </td>
@@ -82,7 +169,23 @@ useEffect(() => {
           </tbody>
         </table>
       ) : (
-        <div>No Bonafide Applied </div>
+        <div>No Bonafide Applied</div>
+      )}
+
+      {showModal && selectedBonafide && (
+        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <h3>Reupload Required Files</h3>
+            {(purposeFileMap[selectedBonafide.purpose] || []).map(fileKey => (
+              <div className="file-upload" key={fileKey}>
+                <label>{fileKey.replace(/([A-Z])/g, ' $1')}</label>
+                <input type="file" onChange={e => handleFileChange(e, fileKey)} />
+              </div>
+            ))}
+            <button onClick={handleSubmitReupload}>Submit</button>
+            <button onClick={() => setShowModal(false)}>Cancel</button>
+          </div>
+        </div>
       )}
     </div>
   );

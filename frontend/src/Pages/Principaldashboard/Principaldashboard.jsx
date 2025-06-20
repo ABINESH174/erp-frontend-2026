@@ -10,7 +10,7 @@ import BonafideViewModal from '../../Components/BonafideViewModal/BonafideViewMo
 import Logoutbtn from '../../Components/logoutbutton/Logoutbtn.jsx';
 import View from '../../Assets/eyewhite.svg';
 import { confirmAlert } from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css'; 
+import 'react-confirm-alert/src/react-confirm-alert.css';  
 
 const Principaldashboard = () => {
   const [bonafides, setBonafides] = useState([]);
@@ -36,8 +36,8 @@ const Principaldashboard = () => {
       }
     } catch (err) {
       console.error('Error fetching bonafides:', err);
-      setError('Failed to fetch bonafide requests.');
-    } finally {
+      setError('No Bonafide Requests');
+    } finally { 
       setLoading(false);
     }
   };
