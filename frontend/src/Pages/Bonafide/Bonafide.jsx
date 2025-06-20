@@ -1,62 +1,103 @@
 // src/pages/Bonafide/Bonafide.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import './Bonafide.css';
 import Header from '../../Components/Header/Header';
-// import Footer from '../../Components/Footer/Footer';
 import axios from 'axios';
 
 function Bonafide() {
     const location = useLocation();
     const navigate = useNavigate();
+    const userId = location.state?.studentId;
 
-    const options = [
-        { title: "Bonafide for Post Matric Scholarships", id: "postMatricScholarship",image: "tinystudents.jpg" ,discription: "Post Matric Scholarships for  BC/ MBC/DNC and SC/ST/SCA students." },
-        { title: "Bonafide for Pudhumai Penn Scheme",id:"pudhumaiPennScheme",image:"pudhumai.jpeg",discription: "For Pudhumai Penn." },
-        { title: "Bonafide for TamilPudhalvan Scheme",id:"tamilPudhalvanScheme",image:"tamilpudhalvan.jpg",discription: "For Tamil Pudhalvan." },
-        { title: "Bonafide for Welfare Scholarship", id: "welfareScholarship", image: "welfare.jpeg", discription: "For state-specific scholarships like Labour Welfare, Tailor Welfare, and Farmer Welfare." },
-        { title: "Bonafide for Educational Support",id:"educationalSupport",image:"scholarshiphands.jpg",discription: "For educational support." },
-        { title: "Bonafide for Internship", id: "internship", image: "of.png", discription: "For internship applications." },
-        { title: "Bonafide for Bus Pass", id: "busPass", image: "buspass.jpg", discription: "For bus pass applications." },
-        { title: "Bonafide for Passport", id: "passport", image: "passport.jpg", discription: "For passport applications." },
-        { title: "Bonafide for Others", id: "others", image: "others.jpeg", discription: "For other purposes." }
-    ];
-
-    const welfareScholarships = ["Labour Welfare", "Tailor Welfare", "Farmer Welfare"];
-    const postMatricScholarships= [" BC/MBC/DNC Post Matric Scholarship","SC/ST/SCA Post Matric Scholarship"];
-
+    const [applicableBonafide, setApplicableBonafide] = useState({});
     const [uploads, setUploads] = useState({
         selectedOption: "",
         showModal: false,
         showCentralScholarshipCheck: false,
-        scholarshipTypes: [],
         selectedScholarship: "",
         fileUploads: {}
     });
 
+    const options = [
+        { title: "Bonafide for Post Matric Scholarships", id: "postMatricScholarship", image: "tinystudents.jpg", description: "Post Matric Scholarships for BC/ MBC/DNC and SC/ST/SCA students." },
+        { title: "Bonafide for Pudhumai Penn Scheme", id: "pudhumaiPennScheme", image: "pudhumai.jpeg", description: "For Pudhumai Penn." },
+        { title: "Bonafide for TamilPudhalvan Scheme", id: "tamilPudhalvanScheme", image: "tamilpudhalvan.jpg", description: "For Tamil Pudhalvan." },
+        { title: "Bonafide for Welfare Scholarship", id: "welfareScholarship", image: "welfare.jpeg", description: "For state-specific scholarships like Labour Welfare, Tailor Welfare, and Farmer Welfare." },
+        { title: "Bonafide for Educational Support", id: "educationalSupport", image: "scholarshiphands.jpg", description: "For educational support." },
+        { title: "Bonafide for Internship", id: "internship", image: "of.png", description: "For internship applications." },
+        { title: "Bonafide for Bus Pass", id: "busPass", image: "buspass.jpg", description: "For bus pass applications." },
+        { title: "Bonafide for Passport", id: "passport", image: "passport.jpg", description: "For passport applications." },
+        { title: "Bonafide for Others", id: "others", image: "others.jpeg", description: "For other purposes." }
+    ];
+
+    // Map frontend option IDs to backend DTO keys
+    const bonafideEligibilityKeyMap = {
+        postMatricScholarship: ["bcMbcDncPostMatricScholarship", "scStScaPostMatricScholarship"],
+        pudhumaiPennScheme: "pudhumaiPennScholarship",
+        tamilPudhalvanScheme: "tamilPudhalvanScholarship",
+        welfareScholarship: ["labourWelfareScholarship", "tailorWelfareScholarship", "farmerWelfareScholarship"],
+        educationalSupport: "applyEducationSupport",
+        internship: "applyInternship",
+        busPass: "applyBusPass",
+        passport: "applyPassport",
+        others: true
+    };
+
+    const allWelfareTypes = ["Labour Welfare", "Tailor Welfare", "Farmer Welfare"];
+    const allPostMatricTypes = [" BC/MBC/DNC Post Matric Scholarship", "SC/ST/SCA Post Matric Scholarship"];
+
+    useEffect(() => {
+        const fetchApplicableBonafide = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/api/bonafide/getApplicableBonafide/${userId}`);
+                if (response.data?.data) {
+                    setApplicableBonafide(response.data.data);
+                }
+            } catch (error) {
+                console.error("Error fetching bonafide eligibility", error);
+                toast.error("Unable to fetch eligibility data.");
+            }
+        };
+
+        if (userId) fetchApplicableBonafide();
+    }, [userId]);
+
+    const isEligible = (optionId) => {
+        const key = bonafideEligibilityKeyMap[optionId];
+        if (key === true) return true;
+        if (Array.isArray(key)) {
+            return key.some(k => applicableBonafide[k]);
+        }
+        return applicableBonafide[key];
+    };
+
     const handleCardClick = (optionId) => {
-    const title = options.find(option => option.id === optionId)?.title || "";
+        const title = options.find(option => option.id === optionId)?.title || "";
 
-    if (optionId === "postMatricScholarship") {
-        setUploads(prev => ({
-            ...prev,
-            selectedOption: optionId,
-            showCentralScholarshipCheck: true, 
-            selectedScholarship: "",
-            scholarshipTypes: []
-        }));
-    } else {
-        setUploads(prev => ({
-            ...prev,
-            selectedOption: optionId,
-            selectedScholarship: optionId === "welfareScholarship" ? "" : title,
-            scholarshipTypes: optionId === "welfareScholarship" ? welfareScholarships : [],
-            showModal: optionId === "welfareScholarship"
-        }));
-    }
-};
-
+        if (optionId === "postMatricScholarship") {
+            setUploads(prev => ({
+                ...prev,
+                selectedOption: optionId,
+                showCentralScholarshipCheck: true,
+                selectedScholarship: "",
+            }));
+        } else if (optionId === "welfareScholarship") {
+            setUploads(prev => ({
+                ...prev,
+                selectedOption: optionId,
+                selectedScholarship: "",
+                showModal: true,
+            }));
+        } else {
+            setUploads(prev => ({
+                ...prev,
+                selectedOption: optionId,
+                selectedScholarship: title,
+            }));
+        }
+    };
 
     const handleScholarshipSelect = (type) => {
         setUploads(prev => ({
@@ -77,11 +118,12 @@ function Bonafide() {
     };
 
     const validateFiles = () => {
-        if (["Labour Welfare", "Farmer Welfare", "Tailor Welfare"].includes(uploads.selectedScholarship)) {
-            const requiredFiles = ["aadharCardFile","labourWelfareFile", "smartCardFile", "studentIdCardFile"];
-            return requiredFiles.every(fileType => uploads.fileUploads[fileType]);
+        const required = ["studentIdCardFile"];
+        if (allWelfareTypes.includes(uploads.selectedScholarship)) {
+            required.push("aadharCardFile", "smartCardFile", "labourWelfareFile");
         }
-        return !!uploads.fileUploads["studentIdCardFile"];
+
+        return required.every(f => uploads.fileUploads[f]);
     };
 
     const handleSubmit = async () => {
@@ -91,37 +133,24 @@ function Bonafide() {
         }
 
         try {
-            const userId = location.state?.studentId;
             const formData = new FormData();
             formData.append('registerNo', userId);
             formData.append('purpose', uploads.selectedScholarship.toLowerCase().trim());
-
-            if (uploads.fileUploads.companyName) {
-                formData.append('companyName', uploads.fileUploads.companyName);
-            }
-
-            if (uploads.fileUploads.welfareId) {
-                formData.append('welfareId', uploads.fileUploads.welfareId);
-            }
-
-            Object.entries(uploads.fileUploads).forEach(([key, file]) => {
-                formData.append(key, file);
-            });
-
             formData.append('bonafideStatus', 'PENDING');
             formData.append('date', new Date().toISOString().split('T')[0]);
 
-            await axios.post('/api/bonafide/create', formData, {
-                headers: {
-                    'Content-Type': 'multipa    rt/form-data',
-                },
+            Object.entries(uploads.fileUploads).forEach(([key, value]) => {
+                formData.append(key, value);
             });
 
-            toast.success("Files uploaded successfully!");
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            navigate('/profile-page', { state: { userId } });
+            await axios.post('/api/bonafide/create', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+
+            toast.success("Bonafide submitted successfully!");
+            setTimeout(() => navigate('/profile-page', { state: { userId } }), 1500);
         } catch (error) {
-            toast.error(error.response?.data?.message || "File upload failed. Please try again.");
+            toast.error(error.response?.data?.message || "Submission failed.");
         }
     };
 
@@ -132,178 +161,109 @@ function Bonafide() {
                 <div className="bonafide-heading-bar">
                     <h1>Bonafide Certificate Request</h1>
                 </div>
-                <div className="details-on-bonafide">
-                    <div className="eligibility-box">
-                        <h2>Eligibility Criteria</h2>
-                        <ul className='eligibility-list'>
-                         <li>Must be a registered student of the institution</li>
-                        <li>Must have a valid ID proof</li>
-                        <li>Must be a registered student</li>   
-                        <li>Valid ID proof is required</li>
-                        <li>Application form must be filled completely</li>
-                        <li>Must adhere to the submission deadlines</li>
-                        <li>For state scholarships, additional documents may be required</li>
-                        <li>For central scholarships, specific eligibility criteria apply</li>
 
-                        </ul>
-                    </div>
-                    <div className="Requirements-box">
-                        <h2>Requirements Details</h2>
-                        <ul  className='requirements-list'>
-                            <li>Valid Student ID Card</li>
-                             
-                        
-                        </ul>
-                    </div>
-                </div>
                 <div className="bonafide-display-container">
-                <h2>Select The Bonafide</h2>
-                <div className="bonafide-cards-container">
-                    {options.map((option) => (
-                        <div className="bonafide-cards">
-                        <div
-                            key={option.id}
-                            className="bonafide-card"
-                            onClick={() => handleCardClick(option.id)}
-                        >   
-                            <img src={require(`../../Assets/${option.image}`)} alt={option.title} className="bonafide-card-image" />
-                            <h3>{option.title}</h3>
-                               
+                    <h2>Select The Bonafide</h2>
+                    <div className="bonafide-cards-container">
+                        {options.map(option => (
+                            <div className="bonafide-cards" key={option.id}>
+                                <div
+                                    className={`bonafide-card ${!isEligible(option.id) ? 'disabled' : ''}`}
+                                    onClick={() => isEligible(option.id) && handleCardClick(option.id)}
+                                >
+                                    <img src={require(`../../Assets/${option.image}`)} alt={option.title} className="bonafide-card-image" />
+                                    <h3>{option.title}</h3>
+                                </div>
+                                <div className="bonafide-card-description">
+                                    <h4>{option.title}</h4>
+                                    <p>{option.description}</p>
+                                    {isEligible(option.id) ? (
+                                        <div className='apply-here-btn' onClick={() => handleCardClick(option.id)}>Apply</div>
+                                    ) : (
+                                        <div className='apply-here-btn disabled'>Not Eligible</div>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Central Govt Scholarship Modal */}
+                {uploads.showCentralScholarshipCheck && (
+                    <div className="modal-overlay" onClick={() => setUploads(prev => ({ ...prev, showCentralScholarshipCheck: false }))}>
+                        <div className="modal-content" onClick={e => e.stopPropagation()}>
+                            <h3>Are you receiving any Central Government Scholarship?</h3>
+                            <div className="confirmation-buttons">
+                                <button onClick={() => {
+                                    toast.error("You are not eligible for State Scholarship.");
+                                    setUploads(prev => ({
+                                        ...prev,
+                                        showCentralScholarshipCheck: false,
+                                        selectedOption: ""
+                                    }));
+                                }}>Yes</button>
+                                <button onClick={() => {
+                                    setUploads(prev => ({
+                                        ...prev,
+                                        showCentralScholarshipCheck: false,
+                                        selectedScholarship: "",
+                                        showModal: true
+                                    }));
+                                }}>No</button>
+                            </div>
                         </div>
-                        <div className="bonafide-card-description">
-                            <h4>{option.title}</h4>
-                            <p>{option.discription}</p>
+                    </div>
+                )}
 
-                         <div className='apply-here-btn' onClick={() => handleCardClick(option.id)}>Apply</div>
+                {/* Modal for selecting scholarship type */}
+                {uploads.showModal && (
+                    <div className="modal-overlay" onClick={() => setUploads(prev => ({ ...prev, showModal: false }))}>
+                        <div className="modal-content" onClick={e => e.stopPropagation()}>
+                            <h3>Select Type of Scholarship</h3>
+                            <ul>
+                                {(uploads.selectedOption === "postMatricScholarship" ? allPostMatricTypes : allWelfareTypes).map(type => (
+                                    <li key={type} onClick={() => handleScholarshipSelect(type)}>{type}</li>
+                                ))}
+                            </ul>
+                            <button onClick={() => setUploads(prev => ({ ...prev, showModal: false }))}>Close</button>
                         </div>
+                    </div>
+                )}
+
+                {/* File Upload Modal */}
+                {uploads.selectedScholarship && (
+                    <div className="file-modal-overlay" onClick={() => setUploads(prev => ({ ...prev, selectedScholarship: "" }))}>
+                        <div className="modal-content file-upload-modal" onClick={e => e.stopPropagation()}>
+                            <h3>Upload required documents for {uploads.selectedScholarship}</h3>
+                            <div className="file-upload">
+                                <label>Student ID Card</label>
+                                <input type="file" onChange={handleFileChange('studentIdCardFile')} />
+                            </div>
+                            {allWelfareTypes.includes(uploads.selectedScholarship) && (
+                                <>
+                                    <div className="file-upload">
+                                        <label>Aadhar Card</label>
+                                        <input type="file" onChange={handleFileChange('aadharCardFile')} />
+                                    </div>
+                                    <div className="file-upload">
+                                        <label>Smart Card</label>
+                                        <input type="file" onChange={handleFileChange('smartCardFile')} />
+                                    </div>
+                                    <div className="file-upload">
+                                        <label>Welfare Proof Document</label>
+                                        <input type="file" onChange={handleFileChange('labourWelfareFile')} />
+                                    </div>
+                                </>
+                            )}
+                            <div className="file-upload-buttons">
+                                <button className="submit-button" onClick={handleSubmit}>Submit</button>
+                                <button className="close-button" onClick={() => setUploads(prev => ({ ...prev, selectedScholarship: "" }))}>Close</button>
+                            </div>
                         </div>
-                    ))}
-                </div>
-                </div>
-            </div>
-
-            {uploads.showCentralScholarshipCheck && (
-    <div className="modal-overlay" onClick={() => setUploads(prev => ({ ...prev, showCentralScholarshipCheck: false }))}>
-        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3>Are you receiving any Central Government Scholarship?(Like Pragati,Saksham,Swanath Schloarships)</h3>
-            <div className="confirmation-buttons">
-                <button
-                    onClick={() => {
-                        toast.error("You are not eligible for State Scholarship if receiving Central Scholarship.");
-                        setUploads(prev => ({
-                            ...prev,
-                            showCentralScholarshipCheck: false,
-                            selectedOption: "" 
-                        }));
-                    }}
-                >
-                    Yes
-                </button>
-                <button
-                    onClick={() => {
-                        // Proceed to show list of scholarships
-                        setUploads(prev => ({
-                            ...prev,
-                            showCentralScholarshipCheck: false,
-                            showModal: true,
-                            scholarshipTypes: postMatricScholarships,
-                            selectedScholarship: "" // allow choosing inside modal
-                        }));
-                    }}
-                >
-                    No
-                </button>
-            </div>
-        </div>
-    </div>
-    
-)}
-
-
-            {uploads.showModal && (
-                <div className="modal-overlay" onClick={() => setUploads(prev => ({ ...prev, showModal: false }))}>
-                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <h3>Select Type of Scholarship</h3>
-                        <ul>
-                            {uploads.scholarshipTypes.map((type) => (
-                                <li key={type} onClick={() => handleScholarshipSelect(type)}>{type}</li>
-                            ))}
-                        </ul>
-                        <button onClick={() => setUploads(prev => ({ ...prev, showModal: false }))}>Close</button>
                     </div>
-                </div>
-            )}
-
-            {uploads.selectedScholarship && (
-    <div className="file-modal-overlay" onClick={() => setUploads(prev => ({ ...prev, selectedScholarship: "" }))}>
-        <div className="modal-content  file-upload-modal" onClick={(e) => e.stopPropagation()}>
-            <h3>Upload required documents for {uploads.selectedScholarship}</h3>
-
-            <div className="file-upload">
-                <label>Student ID Card</label>
-                <input type="file" onChange={handleFileChange('studentIdCardFile')} />
+                )}
+                <ToastContainer />
             </div>
-
-            {["Labour Welfare", "Farmer Welfare", "Tailor Welfare"].includes(uploads.selectedScholarship) && (
-                <>
-                    <div className="file-upload">
-                        <label>Aadhar Card</label>
-                        <input type="file" onChange={handleFileChange('aadharCardFile')} />
-                    </div>
-                    <div className="file-upload">
-                        <label>Smart Card</label>
-                        <input type="file" onChange={handleFileChange('smartCardFile')} />
-                    </div>
-                    <div className="file-upload">
-                        <label>Welfare Proof Document</label>
-                        <input type="file" onChange={handleFileChange('labourWelfareFile')} />
-                    </div>
-                </>
-            )}
-             {/* Extra input if Educational Support is selected  */}
-           {uploads.selectedScholarship === "Educational Support" && (
-                 <div className="company-name-input">
-        <label>Bank Name</label>
-        <input
-            type="text"
-            placeholder="Enter Bank name"
-            onChange={(e) => setUploads(prev => ({
-                ...prev,
-                fileUploads: { ...prev.fileUploads, companyName: e.target.value }
-            }))}
-               />
-                 </div>
-            )}
-
-            {uploads.selectedScholarship === "Bonafide for Internship" && (
-                <div className="company-name-input">
-                    <label>Company Name</label>
-                    <input
-                        type="text"
-                        placeholder="Enter Company name"
-                        onChange={(e) => setUploads(prev => ({
-                            ...prev,
-                            fileUploads: { ...prev.fileUploads, companyName: e.target.value }
-                        }))}
-                    />
-                </div>
-            )}
-
-            <div className="academic-year">
-                <label>Academic Year</label>
-                <input type="text" placeholder="Enter Academic Year *Like 2023-2024*" onChange={handleFileChange('academicYear')} />
-            </div>
-            <div className="file-upload-buttons">
-                <button className="submit-button" onClick={handleSubmit}>Submit</button>
-                <button className="close-button"  onClick={() => setUploads(prev => ({ ...prev, selectedScholarship: "" }))}>Close</button>
-            </div>
-
-           
-        </div>
-    </div>
-)}
-            <ToastContainer />
-            {/* <Footer /> */}
         </div>
     );
 }

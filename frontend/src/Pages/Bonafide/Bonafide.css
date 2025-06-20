@@ -526,4 +526,17 @@ h2 {
     background-color: #0056b3;
 }
 
+/* disabling bonafides based on constraints */
+.bonafide-card.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+.apply-here-btn.disabled {
+    background-color: gray;
+    cursor: not-allowed;
+    display: block;
+    text-align: center
+}
+
 
