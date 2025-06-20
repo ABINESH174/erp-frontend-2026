@@ -1,21 +1,13 @@
-// src/components/BonafideDetailsModal.jsx
-
 import React from 'react';
-import './BonafideViewModal.css'; // Assuming you have styles for the modal in this file
+import './BonafideViewModal.css';
 
 const BonafideViewModal = ({ showModal, setShowModal, selectedBonafide }) => {
   if (!showModal || !selectedBonafide) return null;
 
   const handleDownload = async (filePath) => {
-
     try {
-      const response = await fetch(`http://localhost:8080/api/bonafide/downloadFile?filePath=${encodeURIComponent(filePath)}`, {
-        method: 'GET',
-      });
-
-      if (!response.ok) {
-        throw new Error('Download failed');
-      }
+      const response = await fetch(`http://localhost:8080/api/bonafide/downloadFile?filePath=${encodeURIComponent(filePath)}`);
+      if (!response.ok) throw new Error('Download failed');
 
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
@@ -24,113 +16,114 @@ const BonafideViewModal = ({ showModal, setShowModal, selectedBonafide }) => {
       link.setAttribute('download', filePath.split('/').pop());
       document.body.appendChild(link);
       link.click();
-      link.remove();
+      document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('File download error:', error);
+      console.error('Download error:', error);
       alert('Failed to download file.');
     }
   };
 
   const handlePreview = async (filePath) => {
-
     try {
-    const response = await fetch(
-      `http://localhost:8080/api/bonafide/previewFile?filePath=${encodeURIComponent(filePath)}`, 
-      {
-        method: 'GET',
+      const response = await fetch(`http://localhost:8080/api/bonafide/previewFile?filePath=${encodeURIComponent(filePath)}`);
+      if (!response.ok) throw new Error(`Preview failed: ${response.statusText}`);
+
+      const contentType = response.headers.get('content-type');
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const previewableTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/gif', 'text/plain', 'text/html'];
+
+      if (previewableTypes.includes(contentType)) {
+        window.open(url, '_blank');
+      } else {
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', filePath.split('/').pop());
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
       }
-    );
 
-    if (!response.ok) {
-      throw new Error(`Download failed: ${response.statusText}`);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Preview error:', error);
+      alert('Failed to preview file.');
     }
+  };
 
-    // Get the content type from response headers
-    const contentType = response.headers.get('content-type');
-    
-    // Create a Blob from the response
-    const blob = await response.blob();
-    
-    // Create a temporary URL for the Blob
-    const url = window.URL.createObjectURL(blob);
+  // Fields allowed to display
+  const allowedFields = [
+    'name',
+    'registerNo',
+    'purpose',
+    'bonafideStatus',
+    'date',
+    'academicYear',
+    'companyName',
+    'bankNameForEducationalLoan',
+    'mobileNumber',
+    'emailId',
+    'semester',
+    'discipline',
+    'welfareIdFilePath',
+    'smartCardFilePath',
+    'studentIdCardFilePath',
+    'provisionalAllotmentFilePath',
+    'aadharCardFilePath',
+    'centralCommunityCertificateFilePath',
+    'collegeFeeReceiptFilePath',
+  ];
 
-    // Check if the file is likely previewable (e.g., PDF, image)
-    const previewableTypes = [
-      'application/pdf',
-      'image/png',
-      'image/jpeg',
-      'image/gif',
-      'text/plain',
-      'text/html',
-    ];
-
-    if (previewableTypes.includes(contentType)) {
-      // Open in a new tab for previewable files
-      window.open(url, '_blank');
-    } else {
-      // Trigger download for non-previewable files
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', filePath.split('/').pop() || 'download');
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    }
-
-    // Clean up the URL
-    window.URL.revokeObjectURL(url);
-  } catch (error) {
-    console.error('File download error:', error);
-    alert('Failed to download file. Please check the file path or try again.');
-  }
-};
+  // Friendly labels
+  const fieldLabels = {
+    name: 'Name',
+    registerNo: 'Register Number',
+    purpose: 'Purpose',
+    bonafideStatus: 'Status',
+    date: 'Date',
+    academicYear: 'Academic Year',
+    companyName: 'Company Name',
+    bankNameForEducationalLoan: 'Bank Name for Educational Loan',
+    mobileNumber: 'Mobile Number',
+    emailId: 'Email ID',
+    semester: 'Semester',
+    discipline: 'Discipline',
+    welfareIdFilePath: 'Welfare ID',
+    smartCardFilePath: 'Smart Card',
+    studentIdCardFilePath: 'Student ID Card',
+    provisionalAllotmentFilePath: 'Provisional Allotment',
+    aadharCardFilePath: 'Aadhar Card',
+    centralCommunityCertificateFilePath: 'Community Certificate',
+    collegeFeeReceiptFilePath: 'College Fee Receipt',
+  };
 
   return (
     <div className="modal-overlay">
       <div className="modal-content">
         <button className="modal-close-btn" onClick={() => setShowModal(false)}>Close</button>
         <h3>Bonafide Request Details</h3>
-        {Object.entries(selectedBonafide).map(([key, value]) => {
-          if (
-            value !== null &&
-            value !== '' &&
-            key !== 'bonafideId' &&
-            key !== 'studentId'
-          ) {
-            if (key.endsWith('FilePath')) {
-              const label = key
-                .replace(/FilePath$/, '')
-                .replace(/([A-Z])/g, ' $1')
-                .trim();
 
-              return (
-                <div className='view-downloader' key={key}>
-                  <p><strong>{label}:</strong></p>
-                  <button
-                    className="view-download-btn "
-                    onClick={() => handleDownload(value)}
-                  >
-                    Download
-                  </button>
-                  <button
-                    className="view-preview-btn "
-                    onClick={() => handlePreview(value)}
-                  >
-                    Preview
-                  </button>
-                </div>
-              );
-            } else {
-              const label = key.charAt(0).toUpperCase() + key.slice(1);
-              return (
-                <p key={key}>
-                  <strong>{label}:</strong> {value}
-                </p>
-              );
-            }
+        {allowedFields.map((field) => {
+          const value = selectedBonafide[field];
+          if (!value) return null;
+
+          if (field.endsWith('FilePath')) {
+            return (
+              <div className="view-downloader" key={field}>
+                <p><strong>{fieldLabels[field] || field}:</strong></p>
+                <button onClick={() => handleDownload(value)} className="view-download-btn">Download</button>
+                <button onClick={() => handlePreview(value)} className="view-preview-btn">Preview</button>
+              </div>
+            );
           }
-          return null;
+
+          return (
+            <p key={field}>
+              <strong>{fieldLabels[field] || field}:</strong> {value}
+            </p>
+          );
         })}
       </div>
     </div>
