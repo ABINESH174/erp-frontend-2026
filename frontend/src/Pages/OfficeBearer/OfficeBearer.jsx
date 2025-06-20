@@ -129,6 +129,41 @@ const OfficeBearer = () => {
     setSelectedBonafide(item);
     setShowModal(true);
   };
+const handleDownload = async (bonafideId, registerNo) => {
+  console.log('Downloading bonafide ID:', bonafideId, 'Register No:', registerNo);
+
+  try {
+    const response = await axios.get(
+      `http://localhost:8080/api/bonafide/getCertificate/${bonafideId}`,
+      {
+        params: { registerNo }, // 💡 critical
+        responseType: 'blob',
+        headers: {
+          Accept: 'application/pdf',
+        },
+      }
+    );
+
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `Bonafide_${bonafideId}.pdf`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  } catch (error) {
+    if (error.response) {
+      console.error('Download error:', {
+        status: error.response.status,
+        data: error.response.data,
+      });
+    } else {
+      console.error('Download error:', error.message);
+    }
+    toast.error('Failed to download certificate.');
+  }
+};
+
 
   return (
     <div>
@@ -198,7 +233,9 @@ const OfficeBearer = () => {
                 <thead>
                   <tr>
                     <th>S.No</th><th>Register Number</th><th>Name</th><th>Purpose</th><th>Semester</th>
-                    <th>Department</th><th>Date of Apply</th><th>Notify</th>
+                    <th>Department</th><th>Date of Apply</th>
+                    <th>Download</th>
+                    <th>Notify</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -211,6 +248,21 @@ const OfficeBearer = () => {
                       <td>{item.semester}</td>
                       <td>{item.discipline}</td>
                       <td>{item.date}</td>
+                      <td>
+                        <button
+                          onClick={() => handleDownload(item.bonafideId, item.registerNo)}
+                          style={{
+                            backgroundColor: '#4CAF50',
+                            color: '#fff',
+                            padding: '6px 12px',
+                            borderRadius: '6px',
+                            border: 'none',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          Download
+                        </button>
+                      </td>
                       <td>
                         <button
                           onClick={() => handleNotifyStudent(item.bonafideId, item.registerNo)}
