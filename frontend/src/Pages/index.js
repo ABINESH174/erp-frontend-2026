@@ -11,3 +11,4 @@ export {default as Facultydashboard} from './Facultydashboard/Facultydashboard.j
 export {default as Headofthedepartmentdashboard} from './Headofthedepartmentdashboard/Headofthedepartmentdashboard.jsx'
 export {default as FacultyInfohod} from './FacultyInfohod/FacultyInfohod.jsx'
 export {default as StudentInfohod} from './StudentInfohod/StudentInfohod.jsx'
+export {default as Principaldashboard} from './Principaldashboard/Principaldashboard.jsx'

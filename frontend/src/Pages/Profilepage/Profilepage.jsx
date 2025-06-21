@@ -3,10 +3,12 @@ import axios from "axios";
 import "./Profilepage.css";
 import { useLocation,useNavigate } from "react-router-dom";
 import Header from "../../Components/Header/Header.jsx";
-import Footer from "../../Components/Footer/Footer.jsx";
 import Allbuttons from "../../Components/Allbuttons/Allbuttons.jsx";
 import Logout from '../../Assets/logout.svg';
 import Menu from '../../Assets/menu.svg';
+import bonafide from '../../Assets/bonafide.svg';
+import bonafidestatus from '../../Assets/bonafidestatus.svg';
+
 
 function StudentDisplay() {
 
@@ -28,6 +30,10 @@ function StudentDisplay() {
   const handleBonafideClick = () => {
     navigate('/bonafide-page',{state: {studentId}});
   };
+  const handleBonafideStatusClick = () => {
+    navigate('/bonafide-status-page', { state: {studentId} });
+  };
+  
   const handleMenuClick = () => {
     setIsVisible(!isVisible);
   };
@@ -141,7 +147,7 @@ function StudentDisplay() {
       <Header />
       <div className="nav">
      
-        {/* <button className="bonafide_button" onClick={handleBonafideClick}>Bonafide</button> */}
+        {/* <button classN ame="bonafide_button" onClick={handleBonafideClick}>Bonafide</button> */}
         <button className="menu" onClick={handleMenuClick}>
           <img src={Menu} alt="" />
         </button>
@@ -182,14 +188,10 @@ function StudentDisplay() {
           </ul>
 
           <Allbuttons value="Logout" image={Logout} target={handleLogoutClick}/>
-          <Allbuttons value="Bonafide"  target={handleBonafideClick}/>
+          <Allbuttons value="Bonafide" image={bonafide} target={handleBonafideClick}/>
+          <Allbuttons value="Bonafide Status" image={bonafidestatus} target={handleBonafideStatusClick} />
         </div>
-
-
-
-
-
-
+        
       <div className="profile">
       {isVisible && (
        <div className="hi">
@@ -625,7 +627,7 @@ function StudentDisplay() {
         )}
       </div>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

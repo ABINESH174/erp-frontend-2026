@@ -493,7 +493,7 @@ const Modal = ({ student, onClose , userId}) => {
                   </table>
                   <div className='registration_form_buttons' id="navigate_button_next_personal" >
               <Allbuttons   value="Previous" image={Previouswhite} target={() => handleSectionClick("education")}/>
-              <Allbuttons  value="Submit" image={Nextwhite} target={onSubmit}/>
+              <Allbuttons  value="Submit" image={Nextwhite} target={   onSubmit}/>
               <ToastContainer />
               </div>
               </div>

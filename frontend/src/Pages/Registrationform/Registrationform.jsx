@@ -238,6 +238,7 @@ const PersonalForm = () => {
       { field: formData.sslcFile, name: "SSLC File" },
       { field: formData.emisNumber, name: "EMIS Number" , validate: isValidNumbers, errorMessage: "should contain only digits"},
       { field: formData.firstGraduate, name: "First Graduate" },
+      { field: formData.studiedGovernment, name:"Studied in Government School" },
       { field: formData.specialCategory, name: "Special Category" }
     ];
 
@@ -295,9 +296,22 @@ const PersonalForm = () => {
       { field: formData.dateOfAdmission, name: "Date of Admission" },
       { field: formData.courseJoinedDate, name: "Course Joined Date" },
       { field: formData.semester, name: "Semester" },
-      { field: formData.cgpa, name: "CGPA" , validate: isValidDecimal, errorMessage: "should be a valid decimal upto two digits"},
+      // { field: formData.cgpa, name: "CGPA" , validate: isValidDecimal, errorMessage: "should be a valid decimal upto two digits"},
       { field: formData.studentStatus, name: "Student Status" }
     ];
+
+     // Determine whether CGPA should be required
+  const shouldAskCgpa = formData.semester !== "I" &&
+               !(formData.semester === "III" && formData.courseType === "Lateral");
+
+     if (shouldAskCgpa) {
+     requiredFields.push({
+      field: formData.cgpa,
+      name: "CGPA",
+      validate: isValidDecimal,
+      errorMessage: "should be a valid decimal up to two digits"
+    });
+  }
 
     if (!validateFields(requiredFields)) {
       return false;
@@ -647,6 +661,15 @@ const PersonalForm = () => {
                 </div>
               </div>
 
+              
+              <div className="z">
+                <label htmlFor="Is Studied Government School">Is Studied Government School (6th - 12th)</label>
+                <div className="radio" >
+                  <div className="radio-spacing"><input type="radio" name="studiedGovernment" value="Yes" onChange={handleOtherField} checked={formData.studiedGovernment=== 'Yes'}/> Yes</div>
+                  <div className="radio-spacing"><input type="radio" name="studiedGovernment" value="No" onChange={handleOtherField} checked={formData.studiedGovernment === 'No'} /> No</div>
+                </div>
+              </div>
+
               <div className="special_category">
                 <label htmlFor="Special Category">Special Category</label>
                 <select className="dropdown" name="specialCategory" value={formData.specialCategory || ''}  onChange={handleOtherField} >
@@ -733,6 +756,8 @@ const PersonalForm = () => {
                 {fileNames['firstGraduateFile'] && <p className="uploaded_file_name">{fileNames['firstGraduateFile']} Uploaded</p>}
            </div>
               )}
+
+
               {formData.specialCategory!=="Not applicable" && (
                 <div className="specialCategory_file">
                 <input type="file" id="specialCategoryFile" name="specialCategoryFile" className="educational-document" style={{ display: 'none' }} onChange={handleFileChange('specialCategoryFile')} />
@@ -808,7 +833,13 @@ const PersonalForm = () => {
                </select>
              </div>
             <div className="batch">
-              <Allfields fieldtype="text" value="Course Completion Year" inputname="batch"  formData={formData} setFormData={setFormData} />
+              <label htmlFor="batch">Course Completion Year</label>
+              <select className="dropdown" name="batch"  value={formData.batch || ''} onChange={handleOtherField}>
+              <option value=''>Select</option>
+              <option value="2025" >2025</option> 
+              <option value="2026" >2026</option>
+              <option value="2027" >2027</option>
+              </select>
             </div>
             <div className="admission_no">
               <Allfields fieldtype="text" value="Admission Number" inputname="admissionNumber"  formData={formData} setFormData={setFormData} />
@@ -849,11 +880,14 @@ const PersonalForm = () => {
                 <option value="VIII" >VIII</option>
               </select>
             </div>
-            
+
+            {formData.semester !== "I" &&
+            !(formData.semester ==="III" && formData.courseType === 'Lateral')&&(
             <div className="cgpa">
               <Allfields fieldtype="text" value="CGPA" inputname="cgpa" formData={formData} setFormData={setFormData} />
             </div>
-           
+          )}
+
             <div className="student_status">
               <label htmlFor="student_Status">Student Status</label>
               <select className="dropdown" name="studentStatus"  value={formData.studentStatus || ''} onChange={handleOtherField}>

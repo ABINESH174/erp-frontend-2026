@@ -1,0 +1,17 @@
+.batch-container{
+    background-color:transparent;
+    width: 100%;
+    height: 100%;
+}
+.top-faculty-batchbox{
+    background-color: thistle;
+    width: 100%;
+    height: 35%;
+}
+.student-down-batchbox{
+    background-color:aqua;
+    width: 100%;
+    height: 65%;
+    border-bottom-right-radius: 15px;
+
+}
