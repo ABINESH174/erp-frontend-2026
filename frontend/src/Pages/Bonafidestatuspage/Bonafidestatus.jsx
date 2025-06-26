@@ -145,9 +145,6 @@ const BonafideStatus = () => {
                       <p style={{ color: 'green', fontWeight: 'bold', marginBottom: '8px' }}>
                         Bonafide ready student is asked to come and collect the bonafide certification from the office
                       </p>
-                      <button onClick={() => handleDownload(item.filePath)}>
-                        <FaDownload style={{ marginRight: '5px' }} /> Download
-                      </button>
                     </>
                   )}
 
