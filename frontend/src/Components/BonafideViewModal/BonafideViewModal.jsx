@@ -114,7 +114,7 @@ const BonafideViewModal = ({ showModal, setShowModal, selectedBonafide }) => {
               <div className="view-downloader" key={field}>
                 <p><strong>{fieldLabels[field] || field}:</strong></p>
                 <button onClick={() => handleDownload(value)} className="view-download-btn">Download</button>
-                <button onClick={() => handlePreview(value)} className="view-preview-btn">Preview</button>
+                <button onClick={() => handlePreview(value)} className="view-preview-btn" style={{color:'white'}}>Preview</button>
               </div>
             );
           }

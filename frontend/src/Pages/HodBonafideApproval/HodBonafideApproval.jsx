@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { confirmAlert } from 'react-confirm-alert';
@@ -23,7 +22,12 @@ const HodBonafideApproval = () => {
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedBonafide, setSelectedBonafide] = useState(null);
-  const [processingId, setProcessingId] = useState(null);  // NEW: to track currently processing row
+  const [processingId, setProcessingId] = useState(null);
+
+  // Rejection modal states
+  const [rejectionModalOpen, setRejectionModalOpen] = useState(false);
+  const [rejectionItem, setRejectionItem] = useState(null);
+  const [rejectionMessage, setRejectionMessage] = useState('');
 
   useEffect(() => {
     const handleFetchBonafides = async () => {
@@ -54,14 +58,11 @@ const HodBonafideApproval = () => {
   useEffect(() => {
     const fetchHodIdAndBonafides = async () => {
       setLoading(true);
-      setError(null);
-
       try {
         const email = localStorage.getItem('hodEmail');
 
         if (!email) {
           setError('User email not found. Please login again.');
-          setLoading(false);
           return;
         }
 
@@ -72,16 +73,9 @@ const HodBonafideApproval = () => {
 
         const fetchedHodId = hodRes.data.data.hodId;
         setHodId(fetchedHodId);
-
-        if (!fetchedHodId) {
-          setError('Faculty ID not found for this email.');
-          setLoading(false);
-          return;
-        }
       } catch (err) {
         console.error('Error fetching data:', err);
         setError('Failed to fetch data from server.');
-        setData([]);
       } finally {
         setLoading(false);
       }
@@ -90,43 +84,82 @@ const HodBonafideApproval = () => {
     fetchHodIdAndBonafides();
   }, []);
 
-  const handleConfirmStatusChange = (bonafideId, registerNo, status) => {
+  const handleApprove = (bonafideId, registerNo) => {
     confirmAlert({
       title: 'Confirm',
-      message: `Are you sure you want to ${status === 'HOD_APPROVED' ? 'approve' : 'reject'} this bonafide?`,
+      message: 'Are you sure you want to approve this bonafide?',
       buttons: [
-        {
-          label: 'Yes',
-          onClick: () => handleBonafideStatus(bonafideId, registerNo, status)
-        },
-        {
-          label: 'Cancel',
-          onClick: () => { /* do nothing */ }
-        }
-      ]
+        { label: 'Yes', onClick: () => handleStatusUpdate(bonafideId, registerNo, 'HOD_APPROVED') },
+        { label: 'Cancel' },
+      ],
     });
   };
 
-  const handleBonafideStatus = async (bonafideId, registerNo, status) => {
-    setProcessingId(bonafideId);  // disable buttons for this record
-
+  const handleStatusUpdate = async (bonafideId, registerNo, status) => {
     try {
+      setProcessingId(bonafideId);
       const res = await axios.put(
         'http://localhost:8080/api/bonafide/updateBonafideWithBonafideStatus',
         null,
-        {
-          params: { bonafideId, registerNo, status },
-        }
+        { params: { bonafideId, registerNo, status } }
       );
-
       toast.success(res.data.message || 'Status updated!');
-
-      // Remove updated bonafide from list immediately for better UX
-      setData(prevData => prevData.filter(item => item.bonafideId !== bonafideId));
-
+      setData(prev => prev.filter(item => item.bonafideId !== bonafideId));
     } catch (err) {
       console.error('Failed to update status:', err);
       toast.error('Failed to update status.');
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
+  const handleRejectClick = (item) => {
+    setRejectionItem(item);
+    setRejectionMessage('');
+    setRejectionModalOpen(true);
+  };
+
+  const submitRejection = () => {
+    if (!rejectionMessage.trim()) {
+      return toast.error('Please enter a rejection reason.');
+    }
+    setRejectionModalOpen(false);
+
+    confirmAlert({
+      title: 'Confirm Rejection',
+      message: `Reject bonafide for ${rejectionItem.registerNo}?`,
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => rejectBonafide(rejectionItem.bonafideId, rejectionItem.registerNo, rejectionMessage),
+        },
+        {
+          label: 'Cancel',
+          onClick: () => setRejectionModalOpen(true),
+        },
+      ],
+    });
+  };
+
+  const rejectBonafide = async (bonafideId, registerNo, message) => {
+    try {
+      setProcessingId(bonafideId);
+      const res = await axios.put(
+        'http://localhost:8080/api/bonafide/updateObRejectedBonafide',
+        null,
+        {
+          params: {
+            bonafideId,
+            registerNo,
+            status: 'HOD_REJECTED',
+            rejectionMessage: message,
+          },
+        }
+      );
+      toast.success(res.data.message || 'Bonafide rejected successfully!');
+      setData(prev => prev.filter(item => item.bonafideId !== bonafideId));
+    } catch (err) {
+      toast.error('Failed to reject bonafide.');
     } finally {
       setProcessingId(null);
     }
@@ -188,18 +221,14 @@ const HodBonafideApproval = () => {
                       <td className="hod-action-buttons">
                         <button
                           className="approve-btn"
-                          onClick={() =>
-                            handleConfirmStatusChange(item.bonafideId, item.registerNo, 'HOD_APPROVED')
-                          }
+                          onClick={() => handleApprove(item.bonafideId, item.registerNo)}
                           disabled={processingId === item.bonafideId}
                         >
                           Approve
                         </button>
                         <button
                           className="reject-btn"
-                          onClick={() =>
-                            handleConfirmStatusChange(item.bonafideId, item.registerNo, 'REJECTED')
-                          }
+                          onClick={() => handleRejectClick(item)}
                           disabled={processingId === item.bonafideId}
                         >
                           Reject
@@ -216,6 +245,38 @@ const HodBonafideApproval = () => {
           )}
         </div>
       </div>
+
+      {/* Rejection Modal */}
+      {rejectionModalOpen && (
+        <div className="rejection-popup">
+          <div className="rejection-popup-content">
+            <h3>Rejection Reason for {rejectionItem?.registerNo}</h3>
+            <textarea
+              placeholder="Enter rejection reason"
+              value={rejectionMessage}
+              onChange={(e) => setRejectionMessage(e.target.value)}
+              rows="6"
+              cols="60"
+            />
+            <div className="rejection-popup-actions">
+              <button className="submit-reject-btn" onClick={submitRejection}>
+                Submit Rejection
+              </button>
+              <button
+                className="cancel-reject-btn"
+                onClick={() => {
+                  setRejectionModalOpen(false);
+                  setRejectionMessage('');
+                  setRejectionItem(null);
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <BonafideViewModal
         showModal={showModal}
         setShowModal={setShowModal}

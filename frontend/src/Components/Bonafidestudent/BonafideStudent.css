@@ -90,7 +90,7 @@
     background-color: #f9f9f9;
 }
 .fa-bonafide-table tbody tr:hover{
-    background-color: #f1f1f1;
+    background-color: rgb(202, 240, 255);
 }
 .fa-bonafide-table thead th, .fa-bonafide-table tbody td{
     border: 1px solid #ddd;
@@ -114,6 +114,7 @@
 }
 .approve-btn:hover{
     background-color: rgb(45, 128, 45);
+    transform: scale(1.05);
 }
 .reject-btn{
     width: 5rem;
@@ -129,6 +130,7 @@
 }
 .reject-btn:hover{
     background-color: rgb(213, 18, 18);
+    transform: scale(1.05);
 }
 
 .bonafide-backbtn{

@@ -28,12 +28,11 @@
 }
 
 /* Close Button */
-.modal-content .modal-close-btn {
+ .modal-close-btn  {
   position: absolute;
   top: 16px;
   right: 16px;
-  background-color: #c90000;
-  color: white;
+  color: #111;
   border: none;
   padding: 8px 14px;
   border-radius: 5px;
@@ -45,6 +44,8 @@
 
 .modal-content .modal-close-btn:hover {
   background-color: #ff0000;
+  color: white;
+  transform: scale(1.05);
 }
 
 /* Modal Title */
@@ -52,7 +53,7 @@
   margin-top: 0;
   margin-bottom: 24px;
   font-size: 1.8rem;
-  color: #001064;
+  color: rgb(24, 69, 121);
   text-align: center;
   border-bottom: 2px solid #ececec;
   padding-bottom: 12px;
@@ -102,7 +103,7 @@
 
 .view-downloader .view-preview-btn {
   background:linear-gradient(135deg,rgb(0, 68, 255), rgb(46, 173, 193)) ;
-  color: white;
+  color: rgb(218, 23, 23);
   text-decoration: none;
   border: none;
   border-radius: 6px;
