@@ -24,14 +24,14 @@ function Bonafide() {
     });
 
     const options = [
-        { title: "Bonafide for Post Matric Scholarships", id: "postMatricScholarship", image: "tinystudents.jpg", description: "Post Matric Scholarships for BC/ MBC/DNC and SC/ST/SCA students." },
-        { title: "Bonafide for Pudhumai Penn Scheme", id: "pudhumaiPennScheme", image: "pudhumai.jpeg", description: "For Pudhumai Penn." },
-        { title: "Bonafide for TamilPudhalvan Scheme", id: "tamilPudhalvanScheme", image: "tamilpudhalvan.jpg", description: "For Tamil Pudhalvan." },
-        { title: "Bonafide for Welfare Scholarship", id: "welfareScholarship", image: "welfare.jpeg", description: "For Labour, Tailor, Farmer Welfare." },
-        { title: "Bonafide for Educational Support", id: "educationalSupport", image: "scholarshiphands.jpg", description: "For educational support schemes." },
-        { title: "Bonafide for Internship", id: "internship", image: "of.png", description: "For internship applications." },
-        { title: "Bonafide for Bus Pass", id: "busPass", image: "buspass.jpg", description: "For bus pass applications." },
-        { title: "Bonafide for Passport", id: "passport", image: "passport.jpg", description: "For passport applications." },
+        { title: "Bonafide for Post Matric Scholarships", id: "postMatricScholarship", image: "tinystudents.jpg", description: "Post Matric Scholarships for BC/ MBC/DNC and SC/ST/SCA students Only." },
+        { title: "Bonafide for Pudhumai Penn Scheme", id: "pudhumaiPennScheme", image: "pudhumai.jpeg", description: "For Girl students Who had studied in Government School From 6th-12th std Only." },
+        { title: "Bonafide for TamilPudhalvan Scheme", id: "tamilPudhalvanScheme", image: "tamilpudhalvan.jpg", description: "For Boy    students Who had studied in Government School From 6th-12th std Only." },
+        { title: "Bonafide for Welfare Scholarship", id: "welfareScholarship", image: "welfare.jpeg", description: "Welfare Schemes for Labour, Tailor, Farmer ." },
+        { title: "Bonafide for Educational Support", id: "educationalSupport", image: "scholarshiphands.jpg", description: "Educational support schemes for students." },
+        { title: "Bonafide for Internship", id: "internship", image: "of.png", description: "Internship applications Bonafide for Students ." },
+        { title: "Bonafide for Bus Pass", id: "busPass", image: "buspass.jpg", description: "Bus Pass applications Bonafide for Students Only ." },
+        { title: "Bonafide for Passport", id: "passport", image: "passport.jpg", description: "Passport applications Bonafide for Students Only ." },
         { title: "Bonafide for Others", id: "others", image: "others.jpeg", description: "For other purposes." }
     ];
 
