@@ -136,7 +136,7 @@ const handleDownload = async (bonafideId, registerNo) => {
     const response = await axios.get(
       `http://localhost:8080/api/bonafide/getCertificate/${bonafideId}`,
       {
-        params: { registerNo }, // 💡 critical
+        params: { registerNo }, 
         responseType: 'blob',
         headers: {
           Accept: 'application/pdf',
