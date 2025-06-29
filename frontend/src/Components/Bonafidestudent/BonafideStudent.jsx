@@ -100,6 +100,9 @@ const BonafideStudent = () => {
         { params: { bonafideId, registerNo, status: 'FACULTY_APPROVED' } }
       );
 
+      // After faculty approval, sending email to the HOD
+      await axios.post(`/api/email/notify-approver`);
+
       toast.success(res.data.message || 'Status updated!');
       setData(prev => prev.filter(item => item.bonafideId !== bonafideId));
       if (data.length === 1) setError('No bonafide requests found.');
