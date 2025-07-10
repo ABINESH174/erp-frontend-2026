@@ -170,11 +170,10 @@ function Bonafide() {
     await axios.post('/api/bonafide/create', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
-    
+    toast.success("Bonafide submitted successfully!");
+        
     // Notify faculty about the new bonafide request via email
     await axios.post(`/api/email/notify-faculty/${userId}`);
-
-    toast.success("Bonafide submitted successfully!");
     setTimeout(() => navigate('/profile-page', { state: { userId } }), 1500);
   } catch (error) {
     toast.error(error.response?.data?.message || "Submission failed.");
