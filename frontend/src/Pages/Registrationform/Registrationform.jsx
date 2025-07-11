@@ -15,7 +15,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const PersonalForm = () => { 
     const location = useLocation(); 
 
-    const MAX_FILE_SIZE = 20 * 1024;
+    const MAX_FILE_SIZE = 100 * 1024;
     const handleSectionClick = (section) => { 
         setDisplaySection(section); 
     }; 
@@ -662,11 +662,11 @@ const PersonalForm = () => {
               </div>
 
               
-              <div className="z">
+              <div className="is_GovtSchool">
                 <label htmlFor="Is Studied Government School">Is Studied Government School (6th - 12th)</label>
                 <div className="radio" >
-                  <div className="radio-spacing"><input type="radio" name="studiedGovernment" value="Yes" onChange={handleOtherField} checked={formData.studiedGovernment=== 'Yes'}/> Yes</div>
-                  <div className="radio-spacing"><input type="radio" name="studiedGovernment" value="No" onChange={handleOtherField} checked={formData.studiedGovernment === 'No'} /> No</div>
+                  <div className="radio-spacing"><input type="radio" name="isGovtSchool" value="Yes" onChange={handleOtherField} checked={formData.isGovtSchool === 'Yes'}/> Yes</div>
+                  <div className="radio-spacing"><input type="radio" name="isGovtSchool" value="No" onChange={handleOtherField} checked={formData.isGovtSchool === 'No'} /> No</div>
                 </div>
               </div>
 

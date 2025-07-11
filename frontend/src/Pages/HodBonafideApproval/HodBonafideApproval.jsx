@@ -83,17 +83,35 @@ const HodBonafideApproval = () => {
 
     fetchHodIdAndBonafides();
   }, []);
+const handleApprove = (bonafideId, registerNo) => {
+  confirmAlert({
+    title: 'Confirm',
+    message: 'Are you sure you want to approve this bonafide?',
+    buttons: [
+      {
+        label: 'Yes',
+        onClick: async () => {
+          try {
+            await Promise.all([
+              handleStatusUpdate(bonafideId, registerNo, 'HOD_APPROVED'),
+              axios.post(`/api/email/notify-approver`, {
+                bonafideId,
+                registerNo,
+                status: 'HOD_APPROVED',
+              }),
+            ]);
+            toast.success('Bonafide approved successfully.');
+          } catch (err) {
+            console.error('Approval failed:', err.response?.data || err.message || err);
+            toast.error('Something went wrong.');
+          }
+        },
+      },
+      { label: 'No' },
+    ],
+  });
+};
 
-  const handleApprove = (bonafideId, registerNo) => {
-    confirmAlert({
-      title: 'Confirm',
-      message: 'Are you sure you want to approve this bonafide?',
-      buttons: [
-        { label: 'Yes', onClick: () => handleStatusUpdate(bonafideId, registerNo, 'HOD_APPROVED') },
-        { label: 'Cancel' },
-      ],
-    });
-  };
 
   const handleStatusUpdate = async (bonafideId, registerNo, status) => {
     try {
