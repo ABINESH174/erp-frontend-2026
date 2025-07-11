@@ -15,7 +15,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const PersonalForm = () => { 
     const location = useLocation(); 
 
-    const MAX_FILE_SIZE = 20 * 1024;
+    const MAX_FILE_SIZE = 100 * 1024;
     const handleSectionClick = (section) => { 
         setDisplaySection(section); 
     }; 
