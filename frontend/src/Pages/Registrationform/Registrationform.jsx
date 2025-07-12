@@ -238,7 +238,7 @@ const PersonalForm = () => {
       { field: formData.sslcFile, name: "SSLC File" },
       { field: formData.emisNumber, name: "EMIS Number" , validate: isValidNumbers, errorMessage: "should contain only digits"},
       { field: formData.firstGraduate, name: "First Graduate" },
-      { field: formData.studiedGovernment, name:"Studied in Government School" },
+      { field: formData.isGovtSchool, name:"Studied in Government School" },
       { field: formData.specialCategory, name: "Special Category" }
     ];
 
