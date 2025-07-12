@@ -22,87 +22,155 @@ const BonafideStudent = () => {
   const [selectedBonafide, setSelectedBonafide] = useState(null);
   const [processingId, setProcessingId] = useState(null);
 
-  useEffect(() => {
-    const fetchFacultyIdAndBonafides = async () => {
-      try {
-        setLoading(true);
-        setError(null);
+  // Rejection modal states
+  const [rejectionModalOpen, setRejectionModalOpen] = useState(false);
+  const [rejectionItem, setRejectionItem] = useState(null);
+  const [rejectionMessage, setRejectionMessage] = useState('');
 
-        const email = localStorage.getItem('facultyEmail');
-        if (!email) {
-          setError('User email not found. Please login again.');
-          return;
-        }
-
-        const facultyRes = await axios.get(`http://localhost:8080/api/faculty/${email}`);
-        const fetchedFacultyId = facultyRes.data.data.facultyId;
-        setFacultyId(fetchedFacultyId);
-
-        if (!fetchedFacultyId) {
-          setError('Faculty ID not found for this email.');
-          return;
-        }
-
-        const bonafideRes = await axios.get(
-          `http://localhost:8080/api/faculty/get-pending-bonafides/${fetchedFacultyId}`
-        );
-
-        setData(bonafideRes.data?.data || []);
-        if (bonafideRes.data?.data?.length === 0) {
-          setError('No bonafide requests found.');
-        }
-      } catch (err) {
-        console.error('Error fetching data:', err);
-        setError('Failed to fetch data from server.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFacultyIdAndBonafides();
-  }, []);
-
-  const handleConfirmStatusChange = (bonafideId, registerNo, status) => {
-    confirmAlert({
-      title: 'Confirm',
-      message: `Are you sure you want to ${status === 'FACULTY_APPROVED' ? 'approve' : 'reject'} this bonafide?`,
-      buttons: [
-        {
-          label: 'Yes',
-          onClick: () => handleBonafideStatus(bonafideId, registerNo, status)
-        },
-        {
-          label: 'Cancel',
-          onClick: () => {}
-        }
-      ]
-    });
-  };
-
-  const handleBonafideStatus = async (bonafideId, registerNo, status) => {
+ useEffect(() => {
+  const fetchFacultyIdAndBonafides = async () => {
     try {
-      setProcessingId(bonafideId);
+      setLoading(true);
+      setError(null);
 
-      const res = await axios.put(
-        'http://localhost:8080/api/bonafide/updateBonafideWithBonafideStatus',
-        null,
-        { params: { bonafideId, registerNo, status } }
+      const email = localStorage.getItem('facultyEmail');
+      if (!email) {
+        setError('User email not found. Please login again.');
+        return;
+      }
+
+      const facultyRes = await axios.get(`http://localhost:8080/api/faculty/${email}`);
+      const fetchedFacultyId = facultyRes.data.data.facultyId;
+      setFacultyId(fetchedFacultyId);
+
+      if (!fetchedFacultyId) {
+        setError('Faculty ID not found for this email.');
+        return;
+      }
+
+      const bonafideRes = await axios.get(
+        `http://localhost:8080/api/faculty/get-pending-bonafides/${fetchedFacultyId}`
       );
 
-      toast.success(res.data.message || 'Status updated!');
+      const bonafides = bonafideRes.data?.data || [];
+      // ✅ Filter out rejected ones (in case backend returns them)
+      const filtered = bonafides.filter(item =>
+        item.bonafideStatus !== 'FACULTY_REJECTED' &&
+        item.bonafideStatus !== 'REJECTED'
+      );
 
-      setData(prevData => prevData.filter(item => item.bonafideId !== bonafideId));
-
-      if (data.length === 1) {
+      setData(filtered);
+      if (filtered.length === 0) {
         setError('No bonafide requests found.');
       }
     } catch (err) {
-      console.error('Failed to update status:', err);
+      console.error('Error fetching data:', err);
+      setError('Failed to fetch data from server.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchFacultyIdAndBonafides();
+}, []);
+
+
+  const handleApprove = (bonafideId, registerNo) => {
+    confirmAlert({
+      title: 'Confirm',
+      message: `Are you sure you want to approve this bonafide?`,
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: async () => {
+                try {
+                await handleApproveRequest(bonafideId, registerNo);
+                await axios.post(`/api/email/notify-approver`, { bonafideId, registerNo, status: 'FACULTY_APPROVED' });
+                } catch (err) {
+                console.error(err);
+                toast.error('Something went wrong.');
+                }
+        }
+        },
+        {
+          label: 'Cancel',
+        },
+      ],
+    });
+  };
+
+  const handleApproveRequest = async (bonafideId, registerNo) => {
+    try {
+      setProcessingId(bonafideId);
+      const res = await axios.put(
+        'http://localhost:8080/api/bonafide/updateBonafideWithBonafideStatus',
+        null,
+        { params: { bonafideId, registerNo, status: 'FACULTY_APPROVED' } }
+      );
+      toast.success(res.data.message || 'Status updated!');
+      setData(prev => prev.filter(item => item.bonafideId !== bonafideId));
+      if (data.length === 1) setError('No bonafide requests found.');
+    } catch (err) {
       toast.error('Failed to update status.');
     } finally {
       setProcessingId(null);
     }
   };
+
+  const handleRejectClick = (item) => {
+    setRejectionItem(item);
+    setRejectionMessage('');
+    setRejectionModalOpen(true);
+  };
+
+  const submitRejection = () => {
+    if (!rejectionMessage.trim()) return toast.error('Please enter a rejection reason.');
+    setRejectionModalOpen(false);
+
+    confirmAlert({
+      title: 'Confirm Rejection',
+      message: `Reject bonafide for ${rejectionItem.registerNo}?`,
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => rejectBonafide(rejectionItem.bonafideId, rejectionItem.registerNo, rejectionMessage),
+        },
+        {
+          label: 'Cancel',
+          onClick: () => setRejectionModalOpen(true),
+        },
+      ],
+    });
+  };
+
+ const rejectBonafide = async (bonafideId, registerNo, message) => {
+  try {
+    setProcessingId(bonafideId);
+
+    const res = await axios.put(
+      'http://localhost:8080/api/bonafide/updateObRejectedBonafide',
+      null,
+      {
+        params: {
+          bonafideId,
+          registerNo,
+          status: 'FACULTY_REJECTED', // ✅ Added to match backend expectation
+          rejectionMessage: message,
+        },
+      }
+    );
+
+    toast.success(res.data.message || 'Bonafide rejected successfully!');
+    setData(prev => prev.filter(item => item.bonafideId !== bonafideId));
+
+    if (data.length === 1) setError('No bonafide requests found.');
+  } catch (err) {
+    toast.error('Failed to reject bonafide.');
+    console.error(err);
+  } finally {
+    setProcessingId(null);
+  }
+};
 
   const handleViewClick = (item) => {
     setSelectedBonafide(item);
@@ -159,15 +227,14 @@ const BonafideStudent = () => {
                       <td className="fa-action-buttons">
                         <button
                           className="approve-btn"
-                          onClick={() => handleConfirmStatusChange(item.bonafideId, item.registerNo, 'FACULTY_APPROVED')}
+                          onClick={() => handleApprove(item.bonafideId, item.registerNo)}
                           disabled={processingId === item.bonafideId}
                         >
                           {processingId === item.bonafideId ? 'Processing...' : 'Approve'}
                         </button>
-
                         <button
                           className="reject-btn"
-                          onClick={() => handleConfirmStatusChange(item.bonafideId, item.registerNo, 'REJECTED')}
+                          onClick={() => handleRejectClick(item)}
                           disabled={processingId === item.bonafideId}
                         >
                           {processingId === item.bonafideId ? 'Processing...' : 'Reject'}
@@ -184,6 +251,38 @@ const BonafideStudent = () => {
           )}
         </div>
       </div>
+
+      {/* Rejection Modal */}
+      {rejectionModalOpen && (
+        <div className="rejection-popup">
+          <div className="rejection-popup-content">
+            <h3>Rejection Reason for {rejectionItem?.registerNo}</h3>
+            <textarea
+              placeholder="Enter rejection reason"
+              value={rejectionMessage}
+              onChange={(e) => setRejectionMessage(e.target.value)}
+              rows="6"
+              cols="60"
+            />
+            <div className="rejection-popup-actions">
+              <button className="submit-reject-btn" onClick={submitRejection}>
+                Submit Rejection
+              </button>
+              <button
+                className="cancel-reject-btn"
+                onClick={() => {
+                  setRejectionModalOpen(false);
+                  setRejectionMessage('');
+                  setRejectionItem(null);
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <BonafideViewModal showModal={showModal} setShowModal={setShowModal} selectedBonafide={selectedBonafide} />
       <ToastContainer />
     </div>

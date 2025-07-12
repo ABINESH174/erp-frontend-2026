@@ -16,18 +16,18 @@ const BonafideStatus = () => {
   const [selectedBonafide, setSelectedBonafide] = useState(null);
   const [filesToUpload, setFilesToUpload] = useState({});
 
-  const purposeFileMap = {
-    'Bonafide for Internship': ['studentIdCardFile'],
-    'Bonafide for Bus Pass': ['studentIdCardFile'],
-    'Bonafide for Passport': ['studentIdCardFile'],
-    'Educational Support': ['studentIdCardFile'],
-    'Pragati': ['studentIdCardFile'],
-    'Saksham': ['studentIdCardFile'],
-    'Swanath Scholarship': ['studentIdCardFile'],
-    'Labour Welfare': ['studentIdCardFile', 'aadharCardFile', 'smartCardFile', 'WelfareProofDocumentFile'],
-    'Tailor Welfare': ['studentIdCardFile', 'aadharCardFile', 'smartCardFile', 'WelfareProofDocumentFile'],
-    'Farmer Welfare': ['studentIdCardFile', 'aadharCardFile', 'smartCardFile', 'WelfareProofDocumentFile'],
-  };
+ const purposeFileMap = {
+  'bonafide for internship': ['studentIdCardFile'],
+  'bonafide for bus pass': ['studentIdCardFile'],
+  'bonafide for passport': ['studentIdCardFile'],
+  'educational support': ['studentIdCardFile'],
+  'pragati': ['studentIdCardFile'],
+  'saksham': ['studentIdCardFile'],
+  'swanath scholarship': ['studentIdCardFile'],
+  'labour welfare': ['studentIdCardFile', 'aadharCardFile', 'smartCardFile'],
+  'tailor welfare': ['studentIdCardFile', 'aadharCardFile', 'smartCardFile'],
+  'farmer welfare': ['studentIdCardFile', 'aadharCardFile', 'smartCardFile'],
+};
 
   const fetchBonafideDetails = async () => {
     try {
@@ -46,16 +46,7 @@ const BonafideStatus = () => {
     fetchBonafideDetails();
   }, [registerNo]);
 
-  const handleDownload = (filePath) => {
-    const url = `http://localhost:8080/api/bonafide/downloadFile?filePath=${encodeURIComponent(filePath)}`;
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = ''; // You can specify a file name here if desired
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
+  
   const handleFileChange = (e, fileKey) => {
     const file = e.target.files[0];
     if (file) {
@@ -72,7 +63,7 @@ const BonafideStatus = () => {
   const handleSubmitReupload = async () => {
     if (!selectedBonafide || Object.keys(filesToUpload).length === 0) return;
 
-    const requiredFiles = purposeFileMap[selectedBonafide.purpose] || [];
+const requiredFiles = purposeFileMap[selectedBonafide.purpose?.toLowerCase()] || [];
     const missingFiles = requiredFiles.filter(fileKey => !filesToUpload[fileKey]);
 
     if (missingFiles.length > 0) {
@@ -82,10 +73,19 @@ const BonafideStatus = () => {
 
     try {
       const formData = new FormData();
+      const statusMap = {
+      'FACULTY_REJECTED': 'PENDING',
+  'HOD_REJECTED': 'FACULTY_APPROVED',
+  'OB_REJECTED': 'HOD_APPROVED'
+};
+
+  const statusToSend = statusMap[selectedBonafide.bonafideStatus] || selectedBonafide.bonafideStatus;
+  
       formData.append("registerNo", selectedBonafide.registerNo);
       formData.append("purpose", selectedBonafide.purpose);
       formData.append("date", selectedBonafide.date);
-      formData.append("bonafideStatus", "HOD_APPROVED");
+      console.log("Status being sent:", statusToSend);
+      formData.append("bonafideStatus", statusToSend);
 
       Object.entries(filesToUpload).forEach(([key, file]) => {
         formData.append(key, file);
@@ -145,13 +145,10 @@ const BonafideStatus = () => {
                       <p style={{ color: 'green', fontWeight: 'bold', marginBottom: '8px' }}>
                         Bonafide ready student is asked to come and collect the bonafide certification from the office
                       </p>
-                      <button onClick={() => handleDownload(item.filePath)}>
-                        <FaDownload style={{ marginRight: '5px' }} /> Download
-                      </button>
                     </>
                   )}
 
-                  {item.bonafideStatus === 'OB_REJECTED' && (
+                  {(item.bonafideStatus === 'OB_REJECTED' || item.bonafideStatus === 'FACULTY_REJECTED' || item.bonafideStatus === 'HOD_REJECTED') && (
                     <div>
                       <p style={{ color: 'red' }}>Reason: {item.rejectionMessage}</p>
                       <button onClick={() => handleReuploadClick(item)}>Reupload</button>
@@ -160,7 +157,7 @@ const BonafideStatus = () => {
 
                   {
                    item.bonafideStatus !== 'NOTIFIED' &&
-                   item.bonafideStatus !== 'OB_REJECTED' && (
+                   item.bonafideStatus !== 'OB_REJECTED' && item.bonafideStatus !== 'FACULTY_REJECTED' && item.bonafideStatus !== 'HOD_REJECTED' && (
                     <button disabled>Pending Approval</button>
                   )}
                 </td>
@@ -173,20 +170,29 @@ const BonafideStatus = () => {
       )}
 
       {showModal && selectedBonafide && (
-        <div className="modal-overlay" onClick={() => setShowModal(false)}>
-          <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <h3>Reupload Required Files</h3>
-            {(purposeFileMap[selectedBonafide.purpose] || []).map(fileKey => (
-              <div className="file-upload" key={fileKey}>
-                <label>{fileKey.replace(/([A-Z])/g, ' $1')}</label>
-                <input type="file" onChange={e => handleFileChange(e, fileKey)} />
-              </div>
-            ))}
-            <button onClick={handleSubmitReupload}>Submit</button>
-            <button onClick={() => setShowModal(false)}>Cancel</button>
+  <div className="modal-overlay" onClick={() => setShowModal(false)}>
+    <div className="modal-content" onClick={e => e.stopPropagation()}>
+      <h3>Reupload Required Files</h3>
+
+      {(purposeFileMap[selectedBonafide.purpose?.toLowerCase()] || []).length > 0 ? (
+        purposeFileMap[selectedBonafide.purpose?.toLowerCase()].map(fileKey => (
+          <div className="file-upload" key={fileKey}>
+            <label>{fileKey.replace(/([A-Z])/g, ' $1')}</label>
+            <input type="file" onChange={e => handleFileChange(e, fileKey)} />
           </div>
-        </div>
+        ))
+      ) : (
+        <p style={{ color: 'red' }}>
+          No upload fields found for purpose: {selectedBonafide.purpose}
+        </p>
       )}
+
+      <button onClick={handleSubmitReupload}>Submit</button>
+      <button onClick={() => setShowModal(false)}>Cancel</button>
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
