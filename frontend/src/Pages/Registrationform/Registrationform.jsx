@@ -324,9 +324,29 @@ const PersonalForm = () => {
   const handleOtherField = (e) => {
     const { name, value } = e.target;
     const updatedFormData = { ...formData, [name]: value };
+      if (name === "semester") {
+    updatedFormData.semester = value;
+
+    if (value === "I" || value === "II") {
+      updatedFormData.department = "Science and humanities";
+    } else if (formData.discipline) {
+      updatedFormData.department = formData.discipline;
+    }
+
+  } else if (name === "discipline") {
+    updatedFormData.discipline = value;
+
+    if (formData.semester === "I" || formData.semester === "II") {
+      updatedFormData.department = "Science and humanities";
+    } else {
+      updatedFormData.department = value;
+    }
+  }
     setFormData(updatedFormData);
     localStorage.setItem('formData', JSON.stringify(updatedFormData));
   };
+
+  
   const handleFileChange = (name) => async (e) => {
     const { target: { files } } = e;
     const file = files[0];
@@ -364,9 +384,12 @@ const PersonalForm = () => {
       }
 
       const { userId: registerNumber } = location.state;
+    
       const updatedFormData = { ...formData, registerNo: registerNumber };
+       console.log("Form data being sent:", updatedFormData);
 
       setFormData(updatedFormData);
+      
       localStorage.setItem('formData', JSON.stringify(updatedFormData));
 
       setShowModal(true);
@@ -806,6 +829,22 @@ const PersonalForm = () => {
                 <option value="ME">ME</option>
               </select>
             </div>
+            
+             <div className="semester">
+              <label htmlFor="semester">Semester</label>
+              <select className="dropdown" name="semester"  value={formData.semester || ''} onChange={handleOtherField}>
+                <option value=''>Select</option>
+                <option value="I" >I</option>
+                <option value="II" >II</option>
+                <option value="III" >III</option>
+                <option value="IV" >IV</option>
+                <option value="V" >V</option>
+                <option value="VI" >VI</option>
+                <option value="VII" >VII</option>
+                <option value="VIII" >VIII</option>
+              </select>
+            </div>
+
             <div className="discipline">
               <label htmlFor="discipline">Discipline</label>
               <select className="dropdown" name="discipline"  value={formData.discipline || ''} onChange={handleOtherField}>
@@ -866,20 +905,7 @@ const PersonalForm = () => {
             <div className="join_date">
               <Allfields fieldtype="date" value="Course Joined Date" inputname="courseJoinedDate" formData={formData} setFormData={setFormData} />
             </div>
-            <div className="semester">
-              <label htmlFor="semester">Semester</label>
-              <select className="dropdown" name="semester"  value={formData.semester || ''} onChange={handleOtherField}>
-                <option value=''>Select</option>
-                <option value="I" >I</option>
-                <option value="II" >II</option>
-                <option value="III" >III</option>
-                <option value="IV" >IV</option>
-                <option value="V" >V</option>
-                <option value="VI" >VI</option>
-                <option value="VII" >VII</option>
-                <option value="VIII" >VIII</option>
-              </select>
-            </div>
+           
 
             {formData.semester !== "I" &&
             !(formData.semester ==="III" && formData.courseType === 'Lateral')&&(
