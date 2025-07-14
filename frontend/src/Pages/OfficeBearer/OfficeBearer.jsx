@@ -61,8 +61,14 @@ const OfficeBearer = () => {
   const approveBonafide = async (bonafideId, registerNo) => {
     try {
       const res = await axios.put('http://localhost:8080/api/bonafide/updateBonafideWithBonafideStatus', null, {
-        params: { bonafideId, registerNo, status: 'OB_APPROVED' },
+        params: { bonafideId, registerNo, status: 'PRINCIPAL_APPROVED' },
       });
+       try {
+      await axios.post('http://localhost:8080/api/email/notify-approver', {bonafideId, status: 'PRINCIPAL_APPROVED', registerNo});
+    } catch (emailErr) {
+      console.error('Email sending failed:', emailErr);
+    }
+
       toast.success(res.data.message || 'Bonafide approved successfully!');
       fetchHodApprovedBonafides();
     } catch {
@@ -73,7 +79,7 @@ const OfficeBearer = () => {
   const rejectBonafide = async (bonafideId, registerNo, rejectionMessage) => {
     try {
       const res = await axios.put('http://localhost:8080/api/bonafide/updateObRejectedBonafide', null, {
-        params: { bonafideId, registerNo, rejectionMessage },
+        params: { bonafideId, registerNo,status: 'PRINCIPAL_APPROVED',rejectionMessage },
       });
       toast.success(res.data.message || 'Bonafide rejected successfully!');
       fetchHodApprovedBonafides();
@@ -88,6 +94,12 @@ const OfficeBearer = () => {
       await axios.put('http://localhost:8080/api/bonafide/updateBonafideWithBonafideStatus', null, {
         params: { bonafideId, registerNo, status: statusMessage },
       });
+    try {
+      await axios.post('http://localhost:8080/api/email/notify-approver', {bonafideId, status: 'NOTIFIED', registerNo
+      });
+    } catch (emailErr) {
+      console.error('Email sending failed:', emailErr);
+    }
       toast.success("Student notified to collect bonafide.");
       fetchPrincipalApproved();
     } catch {

@@ -15,7 +15,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const PersonalForm = () => { 
     const location = useLocation(); 
 
-    const MAX_FILE_SIZE = 20 * 1024;
+    const MAX_FILE_SIZE = 100 * 1024;
     const handleSectionClick = (section) => { 
         setDisplaySection(section); 
     }; 
@@ -238,7 +238,7 @@ const PersonalForm = () => {
       { field: formData.sslcFile, name: "SSLC File" },
       { field: formData.emisNumber, name: "EMIS Number" , validate: isValidNumbers, errorMessage: "should contain only digits"},
       { field: formData.firstGraduate, name: "First Graduate" },
-      { field: formData.studiedGovernment, name:"Studied in Government School" },
+      { field: formData.isGovtSchool, name:"Studied in Government School" },
       { field: formData.specialCategory, name: "Special Category" }
     ];
 
@@ -665,8 +665,8 @@ const PersonalForm = () => {
               <div className="is_GovtSchool">
                 <label htmlFor="Is Studied Government School">Is Studied Government School (6th - 12th)</label>
                 <div className="radio" >
-                  <div className="radio-spacing"><input type="radio" name="isGovtSchool" value="Yes" onChange={handleOtherField} checked={formData.isGovtSchool=== 'Yes'}/> Yes</div>
-                  <div className="radio-spacing"><input type="radio" name="isGovtSchool" value="No" onChange={handleOtherField} checked={formData.isGovtSchool=== 'No'} /> No</div>
+                  <div className="radio-spacing"><input type="radio" name="isGovtSchool" value="Yes" onChange={handleOtherField} checked={formData.isGovtSchool === 'Yes'}/> Yes</div>
+                  <div className="radio-spacing"><input type="radio" name="isGovtSchool" value="No" onChange={handleOtherField} checked={formData.isGovtSchool === 'No'} /> No</div>
                 </div>
               </div>
 
