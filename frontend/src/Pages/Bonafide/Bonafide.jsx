@@ -10,7 +10,6 @@ function Bonafide() {
     const location = useLocation();
     const navigate = useNavigate();
     const userId = location.state?.studentId;
-
     const [applicableBonafide, setApplicableBonafide] = useState({});
     const [uploads, setUploads] = useState({
         selectedOption: "",
@@ -180,6 +179,21 @@ function Bonafide() {
   }
 };
 
+const instructions = [
+     "You must be a student of this institution to apply for a bonafide certificate.",
+     "For Post Matric Scholarships, you must not be receiving any Central Government Scholarship.",
+     "As students who are benefitted by CENTRAL SCHOLARSHIP are not eligible for State Scholarship.",
+     "The PUDHUMAI PENN SCHEME is exclusively for GIRL students who have studied in Government Schools from 6th to 12th standard.",
+     "The TAMIL PUDHALVAN SCHEME is exclusively for BOY students who have studied in Government Schools from 6th to 12th standard.",
+     "For Welfare Scholarships, you must provide relevant documents such as Aadhar Card, Smart Card, and Welfare Proof Document.",
+     "To apply for bonafide Educational Support, you must provide your Student ID Card and Bank details ,where you had your account for Educational Loan.",
+     "For Internship Bonafide, you must provide your Student ID Card and required details of the Company.",
+     "For Bus Pass Bonafide, you must provide your Student ID Card and relevant documents.",
+     "And if you are applying bonafide for bus pass to get it from TNSTC (Transport Corporation of Tamil Nadu), you must provide your Student ID Card along with your parent's ID proof.",
+     "For all types of bonafide certificates, ensure that you have all the required documents ready for submission.",
+     "If you didn't find your required bonafide certificate in the list, You may apply for 'Others' bonafide certificate.And kindly contact the administration for further assistance.",
+];
+
 
     return (
         <div className="bonafide-container">
@@ -188,7 +202,18 @@ function Bonafide() {
                 <div className="bonafide-heading-bar">
                     <h1>Bonafide Certificate Request</h1>
                 </div>
+                <div className="bonafide-eligibility-container">
 
+                   <div className="eligibility-box">
+                    <ul>
+                        {instructions.map((instruction, index) => (
+                            <li key={index}>{instruction}</li>
+                        ))}
+                    </ul>
+
+                   </div>
+                   <div className="events-list-box">fi</div>
+                </div>
                 <div className="bonafide-display-container">
                     <h2>Select The Bonafide</h2>
                     <div className="bonafide-cards-container">

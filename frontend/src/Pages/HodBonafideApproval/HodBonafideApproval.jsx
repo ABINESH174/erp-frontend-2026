@@ -300,8 +300,8 @@ const handleApprove = (bonafideId, registerNo) => {
         setShowModal={setShowModal}
         selectedBonafide={selectedBonafide}
       />
-      <ToastContainer />
-    </div>
+ <ToastContainer />
+     </div>
   );
 };
 
