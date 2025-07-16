@@ -20,6 +20,7 @@ import Add from '../../Assets/add.svg';
 import Logout from '../../Assets/logout.svg';
 import stud from '../../Assets/studenticondash.svg';
 import BonafideCount from '../../Components/BonafideCounter/BonafideCount.jsx';
+import StudentDetailModal from '../../Components/StudentDetailModal/StudentDetailModal.jsx';
 
 function Facultydashboard() {
   const [faculty, setFaculty] = useState(null);
@@ -124,11 +125,22 @@ function Facultydashboard() {
     </div>
   );
 
-  const handleViewClick = (student) => {
-    setSelectedStudent(student);
+const handleViewClick = async (student) => {
+  const registerNo = student.registerNo?.trim();
+  console.log("View clicked for:", registerNo);
+
+  try {
+    setSelectedStudent(null);
     setOpenModal(true);
     setOpenProfile(false);
-  };
+
+    const response = await axios.get(`http://localhost:8080/api/student/${registerNo}`);
+    setSelectedStudent(response.data); // ← full StudentDto from backend
+  } catch (error) {
+    console.error("Error fetching student data:", error);
+  }
+};
+
 
   const closeModal = () => {
     setOpenModal(false);
@@ -278,19 +290,24 @@ function Facultydashboard() {
                 </thead>
                 <tbody>
                   {faculty.students.filter(student =>
-                    `${student.firstName} ${student.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    student.registerNo.toLowerCase().includes(searchTerm.toLowerCase())
-                  ).map((student, index) => (
-                    <tr key={student.registerNo}>
-                      <td>{index + 1}</td>
-                      <td>{student.firstName} {student.lastName}</td>
-                      <td>{student.registerNo}</td>
-                      <td>{student.emailId}</td>
-                      <td>
-                        <Allbuttons value="View" image={View} target={() => handleViewClick(student)} />
-                      </td>
-                    </tr>
-                  ))}
+  `${student.firstName} ${student.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  student.registerNo.toLowerCase().includes(searchTerm.toLowerCase())
+).map((student, index) => (
+  <tr key={student.registerNo}>
+    <td>{index + 1}</td>
+    <td>{student.firstName} {student.lastName}</td>
+    <td>{student.registerNo}</td>
+    <td>{student.emailId}</td>
+    <td>
+      <Allbuttons 
+        value="View" 
+        image={View} 
+        target={() => handleViewClick(student)} 
+      />
+    </td>
+  </tr>
+))}
+
                 </tbody>
               </table>
             ) : (
@@ -299,7 +316,7 @@ function Facultydashboard() {
           </div>
 
           {openModal && (
-            <Modal student={selectedStudent} onClose={closeModal} userId={selectedStudent.registerNo} />
+            <StudentDetailModal student={selectedStudent} onClose={closeModal}/>
           )}
         </div>
       </div>

@@ -29,31 +29,43 @@ const HodBonafideApproval = () => {
   const [rejectionItem, setRejectionItem] = useState(null);
   const [rejectionMessage, setRejectionMessage] = useState('');
 
-  useEffect(() => {
-    const handleFetchBonafides = async () => {
-      try {
-        const bonafideRes = await axios.get(
-          `http://localhost:8080/api/hod/getFacultyApprovedBonafidesByHodId/${hodId}`,
-          { headers: { Accept: 'application/json' } }
-        );
+ useEffect(() => {
+  const handleFetchBonafides = async () => {
+    try {
+      const bonafideRes = await axios.get(
+        `http://localhost:8080/api/hod/getFacultyApprovedBonafidesByHodId/${hodId}`,
+        { headers: { Accept: 'application/json' } }
+      );
 
-        if (bonafideRes.data?.data?.length > 0) {
-          setData(bonafideRes.data.data);
-          setError(null);
-        } else {
-          setData([]);
-          setError('No bonafide requests found.');
-        }
-      } catch (error) {
-        console.error('Error fetching bonafides:', error);
+      const bonafides = bonafideRes.data?.data || [];
+
+      if (bonafides.length > 0) {
+        setData(bonafides);
+        setError(null);
+      } else {
+        setData([]);
+        setError('No bonafide requests found.');
+      }
+
+    } catch (error) {
+      console.error('Error fetching bonafides:', error);
+
+      if (error.response?.status === 404) {
+        // Backend returned 404 with no data
+        setData([]);
+        setError('No bonafide requests found.');
+      } else {
+        // Other errors like 500 or network
         setError('Error fetching bonafides');
       }
-    };
-
-    if (hodId) {
-      handleFetchBonafides();
     }
-  }, [hodId]);
+  };
+
+  if (hodId) {
+    handleFetchBonafides();
+  }
+}, [hodId]);
+
 
   useEffect(() => {
     const fetchHodIdAndBonafides = async () => {
@@ -113,23 +125,37 @@ const handleApprove = (bonafideId, registerNo) => {
 };
 
 
-  const handleStatusUpdate = async (bonafideId, registerNo, status) => {
-    try {
-      setProcessingId(bonafideId);
-      const res = await axios.put(
-        'http://localhost:8080/api/bonafide/updateBonafideWithBonafideStatus',
-        null,
-        { params: { bonafideId, registerNo, status } }
-      );
-      toast.success(res.data.message || 'Status updated!');
-      setData(prev => prev.filter(item => item.bonafideId !== bonafideId));
-    } catch (err) {
-      console.error('Failed to update status:', err);
+ const handleStatusUpdate = async (bonafideId, registerNo, status) => {
+  try {
+    setProcessingId(bonafideId);
+
+    const res = await axios.put(
+      'http://localhost:8080/api/bonafide/updateBonafideWithBonafideStatus',
+      null,
+      {
+        params: { bonafideId, registerNo, status },
+      }
+    );
+
+    toast.success(res.data.message || 'Status updated!');
+    setData(prev => prev.filter(item => item.bonafideId !== bonafideId));
+    
+  } catch (err) {
+    console.error('Failed to update status:', err);
+
+    if (err.response?.status === 404) {
+      toast.error('Bonafide request not found.');
+    } else if (err.response?.status === 400) {
+      toast.error(err.response?.data?.message || 'Invalid request.');
+    } else {
       toast.error('Failed to update status.');
-    } finally {
-      setProcessingId(null);
     }
-  };
+
+  } finally {
+    setProcessingId(null);
+  }
+};
+
 
   const handleRejectClick = (item) => {
     setRejectionItem(item);
