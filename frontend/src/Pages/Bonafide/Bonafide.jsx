@@ -205,17 +205,21 @@ function Bonafide() {
             <Header />
             <div className="bonafide-content">
                 <div className="bonafide-heading-bar">
-                    <h1>Bonafide Certificate Request</h1>
+                    <p>Bonafide Certificate Request</p>
                 </div>
                 <div className="bonafide-eligibility-container">
-                    <div className="eligibility-box">
-                        <ul>
-                            {instructions.map((instruction, index) => (
-                                <li key={index}>{instruction}</li>
-                            ))}
-                        </ul>
-                    </div>
-                    <div className="events-list-box">fi</div>
+
+                   <div className="eligibility-box">
+                    <ul>
+                        {instructions.map((instruction, index) => (
+                            <li key={index}>{instruction}</li>
+                        ))}
+                    </ul>
+
+                   </div>
+                   <div className="events-list-box">
+                    <h1 className='events-head'>Ongoing Events</h1>
+                   </div>
                 </div>
 
                 <div className="bonafide-display-container">
@@ -246,45 +250,78 @@ function Bonafide() {
 
                 {/* Modals */}
                 {uploads.showCentralScholarshipCheck && (
-                    <div className="modal-overlay" onClick={() => setUploads(prev => ({ ...prev, showCentralScholarshipCheck: false }))}>
-                        <div className="modal-content" onClick={e => e.stopPropagation()}>
-                            <h3>Are you receiving any Central Government Scholarship?</h3>
-                            <div className="confirmation-buttons">
-                                <button onClick={() => {
-                                    toast.error("You are not eligible for State Scholarship.");
-                                    setUploads(prev => ({
-                                        ...prev,
-                                        showCentralScholarshipCheck: false,
-                                        selectedOption: ""
-                                    }));
-                                }}>Yes</button>
-                                <button onClick={() => {
-                                    setUploads(prev => ({
-                                        ...prev,
-                                        showCentralScholarshipCheck: false,
-                                        selectedScholarship: "",
-                                        showModal: true
-                                    }));
-                                }}>No</button>
-                            </div>
-                        </div>
-                    </div>
-                )}
+  <div className="modal-overlay" onClick={() => setUploads(prev => ({ ...prev, showCentralScholarshipCheck: false }))}>
+    <div className="modal-content" onClick={e => e.stopPropagation()}>
+      <h3>Are you receiving any Central Government Scholarship?</h3>
+      <div className="confirmation-buttons">
+        <button
+          onClick={() => {
+            if (uploads.selectedOption === "postMatricScholarship") {
+              toast.error("You are not eligible for State Scholarship.");
+              setUploads(prev => ({
+                ...prev,
+                showCentralScholarshipCheck: false,
+                selectedOption: "", // reset only for state
+              }));
+            } else {
+              setUploads(prev => ({
+                ...prev,
+                showCentralScholarshipCheck: false
+              }));
+            }
+          }}
+        >
+          Yes
+        </button>
 
+        <button
+          onClick={() => {
+            setUploads(prev => ({
+              ...prev,
+              showCentralScholarshipCheck: false,
+              selectedScholarship: "",
+              showModal: true
+            }));
+          }}
+        >
+          No
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+
+                {/* Scholarship Type Modal */}
                 {uploads.showModal && (
-                    <div className="modal-overlay" onClick={() => setUploads(prev => ({ ...prev, showModal: false }))}>
-                        <div className="modal-content" onClick={e => e.stopPropagation()}>
-                            <h3>Select Type of Scholarship</h3>
-                            <ul>
-                                {(uploads.selectedOption === "postMatricScholarship" ? allPostMatricTypes : allWelfareTypes).map(type => (
-                                    <li key={type} onClick={() => handleScholarshipSelect(type)}>{type}</li>
-                                ))}
-                            </ul>
-                            <button onClick={() => setUploads(prev => ({ ...prev, showModal: false }))}>Close</button>
-                        </div>
-                    </div>
-                )}
+  <div className="modal-overlay" onClick={() => setUploads(prev => ({ ...prev, showModal: false }))}>
+    <div className="modal-content" onClick={e => e.stopPropagation()}>
+      <h3>Select Type of Scholarship</h3>
+      <ul>
+        {(uploads.selectedOption === "postMatricScholarship" ? allPostMatricTypes : allWelfareTypes).map(type => {
+          const eligible = isEligible(type); // 🔍 Check eligibility here
+          return (
+            <li
+              key={type}
+              onClick={() => eligible && handleScholarshipSelect(type)}
+              style={{
+                color: eligible ? "#000" : "gray",
+                cursor: eligible ? "pointer" : "not-allowed",
+                pointerEvents: eligible ? "auto" : "none"
+              }}
+            >
+              {type} {!eligible && "(Not Eligible)"}
+            </li>
+          );
+        })}
+      </ul>
+      <button onClick={() => setUploads(prev => ({ ...prev, showModal: false }))}>Close</button>
+    </div>
+  </div>
+)}
 
+
+                {/* Upload Modal */}
                 {uploads.selectedScholarship && (
                     <div className="file-modal-overlay" onClick={() => setUploads(prev => ({ ...prev, selectedScholarship: "" }))}>
                         <div className="modal-content file-upload-modal" onClick={e => e.stopPropagation()}>

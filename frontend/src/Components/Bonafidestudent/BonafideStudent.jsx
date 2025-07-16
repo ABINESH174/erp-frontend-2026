@@ -27,12 +27,12 @@ const BonafideStudent = () => {
   const [rejectionItem, setRejectionItem] = useState(null);
   const [rejectionMessage, setRejectionMessage] = useState('');
 
- useEffect(() => {
+useEffect(() => {
   const fetchFacultyIdAndBonafides = async () => {
-    try {
-      setLoading(true);
-      setError(null);
+    setLoading(true);
+    setError(null);
 
+    try {
       const email = localStorage.getItem('facultyEmail');
       if (!email) {
         setError('User email not found. Please login again.');
@@ -40,32 +40,40 @@ const BonafideStudent = () => {
       }
 
       const facultyRes = await axios.get(`http://localhost:8080/api/faculty/${email}`);
-      const fetchedFacultyId = facultyRes.data.data.facultyId;
-      setFacultyId(fetchedFacultyId);
-
+      const fetchedFacultyId = facultyRes.data?.data?.facultyId;
       if (!fetchedFacultyId) {
         setError('Faculty ID not found for this email.');
         return;
       }
+
+      setFacultyId(fetchedFacultyId);
 
       const bonafideRes = await axios.get(
         `http://localhost:8080/api/faculty/get-pending-bonafides/${fetchedFacultyId}`
       );
 
       const bonafides = bonafideRes.data?.data || [];
-      // ✅ Filter out rejected ones (in case backend returns them)
+
       const filtered = bonafides.filter(item =>
         item.bonafideStatus !== 'FACULTY_REJECTED' &&
         item.bonafideStatus !== 'REJECTED'
       );
 
       setData(filtered);
+
       if (filtered.length === 0) {
         setError('No bonafide requests found.');
       }
+
     } catch (err) {
       console.error('Error fetching data:', err);
-      setError('Failed to fetch data from server.');
+
+      if (err.response?.status === 404) {
+        setError('No bonafide requests found.'); // ❗ specifically for 404 from backend
+      } else {
+        setError('Failed to fetch data from servers.');
+      }
+
     } finally {
       setLoading(false);
     }
@@ -73,6 +81,7 @@ const BonafideStudent = () => {
 
   fetchFacultyIdAndBonafides();
 }, []);
+
 
 
   const handleApprove = (bonafideId, registerNo) => {
