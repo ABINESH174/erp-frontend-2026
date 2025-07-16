@@ -7,6 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaRegEye } from "react-icons/fa";
 import { IoMdEyeOff } from "react-icons/io";
+import {clgimage}from '../../Assets/clgimage.jpg';
 
 function Loginpage() {
   const [userId, setUserId] = useState('');  // Changed setuserId to setUserId for convention
