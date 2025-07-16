@@ -32,17 +32,35 @@ const OfficeBearer = () => {
   }, []);
 
   const fetchHodApprovedBonafides = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.get('http://localhost:8080/api/bonafide/getHodApproved');
-      setData(res.data.data || []);
-      setError(res.data.data?.length ? null : 'No bonafide requests found.');
-    } catch {
-      setError('No bonafide requests.');
-    } finally {
-      setLoading(false);
+  setLoading(true);
+  try {
+    const res = await axios.get('http://localhost:8080/api/bonafide/getHodApproved');
+
+    const bonafides = res.data?.data || [];
+
+    if (bonafides.length === 0) {
+      setData([]);
+      setError('No bonafide requests found.');
+    } else {
+      setData(bonafides);
+      setError(null);
     }
-  };
+
+  } catch (err) {
+    console.error('Error fetching HOD-approved bonafides:', err);
+
+    if (err.response?.status === 404) {
+      setError('No bonafide requests found.');
+      setData([]);
+    } else {
+      setError('Failed to fetch bonafide requests.');
+    }
+
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const fetchPrincipalApproved = async () => {
     setLoading(true);

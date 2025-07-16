@@ -1,0 +1,82 @@
+.student-modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; 
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+}
+
+.student-modal-container {
+  background: #f0f8ff;
+  width: 80vw;
+  max-width: 900px;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.student-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #007bff;
+  color: white;
+  padding: 1rem;
+}
+
+.student-modal-close {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.student-modal-body {
+  display: flex;
+  height: 100%;
+}
+
+.student-modal-sidebar {
+  width: 200px;
+  background: #e6f0fa;
+  padding: 1rem;
+  border-right: 1px solid #ccc;
+}
+
+.student-modal-sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.student-modal-sidebar li {
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+.student-modal-content-area {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.student-modal-content-area table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.student-modal-content-area td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #ccc;
+}
+
+.student-modal-content-area tr:nth-child(even) {
+  background-color: #eaf4ff;
+}
