@@ -1,4 +1,3 @@
-// src/pages/Bonafide/Bonafide.js
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
@@ -11,6 +10,8 @@ function Bonafide() {
     const navigate = useNavigate();
     const userId = location.state?.studentId;
     const [applicableBonafide, setApplicableBonafide] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const [uploads, setUploads] = useState({
         selectedOption: "",
         showModal: false,
@@ -25,7 +26,7 @@ function Bonafide() {
     const options = [
         { title: "Bonafide for Post Matric Scholarships", id: "postMatricScholarship", image: "tinystudents.jpg", description: "Post Matric Scholarships for BC/ MBC/DNC and SC/ST/SCA students Only." },
         { title: "Bonafide for Pudhumai Penn Scheme", id: "pudhumaiPennScheme", image: "pudhumai.jpeg", description: "For Girl students Who had studied in Government School From 6th-12th std Only." },
-        { title: "Bonafide for TamilPudhalvan Scheme", id: "tamilPudhalvanScheme", image: "tamilpudhalvan.jpg", description: "For Boy    students Who had studied in Government School From 6th-12th std Only." },
+        { title: "Bonafide for TamilPudhalvan Scheme", id: "tamilPudhalvanScheme", image: "tamilpudhalvan.jpg", description: "For Boy students Who had studied in Government School From 6th-12th std Only." },
         { title: "Bonafide for Welfare Scholarship", id: "welfareScholarship", image: "welfare.jpeg", description: "Welfare Schemes for Labour, Tailor, Farmer ." },
         { title: "Bonafide for Educational Support", id: "educationalSupport", image: "scholarshiphands.jpg", description: "Educational support schemes for students." },
         { title: "Bonafide for Internship", id: "internship", image: "of.png", description: "Internship applications Bonafide for Students ." },
@@ -139,61 +140,65 @@ function Bonafide() {
         return required.every(f => uploads.fileUploads[f]);
     };
 
-    const handleSubmit = async () => {
-  if (!validateFiles()) return;
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
-  try {
-    const formData = new FormData();
-    formData.append('registerNo', userId);
-    formData.append('purpose', uploads.selectedScholarship.toLowerCase().trim());
-    formData.append('bonafideStatus', 'PENDING');
-    formData.append('date', new Date().toISOString().split('T')[0]);
+        if (!validateFiles() || isSubmitting) return;
 
-    formData.append('academicYear', uploads.academicYear);
-    if (uploads.companyName) {
-      formData.append('companyName', uploads.companyName);
-    }
-    if (uploads.bankNameForEducationalLoan) {
-      formData.append('bankNameForEducationalLoan', uploads.bankNameForEducationalLoan);
-    }
+        try {
+            setIsSubmitting(true);
 
-    Object.entries(uploads.fileUploads).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
+            const formData = new FormData();
+            formData.append('registerNo', userId);
+            formData.append('purpose', uploads.selectedScholarship.toLowerCase().trim());
+            formData.append('bonafideStatus', 'PENDING');
+            formData.append('date', new Date().toISOString().split('T')[0]);
+            formData.append('academicYear', uploads.academicYear);
 
-    // Debug: Log form data before sending
-    for (let pair of formData.entries()) {
-      console.log(`${pair[0]}:`, pair[1]);
-    }
+            if (uploads.companyName) {
+                formData.append('companyName', uploads.companyName);
+            }
+            if (uploads.bankNameForEducationalLoan) {
+                formData.append('bankNameForEducationalLoan', uploads.bankNameForEducationalLoan);
+            }
 
-    await axios.post('/api/bonafide/create', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
-    toast.success("Bonafide submitted successfully!");
-        
-    // Notify faculty about the new bonafide request via email
-    await axios.post(`/api/email/notify-faculty/${userId}`);
-    setTimeout(() => navigate('/profile-page', { state: { userId } }), 1500);
-  } catch (error) {
-    toast.error(error.response?.data?.message || "Submission failed.");
-  }
-};
+            Object.entries(uploads.fileUploads).forEach(([key, value]) => {
+                formData.append(key, value);
+            });
 
-const instructions = [
-     "You must be a student of this institution to apply for a bonafide certificate.",
-     "For Post Matric Scholarships, you must not be receiving any Central Government Scholarship.",
-     "As students who are benefitted by CENTRAL SCHOLARSHIP are not eligible for State Scholarship.",
-     "The PUDHUMAI PENN SCHEME is exclusively for GIRL students who have studied in Government Schools from 6th to 12th standard.",
-     "The TAMIL PUDHALVAN SCHEME is exclusively for BOY students who have studied in Government Schools from 6th to 12th standard.",
-     "For Welfare Scholarships, you must provide relevant documents such as Aadhar Card, Smart Card, and Welfare Proof Document.",
-     "To apply for bonafide Educational Support, you must provide your Student ID Card and Bank details ,where you had your account for Educational Loan.",
-     "For Internship Bonafide, you must provide your Student ID Card and required details of the Company.",
-     "For Bus Pass Bonafide, you must provide your Student ID Card and relevant documents.",
-     "And if you are applying bonafide for bus pass to get it from TNSTC (Transport Corporation of Tamil Nadu), you must provide your Student ID Card along with your parent's ID proof.",
-     "For all types of bonafide certificates, ensure that you have all the required documents ready for submission.",
-     "If you didn't find your required bonafide certificate in the list, You may apply for 'Others' bonafide certificate.And kindly contact the administration for further assistance.",
-];
+            await axios.post('/api/bonafide/create', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
 
+            toast.success("Bonafide submitted successfully!");
+
+            setUploads(prev => ({ ...prev, selectedScholarship: "" }));
+
+            await axios.post(`/api/email/notify-faculty/${userId}`);
+
+             navigate('/profile-page', { state: { userId } });
+
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Submission failed.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const instructions = [
+        "You must be a student of this institution to apply for a bonafide certificate.",
+        "For Post Matric Scholarships, you must not be receiving any Central Government Scholarship.",
+        "As students who are benefitted by CENTRAL SCHOLARSHIP are not eligible for State Scholarship.",
+        "The PUDHUMAI PENN SCHEME is exclusively for GIRL students who have studied in Government Schools from 6th to 12th standard.",
+        "The TAMIL PUDHALVAN SCHEME is exclusively for BOY students who have studied in Government Schools from 6th to 12th standard.",
+        "For Welfare Scholarships, you must provide relevant documents such as Aadhar Card, Smart Card, and Welfare Proof Document.",
+        "To apply for bonafide Educational Support, you must provide your Student ID Card and Bank details ,where you had your account for Educational Loan.",
+        "For Internship Bonafide, you must provide your Student ID Card and required details of the Company.",
+        "For Bus Pass Bonafide, you must provide your Student ID Card and relevant documents.",
+        "And if you are applying bonafide for bus pass to get it from TNSTC (Transport Corporation of Tamil Nadu), you must provide your Student ID Card along with your parent's ID proof.",
+        "For all types of bonafide certificates, ensure that you have all the required documents ready for submission.",
+        "If you didn't find your required bonafide certificate in the list, You may apply for 'Others' bonafide certificate.And kindly contact the administration for further assistance.",
+    ];
 
     return (
         <div className="bonafide-container">
@@ -203,17 +208,16 @@ const instructions = [
                     <h1>Bonafide Certificate Request</h1>
                 </div>
                 <div className="bonafide-eligibility-container">
-
-                   <div className="eligibility-box">
-                    <ul>
-                        {instructions.map((instruction, index) => (
-                            <li key={index}>{instruction}</li>
-                        ))}
-                    </ul>
-
-                   </div>
-                   <div className="events-list-box">fi</div>
+                    <div className="eligibility-box">
+                        <ul>
+                            {instructions.map((instruction, index) => (
+                                <li key={index}>{instruction}</li>
+                            ))}
+                        </ul>
+                    </div>
+                    <div className="events-list-box">fi</div>
                 </div>
+
                 <div className="bonafide-display-container">
                     <h2>Select The Bonafide</h2>
                     <div className="bonafide-cards-container">
@@ -240,7 +244,7 @@ const instructions = [
                     </div>
                 </div>
 
-                {/* Central Scholarship Modal */}
+                {/* Modals */}
                 {uploads.showCentralScholarshipCheck && (
                     <div className="modal-overlay" onClick={() => setUploads(prev => ({ ...prev, showCentralScholarshipCheck: false }))}>
                         <div className="modal-content" onClick={e => e.stopPropagation()}>
@@ -267,7 +271,6 @@ const instructions = [
                     </div>
                 )}
 
-                {/* Scholarship Type Modal */}
                 {uploads.showModal && (
                     <div className="modal-overlay" onClick={() => setUploads(prev => ({ ...prev, showModal: false }))}>
                         <div className="modal-content" onClick={e => e.stopPropagation()}>
@@ -282,19 +285,16 @@ const instructions = [
                     </div>
                 )}
 
-                {/* Upload Modal */}
                 {uploads.selectedScholarship && (
                     <div className="file-modal-overlay" onClick={() => setUploads(prev => ({ ...prev, selectedScholarship: "" }))}>
                         <div className="modal-content file-upload-modal" onClick={e => e.stopPropagation()}>
                             <h3>Upload required documents for {uploads.selectedScholarship}</h3>
 
-                            {/* Student ID Card */}
                             <div className="file-upload">
                                 <label>Student ID Card</label>
                                 <input type="file" onChange={handleFileChange('studentIdCardFile')} />
                             </div>
 
-                            {/* Welfare files */}
                             {allWelfareTypes.includes(uploads.selectedScholarship) && (
                                 <>
                                     <div className="file-upload">
@@ -312,7 +312,6 @@ const instructions = [
                                 </>
                             )}
 
-                            {/* Internship - Company Name */}
                             {uploads.selectedOption === "internship" && (
                                 <div className="file-upload">
                                     <label>Company Name</label>
@@ -320,7 +319,6 @@ const instructions = [
                                 </div>
                             )}
 
-                            {/* Educational Support - Bank Name */}
                             {uploads.selectedOption === "educationalSupport" && (
                                 <div className="file-upload">
                                     <label>Bank Name</label>
@@ -328,14 +326,15 @@ const instructions = [
                                 </div>
                             )}
 
-                            {/* Academic Year */}
                             <div className="file-upload">
                                 <label>Academic Year</label>
                                 <input type="text" placeholder="e.g. 2024-2025" value={uploads.academicYear} onChange={e => setUploads(prev => ({ ...prev, academicYear: e.target.value }))} />
                             </div>
 
                             <div className="file-upload-buttons">
-                                <button className="submit-button" onClick={handleSubmit}>Submit</button>
+                                <button className="submit-button" onClick={handleSubmit} disabled={isSubmitting}>
+                                    {isSubmitting ? "Submitting..." : "Submit"}
+                                </button>
                                 <button className="close-button" onClick={() => setUploads(prev => ({ ...prev, selectedScholarship: "" }))}>Close</button>
                             </div>
                         </div>
