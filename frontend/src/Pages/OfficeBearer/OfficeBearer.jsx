@@ -63,13 +63,8 @@ const OfficeBearer = () => {
       const res = await axios.put('http://localhost:8080/api/bonafide/updateBonafideWithBonafideStatus', null, {
         params: { bonafideId, registerNo, status: 'PRINCIPAL_APPROVED' },
       });
-       try {
-      await axios.post('http://localhost:8080/api/email/notify-approver', {bonafideId, status: 'PRINCIPAL_APPROVED', registerNo});
-    } catch (emailErr) {
-      console.error('Email sending failed:', emailErr);
-    }
 
-      toast.success(res.data.message || 'Bonafide approved successfully!');
+      toast.success('Bonafide approved successfully!');
       fetchHodApprovedBonafides();
     } catch {
       toast.error('Failed to approve bonafide.');
@@ -79,7 +74,7 @@ const OfficeBearer = () => {
   const rejectBonafide = async (bonafideId, registerNo, rejectionMessage) => {
     try {
       const res = await axios.put('http://localhost:8080/api/bonafide/updateObRejectedBonafide', null, {
-        params: { bonafideId, registerNo,status: 'PRINCIPAL_APPROVED',rejectionMessage },
+        params: { bonafideId, registerNo,status: 'OB_REJECTED',rejectionMessage },
       });
       toast.success(res.data.message || 'Bonafide rejected successfully!');
       fetchHodApprovedBonafides();
