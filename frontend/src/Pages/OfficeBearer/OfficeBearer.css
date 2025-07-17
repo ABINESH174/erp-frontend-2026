@@ -218,3 +218,8 @@
 .cancel-reject-btn {
   background-color: #bdc3c7;
 }
+.principal-table-container {
+  width: 100%;
+  height: 80vh;
+  overflow-y: scroll;
+}
