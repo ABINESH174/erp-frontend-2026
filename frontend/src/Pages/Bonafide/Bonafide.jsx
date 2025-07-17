@@ -140,50 +140,57 @@ function Bonafide() {
         return required.every(f => uploads.fileUploads[f]);
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+   const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        if (!validateFiles() || isSubmitting) return;
+    if (!validateFiles() || isSubmitting) return;
 
-        try {
-            setIsSubmitting(true);
+    setIsSubmitting(true);
 
-            const formData = new FormData();
-            formData.append('registerNo', userId);
-            formData.append('purpose', uploads.selectedScholarship.toLowerCase().trim());
-            formData.append('bonafideStatus', 'PENDING');
-            formData.append('date', new Date().toISOString().split('T')[0]);
-            formData.append('academicYear', uploads.academicYear);
+    const formData = new FormData();
+    formData.append('registerNo', userId);
+    formData.append('purpose', uploads.selectedScholarship.toLowerCase().trim());
+    formData.append('bonafideStatus', 'PENDING');
+    formData.append('date', new Date().toISOString().split('T')[0]);
+    formData.append('academicYear', uploads.academicYear);
 
-            if (uploads.companyName) {
-                formData.append('companyName', uploads.companyName);
-            }
-            if (uploads.bankNameForEducationalLoan) {
-                formData.append('bankNameForEducationalLoan', uploads.bankNameForEducationalLoan);
-            }
+    if (uploads.companyName) {
+        formData.append('companyName', uploads.companyName);
+    }
 
-            Object.entries(uploads.fileUploads).forEach(([key, value]) => {
-                formData.append(key, value);
-            });
+    if (uploads.bankNameForEducationalLoan) {
+        formData.append('bankNameForEducationalLoan', uploads.bankNameForEducationalLoan);
+    }
 
-            await axios.post('/api/bonafide/create', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            });
+    Object.entries(uploads.fileUploads).forEach(([key, value]) => {
+        formData.append(key, value);
+    });
 
-            toast.success("Bonafide submitted successfully!");
+    try {
+        await axios.post('/api/bonafide/create', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
 
-            setUploads(prev => ({ ...prev, selectedScholarship: "" }));
+        toast.success('Bonafide submitted successfully!');
+        console.log("Bonafide submitted successfully!");
+        setUploads(prev => ({ ...prev, selectedScholarship: "" }));
+        setTimeout(() => {
+        navigate('/profile-page', { state: { userId } });
+        }, 3000); 
 
-            await axios.post(`/api/email/notify-faculty/${userId}`);
+    } catch (err) {
+        toast.error("Failed to submit Bonafide request.");
+        console.error(err);
+    }
 
-             navigate('/profile-page', { state: { userId } });
+    try {
+        await axios.post(`/api/email/notify-faculty/${userId}`);
+    } catch (notifyErr) {
+        toast.info("Failed to notify Faculty");
+    }
+    setIsSubmitting(false);
+};
 
-        } catch (error) {
-            toast.error(error.response?.data?.message || "Submission failed.");
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
 
     const instructions = [
         "You must be a student of this institution to apply for a bonafide certificate.",
@@ -378,8 +385,9 @@ function Bonafide() {
                     </div>
                 )}
 
-                <ToastContainer />
+                
             </div>
+            <ToastContainer />
         </div>
     );
 }

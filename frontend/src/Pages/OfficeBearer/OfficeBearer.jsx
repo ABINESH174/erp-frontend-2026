@@ -21,6 +21,8 @@ const OfficeBearer = () => {
   const [rejectionModalOpen, setRejectionModalOpen] = useState(false);
   const [rejectionItem, setRejectionItem] = useState(null);
   const [rejectionMessage, setRejectionMessage] = useState("");
+  const [downloadedBonafides, setDownloadedBonafides] = useState([]);
+
 
 /*   // Map NOTIFIED enum to friendly message
   const statusMessages = {
@@ -29,6 +31,7 @@ const OfficeBearer = () => {
 
   useEffect(() => {
     fetchHodApprovedBonafides();
+    fetchNotifiedBonafides();
   }, []);
 
   const fetchHodApprovedBonafides = async () => {
@@ -69,8 +72,22 @@ const OfficeBearer = () => {
       console.log('Principal Approved response:', res.data);
       setPrincipalApprovedData(res.data.data || []);
       setActiveTab('principalApproved');
+    } catch { 
+      toast.info("No approved bonafides.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchNotifiedBonafides = async () => {
+    setLoading(true);
+    try{
+      const res = await axios.get('http://localhost:8080/api/bonafide/getNotifiedBonafides');
+      console.log('Notified Bonafides response:', res.data);
+      setPrincipalApprovedData(res.data.data || []);
+      setActiveTab('notifiedBonafides');
     } catch {
-      toast.info("No principal approved bonafides.");
+      toast.info("No notified bonafides.");
     } finally {
       setLoading(false);
     }
@@ -187,6 +204,7 @@ const handleDownload = async (bonafideId, registerNo) => {
     }
     toast.error('Failed to download certificate.');
   }
+  setDownloadedBonafides(prev => [...prev, bonafideId]);
 };
 
 
@@ -197,7 +215,8 @@ const handleDownload = async (bonafideId, registerNo) => {
         <div className="ob-bonafide-sidebar-container">
           <ul className="ob-bonafide-sidebar-list">
             <li className="ob-bonafide-sidebar-item" onClick={() => setActiveTab('bonafides')}>Bonafides</li>
-            <li className="ob-bonafide-sidebar-item" onClick={fetchPrincipalApproved}>Principal Approved Bonafides</li>
+            <li className="ob-bonafide-sidebar-item" onClick={fetchPrincipalApproved}>Approved Bonafides</li>
+            <li className="ob-bonafide-sidebar-item" onClick={fetchNotifiedBonafides}>Notified Bonafides</li>
           </ul>
         </div>
 
@@ -289,19 +308,21 @@ const handleDownload = async (bonafideId, registerNo) => {
                         </button>
                       </td>
                       <td>
-                        <button
-                          onClick={() => handleNotifyStudent(item.bonafideId, item.registerNo)}
-                          style={{
-                            backgroundColor: '#87cefa',
-                            color: '#000',
-                            padding: '6px 12px',
-                            borderRadius: '6px',
-                            border: 'none',
-                            cursor: 'pointer',
-                          }}
-                        >
-                          Notify
-                        </button>
+                      <button
+                        onClick={() => handleNotifyStudent(item.bonafideId, item.registerNo)}
+                        disabled={!downloadedBonafides.includes(item.bonafideId)}
+                        style={{
+                          backgroundColor: downloadedBonafides.includes(item.bonafideId) ? '#87cefa' : '#d3d3d3',
+                          color: '#000',
+                          padding: '6px 12px',
+                          borderRadius: '6px',
+                          border: 'none',
+                          cursor: downloadedBonafides.includes(item.bonafideId) ? 'pointer' : 'not-allowed',
+                        }}
+                      >
+                        Notify
+                      </button>
+
                       </td>
                     </tr>
                   ))}
@@ -309,6 +330,72 @@ const handleDownload = async (bonafideId, registerNo) => {
               </table>
             </div>
           )}
+          {activeTab === 'notifiedBonafides' && (
+          <div className="principal-table-container">
+             <div className="bonafide-backbtn">
+                <BackButton onClick={() => setActiveTab('bonafides')} />
+              </div>
+            <table className="principal-table">
+              <thead>
+                <tr>
+                  <th>S.No</th>
+                  <th>Register No</th>
+                  <th>Name</th>
+                  <th>Purpose</th>
+                  <th>Semester</th>
+                  <th>Discipline</th>
+                  <th>Date</th>
+                  <th>Download</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {principalApprovedData.map((item, index) => (
+                  <tr key={item.bonafideId}>
+                    <td>{index + 1}</td>
+                    <td>{item.registerNo}</td>
+                    <td>{item.name}</td>
+                    <td>{item.purpose}</td>
+                    <td>{item.semester}</td>
+                    <td>{item.discipline}</td>
+                    <td>{item.date}</td>
+                    <td>
+                      <button
+                        onClick={() => handleDownload(item.bonafideId, item.registerNo)}
+                        style={{
+                          backgroundColor: 'lightblue',
+                          color: '#fff',
+                          padding: '6px 12px',
+                          borderRadius: '6px',
+                          border: 'none',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        Download
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        disabled
+                        style={{
+                          backgroundColor: '#ccc',
+                          color: '#555',
+                          padding: '6px 12px',
+                          borderRadius: '6px',
+                          border: 'none',
+                          cursor: 'not-allowed',
+                        }}
+                      >
+                        Notified
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
         </div>
       </div>
 
