@@ -9,7 +9,7 @@ const BatchCards = () => {
     <div>  
           <div className="batchbox">
 
-            <div class="batch-card">
+            {/* <div class="batch-card">
               <h3>2022-2026   Batch</h3>
               <button className="batch-carry-btn" onClick={()=> navigate('batch-one')}>view</button>
             </div>
@@ -22,7 +22,7 @@ const BatchCards = () => {
               <h3>2024-2028   Batch</h3>
               <button className="batch-carry-btn" onClick={()=> navigate('batch-one')}>view</button>
 
-            </div>
+            </div> */}
           </div> 
     </div>
   )
