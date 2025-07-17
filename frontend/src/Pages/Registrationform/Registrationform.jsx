@@ -431,8 +431,8 @@ const PersonalForm = () => {
                <label htmlFor="Bloodgroup">Blood Group</label>
                <select className='dropdown' name="bloodGroup" value={formData.bloodGroup || ''} onChange={handleOtherField} >
                  <option value=''>Select</option>
-                 <option value="A2+" >A+</option>
-                 <option value="A+" >A1+</option>
+                 <option value="A+" >A+</option>
+                 <option value="A1+" >A1+</option>
                  <option value="A2+" >A2+</option>
                  <option value="A-" >A-</option>
                  <option value="B+" >B+</option>
@@ -863,6 +863,17 @@ const PersonalForm = () => {
               </select>
             </div>
 
+
+            {(formData.discipline === "Mechanical Engineering" || formData.discipline === "Electrical and Electronics Engineering")  && (
+              <div className="classSection">
+              <label htmlFor="classSection">Section</label>
+                <select name="classSection" className='dropdown' value={(formData.classSection || ' ')} onChange={handleOtherField}> 
+                  <option value="A">A</option>
+                  <option value="B">B</option>
+                </select>
+              </div>
+            )}
+
             <div className="regulation" >
                <label htmlFor="regulation">Regulation</label>
                <select className="dropdown" name="regulation" value={formData.regulation || ''} onChange={handleOtherField} >
@@ -906,13 +917,6 @@ const PersonalForm = () => {
               <Allfields fieldtype="date" value="Course Joined Date" inputname="courseJoinedDate" formData={formData} setFormData={setFormData} />
             </div>
            
-
-            {formData.semester !== "I" &&
-            !(formData.semester ==="III" && formData.courseType === 'Lateral')&&(
-            <div className="cgpa">
-              <Allfields fieldtype="text" value="CGPA" inputname="cgpa" formData={formData} setFormData={setFormData} />
-            </div>
-          )}
 
             <div className="student_status">
               <label htmlFor="student_Status">Student Status</label>
