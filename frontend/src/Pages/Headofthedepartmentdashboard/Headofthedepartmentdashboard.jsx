@@ -92,7 +92,7 @@ function Headofthedepartmentdashboard() {
         </div>
         <div className="hod-inner-content">
           <div className="headbar">
-        <div className="welcome-bar"><p>welcome ! head of the CSE department</p> 
+        <div className="welcome-bar"><p>welcome ! head of the {Headofthedepartment.discipline} department</p> 
         <p className='acadamic-year'>Academic Year: <p>{getAcademicYear()}</p></p>
         </div>
          <div className="nav">
@@ -114,8 +114,9 @@ function Headofthedepartmentdashboard() {
       )}
 
          </div>
-<div className="hod-content-space">
-           <Outlet/>
+     <div className="hod-content-space">
+       {console.log(Headofthedepartment.discipline)}
+         <Outlet context={{ discipline: Headofthedepartment.discipline }} />
            </div>
         </div>
       </div>
