@@ -1,0 +1,111 @@
+.student-modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; 
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  z-index: 1000;
+}
+
+.student-modal-container {
+  background: #ffffff;
+  width: 90vw;
+  max-width: 960px;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.student-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #007bff;
+  color: #fff;
+  padding: 1rem 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.student-modal-close {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.student-modal-close:hover {
+  transform: scale(1.2);
+}
+
+.student-modal-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.student-modal-sidebar {
+  width: 220px;
+  background: #f0f6ff;
+  padding: 1rem;
+  border-right: 1px solid #d1dce5;
+  overflow-y: auto;
+}
+
+.student-modal-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.student-modal-sidebar li {
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  border-radius: 5px;
+  font-weight: 500;
+  transition: background 0.3s, color 0.3s;
+}
+.student-modal-sidebar li:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.student-modal-content-area {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-y: auto;
+  background-color: #f9fbfd;
+}
+
+.student-modal-content-area table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.student-modal-content-area td, 
+.student-modal-content-area th {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e1e7ec;
+  text-align: left;
+}
+
+.student-modal-content-area tr:nth-child(even) {
+  background-color: #f3f9ff;
+}
+
+.student-modal-content-area tr:hover {
+  background-color: #e1f0ff;
+}

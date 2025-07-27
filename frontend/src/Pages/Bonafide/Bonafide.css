@@ -1,163 +1,6 @@
-/* .bonafide-container {
-    font-family: Poppins, sans-serif;
-    padding: 20px;
-    text-align: center;
-}
-
-.bonafide-content {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.bonafide-cards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-}
-
-.bonafide-card {
-    background-color: #009DFF66;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 200px;
-    height: 150px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.2s, background-color 0.2s;
-}
-
-.bonafide-card:hover {
-    background-color: #e0e0e0;
-    transform: translateY(-5px);
-}
-
-.bonafide-card h3 {
-    margin: 0;
-    font-size: 1.1em;
-    color: #333;
-    padding: 10px;
-}
-
-h2 {
-    color: #333;
-    font-size: 1.5em;
-    margin-bottom: 20px;
-}
-
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.modal-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    width: 300px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.modal-content h3 {
-    margin-top: 0;
-}
-
-.modal-content ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 15px 0;
-}
-
-.modal-content ul li {
-    cursor: pointer;
-    padding: 10px;
-    background: #f5f5f5;
-    margin: 5px 0;
-    border-radius: 4px;
-    transition: background 0.2s;
-}
-
-.modal-content ul li:hover {
-    background: #e0e0e0;
-}
-
-.modal-content button {
-    margin-top: 15px;
-    padding: 8px 12px;
-    border: none;
-    background-color: #333;
-    color: #fff;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.modal-content button:hover {
-    background-color: #555;
-}
-
-.file-upload-section {
-    margin-top: 20px;
-    text-align: left;
-    max-width: 500px;
-    margin: 0 auto;
-}
-
-.file-upload-section h3 {
-    font-size: 1.2em;
-    color: #333;
-    margin-bottom: 10px;
-}
-
-.file-upload {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.file-upload label {
-    flex: 1;
-    font-weight: bold;
-    color: #333;
-}
-
-.file-upload input[type="file"] {
-    flex: 2;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 5px;
-    cursor: pointer;
-}
-
-.file-upload button {
-    margin-top: 15px;
-    padding: 10px 15px;
-    border: none;
-    background-color: #009DFF;
-    color: #fff;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.file-upload button:hover {
-    background-color: #007acc;
-} */
 .bonafide-container{
     width: 99vw;
-    height: 100vh;
+    height: fit-content;
 }
 .bonafide-content {
     width: 100%;
@@ -175,46 +18,6 @@ h2 {
     align-items: center;
     color: #123458;
     padding: 20px;
-}
-
-.details-on-bonafide{
-    display: flex;
-    flex-direction: row;
-    width: 99vw;
-    height: 80vh;
-    /* background-color: rebeccapurple; */
-}
-
-.eligibility-box{
-    width: 64%;
-    height: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-    color: rgb(13, 13, 13);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    /* background-color: red; */
-}
-.eligibility-box h2 {
-    color: #00b4d8;
-    font-size: 1.8rem;
-    font-weight: 600;
-    margin-bottom: 10px;
-}
-.eligibility-list{
-    /* background-color:#0582ca; */
-    list-style: none;
-    width:40vw;
-    height: 60vh;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-}
-.Requirements-box{
-    width: 36%;
-    height: 100%;
-    list-style: none;
 }
 
 .bonafide-display-container{
@@ -305,7 +108,7 @@ h2 {
 
 }
 .bonafide-card-description {
-    position: relative; /* Required for absolute positioning inside */
+    position: relative; 
 }
 
 .bonafide-card-description .apply-here-btn {
@@ -346,6 +149,7 @@ h2 {
 }
 .modal-content {
     background-color: #fff;
+    color: white;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
@@ -364,6 +168,7 @@ h2 {
 
 .modal-content ul {
     list-style: none;
+    color: white;
     padding: 0;
     margin: 0;
 }
@@ -440,6 +245,9 @@ h2 {
     width: 90%;
     max-width: 500px;
     text-align: center;
+}
+.modal-content ul li{
+    color: white;
 }
 
 .file-upload-modal h3 {
@@ -539,4 +347,73 @@ h2 {
     text-align: center
 }
 
+/* eligibility  */
+.bonafide-eligibility-container {
+    width: 99vw;
+    height: 40vh;
+    background-color:whitesmoke;
+    display: flex;
+    flex-direction: row;
+    padding: 20px;
+    margin-top: 10px;
+}
+
+.bonafide-eligibility-container .eligibility-box{
+    width: 64%;
+    height: 100%;
+    box-sizing: border-box;
+    color: rgb(13, 13, 13);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* background-color: rebeccapurple; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 40px ;
+    
+}
+.eligibility-box ul{
+    width: 90%;
+    padding-left: 0;
+    overflow-y: scroll; 
+    background-color: rgb(51, 121, 167); 
+    color: #ffffff;
+}
+.eligibility-box li {
+    position: relative;
+    list-style:circle;
+    color: #ffffff;
+    padding-left: 24px;
+    margin-bottom: 12px;
+    line-height: 1.6;
+    font-size: 1rem;
+}
+.eligibility-box li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 2px;
+    font-size: 1rem;
+}
+
+.bonafide-eligibility-container .events-list-box{
+    width:36%;
+    height: 100%;
+    padding: 20px;
+    background-color: #001F3F;
+}
+.events-head{
+    background-color: #f3ac33;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    height: 20%;
+    width: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
 

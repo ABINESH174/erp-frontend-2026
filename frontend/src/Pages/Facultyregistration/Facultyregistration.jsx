@@ -20,6 +20,14 @@ function Facultyregistration() {
     handlingBatch:''
   });
 
+  const scienceAndHumanities = [
+  "Department of Physics",
+  "Department of Chemistry",
+  "Department of Mathematics",
+  "Department of English",
+  "Department of Tamil",
+];
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -41,8 +49,21 @@ function Facultyregistration() {
 
   const handleOtherField = (e) => {
     const { name, value } = e.target;
-    setFormData(prevFormData => ({ ...prevFormData, [name]: value }));
-  };
+  if (name === 'department') {
+    const isScienceDept = scienceAndHumanities.includes(value);
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      department: value,
+      discipline: isScienceDept ? "Science and humanities" : value
+      
+    }));
+  } else {
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      [name]: value
+    }));
+  }
+};
 
   return (
     <div>
@@ -66,7 +87,7 @@ function Facultyregistration() {
           
           <div className="faculty_discipline">
             <label htmlFor="discipline">Discipline</label>
-            <select name="discipline" className='dropdown' value={formData.discipline || ''} onChange={handleOtherField}>
+            <select name="department" className='dropdown' value={formData.department || ''} onChange={handleOtherField}>
               <option value=''>Select</option>
               <option value="Civil Engineering">Civil Engineering</option>
               <option value="Mechanical Engineering">Mechanical Engineering</option>

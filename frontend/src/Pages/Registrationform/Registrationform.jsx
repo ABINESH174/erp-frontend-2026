@@ -296,22 +296,21 @@ const PersonalForm = () => {
       { field: formData.dateOfAdmission, name: "Date of Admission" },
       { field: formData.courseJoinedDate, name: "Course Joined Date" },
       { field: formData.semester, name: "Semester" },
-      // { field: formData.cgpa, name: "CGPA" , validate: isValidDecimal, errorMessage: "should be a valid decimal upto two digits"},
       { field: formData.studentStatus, name: "Student Status" }
     ];
 
-     // Determine whether CGPA should be required
-  const shouldAskCgpa = formData.semester !== "I" &&
-               !(formData.semester === "III" && formData.courseType === "Lateral");
+  //    // Determine whether CGPA should be required
+  // const shouldAskCgpa = formData.semester !== "I" &&
+  //              !(formData.semester === "III" && formData.courseType === "Lateral");
 
-     if (shouldAskCgpa) {
-     requiredFields.push({
-      field: formData.cgpa,
-      name: "CGPA",
-      validate: isValidDecimal,
-      errorMessage: "should be a valid decimal up to two digits"
-    });
-  }
+  //    if (shouldAskCgpa) {
+  //    requiredFields.push({
+  //     field: formData.cgpa,
+  //     name: "CGPA",
+  //     validate: isValidDecimal,
+  //     errorMessage: "should be a valid decimal up to two digits"
+  //   });
+  // }
 
     if (!validateFields(requiredFields)) {
       return false;
@@ -324,9 +323,29 @@ const PersonalForm = () => {
   const handleOtherField = (e) => {
     const { name, value } = e.target;
     const updatedFormData = { ...formData, [name]: value };
+      if (name === "semester") {
+    updatedFormData.semester = value;
+
+    if (value === "I" || value === "II") {
+      updatedFormData.department = "Science and humanities";
+    } else if (formData.discipline) {
+      updatedFormData.department = formData.discipline;
+    }
+
+  } else if (name === "discipline") {
+    updatedFormData.discipline = value;
+
+    if (formData.semester === "I" || formData.semester === "II") {
+      updatedFormData.department = "Science and humanities";
+    } else {
+      updatedFormData.department = value;
+    }
+  }
     setFormData(updatedFormData);
     localStorage.setItem('formData', JSON.stringify(updatedFormData));
   };
+
+  
   const handleFileChange = (name) => async (e) => {
     const { target: { files } } = e;
     const file = files[0];
@@ -364,9 +383,12 @@ const PersonalForm = () => {
       }
 
       const { userId: registerNumber } = location.state;
+    
       const updatedFormData = { ...formData, registerNo: registerNumber };
+       console.log("Form data being sent:", updatedFormData);
 
       setFormData(updatedFormData);
+      
       localStorage.setItem('formData', JSON.stringify(updatedFormData));
 
       setShowModal(true);
@@ -408,8 +430,8 @@ const PersonalForm = () => {
                <label htmlFor="Bloodgroup">Blood Group</label>
                <select className='dropdown' name="bloodGroup" value={formData.bloodGroup || ''} onChange={handleOtherField} >
                  <option value=''>Select</option>
-                 <option value="A2+" >A+</option>
-                 <option value="A+" >A1+</option>
+                 <option value="A+" >A+</option>
+                 <option value="A1+" >A1+</option>
                  <option value="A2+" >A2+</option>
                  <option value="A-" >A-</option>
                  <option value="B+" >B+</option>
@@ -806,6 +828,22 @@ const PersonalForm = () => {
                 <option value="ME">ME</option>
               </select>
             </div>
+            
+             <div className="semester">
+              <label htmlFor="semester">Semester</label>
+              <select className="dropdown" name="semester"  value={formData.semester || ''} onChange={handleOtherField}>
+                <option value=''>Select</option>
+                <option value="I" >I</option>
+                <option value="II" >II</option>
+                <option value="III" >III</option>
+                <option value="IV" >IV</option>
+                <option value="V" >V</option>
+                <option value="VI" >VI</option>
+                <option value="VII" >VII</option>
+                <option value="VIII" >VIII</option>
+              </select>
+            </div>
+
             <div className="discipline">
               <label htmlFor="discipline">Discipline</label>
               <select className="dropdown" name="discipline"  value={formData.discipline || ''} onChange={handleOtherField}>
@@ -823,6 +861,17 @@ const PersonalForm = () => {
                 <option value="Microwave and Optical Communication" >Microwave and Optical Communication</option>
               </select>
             </div>
+
+
+            {(formData.discipline === "Mechanical Engineering" || formData.discipline === "Electrical and Electronics Engineering")  && (
+              <div className="classSection">
+              <label htmlFor="classSection">Section</label>
+                <select name="classSection" className='dropdown' value={(formData.classSection || ' ')} onChange={handleOtherField}> 
+                  <option value="A">A</option>
+                  <option value="B">B</option>
+                </select>
+              </div>
+            )}
 
             <div className="regulation" >
                <label htmlFor="regulation">Regulation</label>
@@ -866,27 +915,7 @@ const PersonalForm = () => {
             <div className="join_date">
               <Allfields fieldtype="date" value="Course Joined Date" inputname="courseJoinedDate" formData={formData} setFormData={setFormData} />
             </div>
-            <div className="semester">
-              <label htmlFor="semester">Semester</label>
-              <select className="dropdown" name="semester"  value={formData.semester || ''} onChange={handleOtherField}>
-                <option value=''>Select</option>
-                <option value="I" >I</option>
-                <option value="II" >II</option>
-                <option value="III" >III</option>
-                <option value="IV" >IV</option>
-                <option value="V" >V</option>
-                <option value="VI" >VI</option>
-                <option value="VII" >VII</option>
-                <option value="VIII" >VIII</option>
-              </select>
-            </div>
-
-            {formData.semester !== "I" &&
-            !(formData.semester ==="III" && formData.courseType === 'Lateral')&&(
-            <div className="cgpa">
-              <Allfields fieldtype="text" value="CGPA" inputname="cgpa" formData={formData} setFormData={setFormData} />
-            </div>
-          )}
+           
 
             <div className="student_status">
               <label htmlFor="student_Status">Student Status</label>
