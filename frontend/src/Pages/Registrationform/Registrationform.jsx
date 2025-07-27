@@ -296,22 +296,21 @@ const PersonalForm = () => {
       { field: formData.dateOfAdmission, name: "Date of Admission" },
       { field: formData.courseJoinedDate, name: "Course Joined Date" },
       { field: formData.semester, name: "Semester" },
-      // { field: formData.cgpa, name: "CGPA" , validate: isValidDecimal, errorMessage: "should be a valid decimal upto two digits"},
       { field: formData.studentStatus, name: "Student Status" }
     ];
 
-     // Determine whether CGPA should be required
-  const shouldAskCgpa = formData.semester !== "I" &&
-               !(formData.semester === "III" && formData.courseType === "Lateral");
+  //    // Determine whether CGPA should be required
+  // const shouldAskCgpa = formData.semester !== "I" &&
+  //              !(formData.semester === "III" && formData.courseType === "Lateral");
 
-     if (shouldAskCgpa) {
-     requiredFields.push({
-      field: formData.cgpa,
-      name: "CGPA",
-      validate: isValidDecimal,
-      errorMessage: "should be a valid decimal up to two digits"
-    });
-  }
+  //    if (shouldAskCgpa) {
+  //    requiredFields.push({
+  //     field: formData.cgpa,
+  //     name: "CGPA",
+  //     validate: isValidDecimal,
+  //     errorMessage: "should be a valid decimal up to two digits"
+  //   });
+  // }
 
     if (!validateFields(requiredFields)) {
       return false;
@@ -867,7 +866,7 @@ const PersonalForm = () => {
             {(formData.discipline === "Mechanical Engineering" || formData.discipline === "Electrical and Electronics Engineering")  && (
               <div className="classSection">
               <label htmlFor="classSection">Section</label>
-                <select name="classSection" className='dropdown' value={(formData.classSection || ' ')} onChange={handleOtherField}> 
+                <select name="classSection" className='dropdown' value={(formData.classSection || '')} onChange={handleOtherField}> 
                   <option value="A">A</option>
                   <option value="B">B</option>
                 </select>
