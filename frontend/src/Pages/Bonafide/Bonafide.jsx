@@ -47,11 +47,11 @@ function Bonafide() {
         others: true
     };
 
-    const allWelfareTypes = ["Labour Welfare", "Tailor Welfare", "Farmer Welfare"];
-    const allPostMatricTypes = ["BC/MBC/DNC Post Matric Scholarship", "SC/ST/SCA Post Matric Scholarship"];
+    const allWelfareTypes = ["Bonafide for Labour Welfare", "Bonafide for Tailor Welfare", "Bonafide for Farmer Welfare"];
+    const allPostMatricTypes = ["Bonafide for BC/MBC/DNC Post Matric Scholarship", "Bonafide for SC/ST/SCA Post Matric Scholarship"];
  const typeToKeyMap = {
-  "BC/MBC/DNC Post Matric Scholarship": "bcMbcDncPostMatricScholarship",
-  "SC/ST/SCA Post Matric Scholarship": "scStScaPostMatricScholarship",
+  "Bonafide for BC/MBC/DNC Post Matric Scholarship": "bcMbcDncPostMatricScholarship",
+  "Bonafide for SC/ST/SCA Post Matric Scholarship": "scStScaPostMatricScholarship",
 };
 
     useEffect(() => {
@@ -163,6 +163,7 @@ function Bonafide() {
             const formData = new FormData();
             formData.append('registerNo', userId);
             formData.append('purpose', uploads.selectedScholarship.toLowerCase().trim());
+            console.log("Purpose being sent to backend:", uploads.selectedScholarship.toLowerCase().trim());
             formData.append('bonafideStatus', 'PENDING');
             formData.append('date', new Date().toISOString().split('T')[0]);
             formData.append('academicYear', uploads.academicYear);

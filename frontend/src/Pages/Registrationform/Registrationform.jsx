@@ -866,7 +866,7 @@ const PersonalForm = () => {
             {(formData.discipline === "Mechanical Engineering" || formData.discipline === "Electrical and Electronics Engineering")  && (
               <div className="classSection">
               <label htmlFor="classSection">Section</label>
-                <select name="classSection" className='dropdown' value={(formData.classSection || '')} onChange={handleOtherField}> 
+                <select name="classSection" className='dropdown' value={(formData.classSection || ' ')} onChange={handleOtherField}> 
                   <option value="A">A</option>
                   <option value="B">B</option>
                 </select>

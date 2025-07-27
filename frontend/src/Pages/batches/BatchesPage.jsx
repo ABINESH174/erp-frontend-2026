@@ -19,13 +19,12 @@ const BatchesPage = () => {
 
   const rawYear = queryParams.get('year');
   const discipline = queryParams.get('discipline');
-  const year = yearEnumMap[rawYear];
+  const year = yearEnumMap[rawYear?.toUpperCase()] || null;
 
   const [students, setStudents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // ✅ Modal states
   const [openModal, setOpenModal] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
 
@@ -41,7 +40,7 @@ const BatchesPage = () => {
         setLoading(true);
         setError(null);
 
-        const url = `http://localhost:8080/api/student/get/displine/year?discipline=${encodeURIComponent(
+        const url = `http://localhost:8080/api/student/get/discipline/year?discipline=${encodeURIComponent(
           discipline
         )}&year=${year}`;
 
@@ -63,7 +62,6 @@ const BatchesPage = () => {
     fetchStudents();
   }, [year, discipline]);
 
-  // ✅ View Student Handler
   const handleViewClick = async (student) => {
     const registerNo = student.registerNo?.trim();
     console.log('View clicked for:', registerNo);
@@ -71,12 +69,13 @@ const BatchesPage = () => {
     try {
       const response = await axios.get(
         `http://localhost:8080/api/student/get/${registerNo}`
-      ); // 🔁 Change to single-student endpoint
+      );
 
       setSelectedStudent(response.data);
       setOpenModal(true);
     } catch (error) {
       console.error('Error fetching student data:', error);
+      setError('Unable to fetch student details.');
     }
   };
 
@@ -86,7 +85,7 @@ const BatchesPage = () => {
   };
 
   return (
-    <div>
+    <div className="batches-page-container">
       <div className="hod-student-batch-box">
         {loading && <p>Loading students...</p>}
         {error && <p style={{ color: 'red' }}>{error}</p>}
@@ -108,7 +107,7 @@ const BatchesPage = () => {
               {students.map((student) => (
                 <tr key={student.registerNo}>
                   <td>{student.registerNo}</td>
-                  <td>{student.firstName + ' ' + student.lastName}</td>
+                  <td>{`${student.firstName} ${student.lastName}`}</td>
                   <td>{student.mobileNumber}</td>
                   <td>{student.semester}</td>
                   <td>{student.emailid}</td>
@@ -127,7 +126,7 @@ const BatchesPage = () => {
       </div>
 
       {openModal && selectedStudent && (
-        <StudentDetailModal student={selectedStudent} onClose={closeModal} />
+          <StudentDetailModal student={selectedStudent} onClose={closeModal} viewerRole="hod" />
       )}
     </div>
   );
