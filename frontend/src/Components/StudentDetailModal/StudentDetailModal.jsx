@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './StudentDetailModal.css';
 
-function StudentDetailModal({ student, onClose, viewerRole = 'hod' }) {
+function StudentDetailModal({ student, onClose }) {
   const [activeSection, setActiveSection] = useState('personal');
 
   if (!student) return null;

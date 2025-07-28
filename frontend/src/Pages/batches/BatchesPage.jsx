@@ -27,10 +27,11 @@ const BatchesPage = () => {
 
   const [openModal, setOpenModal] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
+  const [defaultStudent, setDefaultStudent] = useState(null);
 
   useEffect(() => {
     if (!year || !discipline) {
-      setError('Missing year or discipline.');
+      setError('Missing or invalid year or discipline.');
       setLoading(false);
       return;
     }
@@ -52,8 +53,17 @@ const BatchesPage = () => {
         }
 
         setStudents(result.data || []);
+
+        // Automatically fetch details for the first student to get faculty status
+        if (result.data && result.data.length > 0) {
+          const defaultRegisterNo = result.data[0].registerNo;
+          const defaultRes = await axios.get(
+            `http://localhost:8080/api/student/${encodeURIComponent(defaultRegisterNo)}`
+          );
+          setDefaultStudent(defaultRes.data);
+        }
       } catch (err) {
-        setError(err.message || 'Something went wrong');
+        setError(err.message || 'Something went wrong while fetching students.');
       } finally {
         setLoading(false);
       }
@@ -63,19 +73,15 @@ const BatchesPage = () => {
   }, [year, discipline]);
 
   const handleViewClick = async (student) => {
-    const registerNo = student.registerNo?.trim();
-    console.log('View clicked for:', registerNo);
-
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/student/get/${registerNo}`
+        `http://localhost:8080/api/student/${encodeURIComponent(student.registerNo)}`
       );
-
       setSelectedStudent(response.data);
       setOpenModal(true);
-    } catch (error) {
-      console.error('Error fetching student data:', error);
-      setError('Unable to fetch student details.');
+    } catch (err) {
+      console.error('Fetch error:', err);
+      setError('Failed to get student details.');
     }
   };
 
@@ -87,10 +93,22 @@ const BatchesPage = () => {
   return (
     <div className="batches-page-container">
       <div className="hod-student-batch-box">
+        <div className="assign">
+          <h2>Faculty Assignment</h2>
+          {defaultStudent ? (
+            defaultStudent.faculty === null ? (
+              <button className="assign-faculty-btn">Assign Faculty</button>
+            ) : (
+              <button className="dismiss-faculty-btn">Dismiss Faculty</button>
+            )
+          ) : (
+            <p>Loading faculty status...</p>
+          )}
+        </div>
+
         {loading && <p>Loading students...</p>}
         {error && <p style={{ color: 'red' }}>{error}</p>}
         {!loading && !error && students.length === 0 && <p>No students found.</p>}
-
         {!loading && !error && students.length > 0 && (
           <table className="hod-student-tables">
             <thead>
@@ -126,7 +144,7 @@ const BatchesPage = () => {
       </div>
 
       {openModal && selectedStudent && (
-          <StudentDetailModal student={selectedStudent} onClose={closeModal} viewerRole="hod" />
+        <StudentDetailModal student={selectedStudent} onClose={closeModal} />
       )}
     </div>
   );
