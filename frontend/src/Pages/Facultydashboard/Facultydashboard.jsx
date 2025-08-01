@@ -12,6 +12,7 @@ import Footer from '../../Components/Footer/Footer.jsx';
 import Modal from '../../Components/Modal/Modal.jsx';
 import Allbuttons from '../../Components/Allbuttons/Allbuttons.jsx';
 import Facultyfields from '../../Components/Facultyfields/Facultyfields.jsx';
+import ExcelFileUpload from '../../Components/excelupload/excelupload.jsx';
 import Logoutbtn from '../../Components/logoutbutton/Logoutbtn.jsx';
 
 import Profileicon from '../../Assets/profile.svg';
@@ -28,6 +29,7 @@ function Facultydashboard() {
   const [openProfile, setOpenProfile] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [openAddClassModal, setOpenAddClassModal] = useState(false);
+  const [openExcelUploadModal, setOpenExcelUploadModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [openExportPopup, setOpenExportPopup] = useState(false);
@@ -145,6 +147,7 @@ const handleViewClick = async (student) => {
   const closeModal = () => {
     setOpenModal(false);
     setOpenAddClassModal(false);
+    setOpenExcelUploadModal(false);
     setSelectedStudent(null);
     fetchFaculty();
   };
@@ -218,7 +221,10 @@ const handleViewClick = async (student) => {
               />
             </div>
             <div className="class_add_button">
-              <Allbuttons image={Add} value="Add Class" target={() => setOpenAddClassModal(true)} />
+              <Allbuttons image={Add} value="Add Class" target={() => setOpenExcelUploadModal(true)} />
+            </div>
+            <div className="class_add_button">
+              <Allbuttons image={Add} value="Add Student" target={() => setOpenAddClassModal(true)} />
             </div>
             <div className="faculty_profile_icon" onClick={toggleProfile}>
               <img id="profile_icon" src={Profileicon} alt="Profile Icon" />
@@ -238,8 +244,13 @@ const handleViewClick = async (student) => {
           )}
 
           {openAddClassModal && (
-            <Facultyfields email={faculty.email} onClose={closeModal} />
+            <Facultyfields onClose={closeModal} />
           )}
+
+          {openExcelUploadModal && (
+            <ExcelFileUpload onClose={closeModal} />
+          )}
+
 
           {openExportPopup && (
             <div className="export_option_popup">

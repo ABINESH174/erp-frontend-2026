@@ -102,7 +102,7 @@ background: linear-gradient(to right, #0a2361,#061845,#325fa1,#25477d, #3b79d5, 
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-left: 30rem;
+    margin-left: 26rem;
   }
   .student-search-bar input{
     width: 300px;

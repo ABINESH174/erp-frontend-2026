@@ -4,13 +4,14 @@ import { Allfields, Allbuttons } from '..';
 import Nextwhite from '../../Assets/Nextwhite.svg'; 
 import axios from 'axios'; 
 
-function Facultyfields({ email, onClose }) {
+function Facultyfields({ onClose }) {
 
   const [formData, setFormData] = useState({
-    subject: '',
-    handlingSemester: '',
-    handlingDept: '',
-    batch: ''
+    Name: '',
+    RegisterNumber: '',
+    MobileNumber: '',
+    MailId: '',
+    AadharNumber: '',
   });
 
   const handleOtherField = (e) => {
@@ -23,14 +24,15 @@ function Facultyfields({ email, onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`/api/faculty/update/${email}`, formData);
-      console.log('Data submitted successfully:', response.data);
+/*       const response = await axios.put(`/api/faculty/update/${email}`, formData);
+      console.log('Data submitted successfully:', response.data); */
       
       setFormData({
-        subject: '',
-        handlingSemester: '',
-        handlingDept: '',
-        batch: ''
+        Name: '',
+        RegisterNumber: '',
+        MobileNumber: '',
+        MailId: '',
+        AadharNumber: '',
       });
 
       if (onClose) {
@@ -49,7 +51,7 @@ function Facultyfields({ email, onClose }) {
           </span>
      </div>
 
-     <div className="discipline">
+{/*      <div className="discipline">
               <label htmlFor="discipline">Department</label>
               <select className="dropdown" name="handlingDept"  value={formData.handlingDept || ''} onChange={handleOtherField}>
                 <option value=''>Select</option>
@@ -79,12 +81,12 @@ function Facultyfields({ email, onClose }) {
                 <option value="VII" >VII</option>
                 <option value="VIII" >VIII</option>
               </select>
-            </div>
+            </div> */}
       <div>
       <Allfields
         fieldtype="text"
-        value="Batch"
-        inputname="batch"
+        value="Name"
+        inputname="Name"
         formData={formData}
         setFormData={setFormData}
       />
@@ -93,8 +95,35 @@ function Facultyfields({ email, onClose }) {
       <div>
       <Allfields
         fieldtype="text"
-        value="Subject"
-        inputname="subject"
+        value="Register Number"
+        inputname="RegisterNumber"
+        formData={formData}
+        setFormData={setFormData}
+      />
+      </div>
+      <div>
+      <Allfields
+        fieldtype="text"
+        value="Mobile Number"
+        inputname="MobileNumber"
+        formData={formData}
+        setFormData={setFormData}
+      />
+      </div>
+      <div>
+      <Allfields
+        fieldtype="text"
+        value="Mail Id"
+        inputname="MailId"
+        formData={formData}
+        setFormData={setFormData}
+      />
+      </div>
+      <div>
+      <Allfields
+        fieldtype="text"
+        value="Aadhar Number"
+        inputname="AadharNumber"
         formData={formData}
         setFormData={setFormData}
       />
