@@ -5,7 +5,6 @@ import Header from '../../Components/Header/Header.jsx';
 import Footer from '../../Components/Footer/Footer.jsx';
 import Profileicon from '../../Assets/profile.svg';
 import axios from 'axios';
-import BatchCards from '../../Components/batchcomponent/BatchCards.jsx';
 import Logoutbtn from '../../Components/logoutbutton/Logoutbtn.jsx';
 import { BsPerson } from "react-icons/bs";
 import { FaFileAlt } from "react-icons/fa";
@@ -13,119 +12,124 @@ import Logout from '../../Assets/logout.svg';
 import Allbuttons from '../../Components/Allbuttons/Allbuttons.jsx';
 import BonafideCount from '../../Components/BonafideCounter/BonafideCount.jsx';
 
-
 function Headofthedepartmentdashboard() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [userId, setUserId] = useState('Headofthedepartment');
+
+  const [userId, setUserId] = useState('');
   const [open, setOpen] = useState(false);
-  const [Headofthedepartment, setHeadofthedepartment] = useState({});
+  const [hodData, setHodData] = useState(null);
   const [error, setError] = useState(null);
 
+  // Step 1: Set userId from location.state or localStorage
   useEffect(() => {
-    const fetchHeadofthedepartment = async () => {
+    const idFromState = location.state?.userId;
+    const storedId = localStorage.getItem('hodEmail');
+
+    if (idFromState) {
+      setUserId(idFromState);
+      localStorage.setItem('hodEmail', idFromState);
+    } else if (storedId) {
+      setUserId(storedId);
+    } else {
+      setError('No user ID found.');
+    }
+  }, [location.state]);
+
+  // Step 2: Fetch HOD data once userId is available
+  useEffect(() => {
+    if (!userId) return;
+
+    const fetchHod = async () => {
       try {
-        const { userId } = location.state || {};
-        const response = await axios.get(`http://localhost:8080/api/hod/getHodByEmail/${userId}`);
-        setHeadofthedepartment(response.data.data);
-        setUserId(userId);
-      } catch (error) {
-        console.error('Error fetching faculty:', error);
-        setError('Failed to fetch data. Please try again later.');
+        const res = await axios.get(`http://localhost:8080/api/hod/getHodByEmail/${encodeURIComponent(userId)}`);
+        setHodData(res.data.data);
+      } catch (err) {
+        console.error('Error fetching HOD data:', err);
+        setError('Failed to fetch HOD data.');
       }
     };
 
-    fetchHeadofthedepartment();
-  }, [location.state]);
+    fetchHod();
+  }, [userId]);
 
   const handleLogoutClick = () => {
+    localStorage.removeItem('hodEmail');
     navigate('/login-page');
   };
 
-  const gotofacultyinfohod = () => {
-    navigate('/facultyinfohod-page', { state: { userId } });
-  };
-
-  const gotostudentinfohod = () => {
-    navigate('/studentinfohod-page', { state: { userId } });
-  };
   const getAcademicYear = () => {
     const now = new Date();
-    const currentYear = now.getFullYear();
-    const startMonth = 8; // August (0-indexed: Jan = 0, Aug = 8)
-
-    if (now.getMonth() >= startMonth) {
-      // Academic year starts this year
-      return `${currentYear}-${currentYear + 1}`;
-    } else {
-      // Academic year started last year
-      return `${currentYear - 1}-${currentYear}`;
-    }
+    const year = now.getFullYear();
+    return now.getMonth() >= 7 ? `${year}-${year + 1}` : `${year - 1}-${year}`;
   };
+
+  const goToFacultyInfo = () => navigate('/facultyinfohod-page', { state: { userId } });
+  const goToStudentInfo = () => navigate('/studentinfohod-page', { state: { userId } });
 
   return (
     <div>
       <Header />
-    <div className="hod-outer-container">
-      <div className="hod-whole">          
-        <div className="hod-nav-sidebar">
+      <div className="hod-outer-container">
+        <div className="hod-whole">
+          <div className="hod-nav-sidebar">
             <h2>HOD Dashboard</h2>
-          <div className="hod-navigation-bar">
-            <p className='hod-nav-item' onClick={() => setOpen(!open)}><BsPerson />profile</p>
-           <p className='hod-bonafide-nav-item' onClick={() => navigate('/hod-bonafide-approval', { state: { userId } })}>
-  <FaFileAlt /> Bonafide 
-  {userId && (
-    <BonafideCount 
-      emailKey="hodEmail"
-      getIdApi={`http://localhost:8080/api/hod/getHodByEmail`}
-      getBonafideApi={`http://localhost:8080/api/hod/getFacultyApprovedBonafidesByHodId`}
-      statusFilter="FACULTY_APPROVED"
-      render={(count) => count > 0 && (
-        <span className='hod-bonafide-count'>{count}</span>
-      )}
-    />
-  )}
-</p>
+            <div className="hod-navigation-bar">
+              <p className='hod-nav-item' onClick={() => setOpen(!open)}><BsPerson /> Profile</p>
+              <p className='hod-bonafide-nav-item' onClick={() => navigate('/hod-bonafide-approval', { state: { userId } })}>
+                <FaFileAlt /> Bonafide
+                {userId && (
+                  <BonafideCount
+                    emailKey="hodEmail"
+                    getIdApi="http://localhost:8080/api/hod/getHodByEmail"
+                    getBonafideApi="http://localhost:8080/api/hod/getFacultyApprovedBonafidesByHodId"
+                    statusFilter="FACULTY_APPROVED"
+                    render={(count) => count > 0 && (
+                      <span className='hod-bonafide-count'>{count}</span>
+                    )}
+                  />
+                )}
+              </p>
+            </div>
+            <Logoutbtn className='hod-logout' />
+          </div>
 
-          </div> 
-          <div > <Logoutbtn className='hod-logout' /></div>
-        </div>
-        <div className="hod-inner-content">
-          <div className="headbar">
-        <div className="welcome-bar"><p>welcome ! head of the CSE department</p> 
-        <p className='acadamic-year'>Academic Year: <p>{getAcademicYear()}</p></p>
-        </div>
-         <div className="nav">
-        <div className="faculty_profile_icon" onClick={() => setOpen(!open)}>
-          <img id="profile_icon" src={Profileicon} alt="Profile Icon" />
-        </div>
-      </div>
+          <div className="hod-inner-content">
+            <div className="headbar">
+              <div className="welcome-bar">
+                <p>Welcome! Head of the {hodData?.discipline || '...'} Department</p>
+                <p className="acadamic-year">Academic Year: {getAcademicYear()}</p>
+              </div>
+              <div className="nav">
+                <div className="faculty_profile_icon" onClick={() => setOpen(!open)}>
+                  <img id="profile_icon" src={Profileicon} alt="Profile Icon" />
+                </div>
+              </div>
+              {open && (
+                <div className="faculty_profile_details">
+                  <div className="faculty-profile">
+                    <p className="field_background">{hodData?.firstName} {hodData?.lastName}</p>
+                    <p className="field_background">{hodData?.discipline}</p>
+                    <p className="field_background">{hodData?.email}</p>
+                    <p className="field_background">{hodData?.mobileNumber}</p>
+                    <Allbuttons value="Logout" image={Logout} target={handleLogoutClick} />
+                  </div>
+                </div>
+              )}
+            </div>
 
-      {open && (
-        <div className="faculty_profile_details">
-          <div className="faculty-profile">
-            <p className="field_background">{Headofthedepartment.firstName} {Headofthedepartment.lastName}</p>
-            <p className="field_background">{Headofthedepartment.discipline}</p>
-            <p className="field_background">{Headofthedepartment.email}</p>
-            <p className="field_background">{Headofthedepartment.mobileNumber}</p>
-            <Allbuttons value="Logout" image={Logout} target={handleLogoutClick} />
+            <div className="hod-content-space">
+              <Outlet context={{ discipline: hodData?.discipline }} />
+            </div>
           </div>
         </div>
-      )}
-
-         </div>
-<div className="hod-content-space">
-           <Outlet/>
-           </div>
-        </div>
-      </div>
       </div>
 
+      {/* Uncomment if you want footer */}
       {/* <div className="Headofthedepartmentdashboard_footer">
         <Footer />
       </div> */}
     </div>
-    
   );
 }
 

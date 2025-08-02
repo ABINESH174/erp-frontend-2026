@@ -47,8 +47,12 @@ function Bonafide() {
         others: true
     };
 
-    const allWelfareTypes = ["Labour Welfare", "Tailor Welfare", "Farmer Welfare"];
-    const allPostMatricTypes = [" BC/MBC/DNC Post Matric Scholarship", "SC/ST/SCA Post Matric Scholarship"];
+    const allWelfareTypes = ["Bonafide for Labour Welfare", "Bonafide for Tailor Welfare", "Bonafide for Farmer Welfare"];
+    const allPostMatricTypes = ["Bonafide for BC/MBC/DNC Post Matric Scholarship", "Bonafide for SC/ST/SCA Post Matric Scholarship"];
+ const typeToKeyMap = {
+  "Bonafide for BC/MBC/DNC Post Matric Scholarship": "bcMbcDncPostMatricScholarship",
+  "Bonafide for SC/ST/SCA Post Matric Scholarship": "scStScaPostMatricScholarship",
+};
 
     useEffect(() => {
         const fetchApplicableBonafide = async () => {
@@ -56,6 +60,8 @@ function Bonafide() {
                 const response = await axios.get(`http://localhost:8080/api/bonafide/getApplicableBonafide/${userId}`);
                 if (response.data?.data) {
                     setApplicableBonafide(response.data.data);
+                    console.log("Received eligibility data:", response.data.data);
+
                 }
             } catch (error) {
                 console.error("Error fetching bonafide eligibility", error);
@@ -66,12 +72,18 @@ function Bonafide() {
         if (userId) fetchApplicableBonafide();
     }, [userId]);
 
-    const isEligible = (optionId) => {
-        const key = bonafideEligibilityKeyMap[optionId];
-        if (key === true) return true;
-        if (Array.isArray(key)) return key.some(k => applicableBonafide[k]);
-        return applicableBonafide[key];
-    };
+ const isEligible = (optionId) => {
+  const key = bonafideEligibilityKeyMap[optionId];
+
+  if (!key) return false; 
+
+  if (Array.isArray(key)) {
+    return key.some(k => applicableBonafide[k] === true);
+  }
+
+  return applicableBonafide[key] === true;
+};
+
 
     const handleCardClick = (optionId) => {
         const title = options.find(option => option.id === optionId)?.title || "";
@@ -147,12 +159,13 @@ function Bonafide() {
 
     setIsSubmitting(true);
 
-    const formData = new FormData();
-    formData.append('registerNo', userId);
-    formData.append('purpose', uploads.selectedScholarship.toLowerCase().trim());
-    formData.append('bonafideStatus', 'PENDING');
-    formData.append('date', new Date().toISOString().split('T')[0]);
-    formData.append('academicYear', uploads.academicYear);
+            const formData = new FormData();
+            formData.append('registerNo', userId);
+            formData.append('purpose', uploads.selectedScholarship.toLowerCase().trim());
+            console.log("Purpose being sent to backend:", uploads.selectedScholarship.toLowerCase().trim());
+            formData.append('bonafideStatus', 'PENDING');
+            formData.append('date', new Date().toISOString().split('T')[0]);
+            formData.append('academicYear', uploads.academicYear);
 
     if (uploads.companyName) {
         formData.append('companyName', uploads.companyName);
@@ -217,13 +230,12 @@ function Bonafide() {
                 <div className="bonafide-eligibility-container">
 
                    <div className="eligibility-box">
-                    <ul>
-                        {instructions.map((instruction, index) => (
-                            <li key={index}>{instruction}</li>
-                        ))}
-                    </ul>
-
-                   </div>
+  <ul className="scrolling-list">
+    {[...instructions, ...instructions].map((instruction, index) => (
+      <li key={index}>{instruction}</li>
+    ))}
+  </ul>
+</div>
                    <div className="events-list-box">
                     <h1 className='events-head'>Ongoing Events</h1>
                    </div>
@@ -298,21 +310,25 @@ function Bonafide() {
   </div>
 )}
 
-
-                {/* Scholarship Type Modal */}
-                {uploads.showModal && (
+{uploads.showModal && (
   <div className="modal-overlay" onClick={() => setUploads(prev => ({ ...prev, showModal: false }))}>
     <div className="modal-content" onClick={e => e.stopPropagation()}>
       <h3>Select Type of Scholarship</h3>
       <ul>
-        {(uploads.selectedOption === "postMatricScholarship" ? allPostMatricTypes : allWelfareTypes).map(type => {
-          const eligible = isEligible(type); // 🔍 Check eligibility here
+        {(uploads.selectedOption === "postMatricScholarship" ? allPostMatricTypes : allWelfareTypes).map((type) => {
+          const eligible =
+            uploads.selectedOption === "postMatricScholarship"
+              ? applicableBonafide[typeToKeyMap[type]] === true
+              : true;
+
+          console.log(`Checking type "${type}" → Eligible:`, eligible);
+
           return (
             <li
               key={type}
               onClick={() => eligible && handleScholarshipSelect(type)}
               style={{
-                color: eligible ? "#000" : "gray",
+                color: eligible ? "#ffffff" : "gray",
                 cursor: eligible ? "pointer" : "not-allowed",
                 pointerEvents: eligible ? "auto" : "none"
               }}
@@ -326,6 +342,7 @@ function Bonafide() {
     </div>
   </div>
 )}
+
 
 
                 {/* Upload Modal */}
