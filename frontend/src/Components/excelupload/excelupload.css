@@ -1,0 +1,49 @@
+.excel_upload_modal_container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(241, 241, 241);
+  padding: 20px 40px;
+  width: 500px;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.excel_upload_modal_container > * {
+  padding-bottom: 10px;
+}
+
+.excel_upload_modal_container > :nth-child(2) {
+  padding-top: 30px;
+}
+
+.file_upload_field label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+.file_upload_field input[type="file"] {
+  width: 100%;
+  padding: 8px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+#excel_upload_button {
+  display: flex;
+  justify-content: center;
+}
+
+.close {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  cursor: pointer;
+}

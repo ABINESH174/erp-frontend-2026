@@ -1,109 +1,106 @@
 import React, { useState } from 'react';
-import './Facultyfields.css'
+import './Facultyfields.css';
 import { Allfields, Allbuttons } from '..';
-import Nextwhite from '../../Assets/Nextwhite.svg'; 
-import axios from 'axios'; 
+import Nextwhite from '../../Assets/Nextwhite.svg';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-function Facultyfields({ email, onClose }) {
+function Facultyfields({ onClose, fields = [], role }) {
+  const initialFormData = fields.reduce((acc, field) => {
+    acc[field.inputname] = '';
+    return acc;
+  }, {});
 
-  const [formData, setFormData] = useState({
-    subject: '',
-    handlingSemester: '',
-    handlingDept: '',
-    batch: ''
-  });
+  const [formData, setFormData] = useState(initialFormData);
+  const [errors, setErrors] = useState({});
 
-  const handleOtherField = (e) => {
-    const { name, value } = e.target;
-    const updatedFormData = { ...formData, [name]: value };
-    setFormData(updatedFormData);
-    localStorage.setItem('formData', JSON.stringify(updatedFormData));
+  const validate = () => {
+    const newErrors = {};
+
+    fields.forEach((field) => {
+      const value = formData[field.inputname].trim();
+      if (!value) {
+        newErrors[field.inputname] = `${field.label} should not be empty`;
+      }
+      if (field.inputname === 'AadharNumber' && !/^\d{12}$/.test(value)) {
+        newErrors[field.inputname] = 'Aadhar Number should be 12 digits';
+      }
+      if (field.inputname === 'MobileNumber' && !/^\d{10}$/.test(value)) {
+        newErrors[field.inputname] = 'Mobile Number should be 10 digits';
+      }
+      if (field.inputname === 'MailId') {
+        if (!value.endsWith('@gmail.com') || !/^\S+@gmail\.com$/.test(value)) {
+          newErrors[field.inputname] = 'Please enter a valid Gmail ID';
+        }
+      }
+    });
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await axios.put(`/api/faculty/update/${email}`, formData);
-      console.log('Data submitted successfully:', response.data);
-      
-      setFormData({
-        subject: '',
-        handlingSemester: '',
-        handlingDept: '',
-        batch: ''
-      });
 
-      if (onClose) {
-        onClose();
-      }
+    if (!validate()) {
+      toast.error('Please correct the highlighted errors.');
+      return;
+    }
+
+    try {
+      const userId = formData.MailId;
+      const password = formData.AadharNumber;
+      const payload = { userId, password, role };
+
+      const response = await axios.post(`http://localhost:8080/api/authentication/create`, payload);
+
+      toast.success(`${role} added successfully`);
+      console.log('Data submitted successfully:', response.data);
+      setFormData(initialFormData);
+
+      // Close popup only after short delay to allow toast to show
+      setTimeout(() => {
+        if (onClose) onClose();
+      }, 1000);
+
     } catch (error) {
       console.error('Error submitting data:', error);
+      toast.error('Submission failed');
     }
   };
+
   return (
     <div className="faculty_fields_container">
-      
-     <div>
-     <span className="close" onClick={onClose}>
-            &times;
-          </span>
-     </div>
-
-     <div className="discipline">
-              <label htmlFor="discipline">Department</label>
-              <select className="dropdown" name="handlingDept"  value={formData.handlingDept || ''} onChange={handleOtherField}>
-                <option value=''>Select</option>
-                <option value="Civil Engineering">Civil Engineering</option>
-                <option value="Mechanical Engineering" >Mechanical Engineering</option>
-                <option value="Electrical and Electronics Engineering" >Electrical and Electronics Engineering</option>
-                <option value="Electronics and communication Engineering" >Electronics and communication Engineering</option>
-                <option value="Computer Science and Engineering" >Computer Science and Engineering</option>
-                <option value="Structural Engineering" >Structural Engineering</option>
-                <option value="Environmental Engineering" >Environmental Engineering</option>
-                <option value="Manufacturing Engineering" >Manufacturing Engineering</option>
-                <option value="Computer Aided Design" >Computer Aided Design</option>
-                <option value="Power Electronics and Drives" >Power Electronics and Drives</option>
-                <option value="Microwave and Optical Communication" >Microwave and Optical Communication</option>
-              </select>
-            </div>
-            <div className="semester">
-              <label htmlFor="semester">Semester</label>
-              <select className="dropdown" name="handlingSemester"  value={formData.handlingSemester || ''} onChange={handleOtherField}>
-                <option value=''>Select</option>
-                <option value="I" >I</option>
-                <option value="II" >II</option>
-                <option value="III" >III</option>
-                <option value="IV" >IV</option>
-                <option value="V" >V</option>
-                <option value="VI" >VI</option>
-                <option value="VII" >VII</option>
-                <option value="VIII" >VIII</option>
-              </select>
-            </div>
       <div>
-      <Allfields
-        fieldtype="text"
-        value="Batch"
-        inputname="batch"
-        formData={formData}
-        setFormData={setFormData}
-      />
+        <span className="close" onClick={onClose}>&times;</span>
       </div>
 
-      <div>
-      <Allfields
-        fieldtype="text"
-        value="Subject"
-        inputname="subject"
-        formData={formData}
-        setFormData={setFormData}
-      />
-      </div>
-      
+      {fields.map((field) => (
+        <div key={field.inputname}>
+          <Allfields
+            fieldtype={field.fieldtype}
+            value={field.label}
+            inputname={field.inputname}
+            formData={formData}
+            setFormData={setFormData}
+          />
+          {errors[field.inputname] && (
+            <div style={{ color: 'red', fontSize: '12px', marginTop: '4px' }}>
+              * {errors[field.inputname]}
+            </div>
+          )}
+        </div>
+      ))}
+
       <div id="faculty_field_button">
-      <Allbuttons  value="Submit" image={Nextwhite} target={handleSubmit}/>
+        <Allbuttons value="Submit" image={Nextwhite} target={handleSubmit} />
       </div>
+
+      {/* Place ToastContainer INSIDE return block with desired settings */}
+      <ToastContainer/>
     </div>
   );
 }
+
 export default Facultyfields;
