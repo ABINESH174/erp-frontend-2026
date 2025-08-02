@@ -9,6 +9,8 @@ import OfficeBearer from './Pages/OfficeBearer/OfficeBearer';
 import BatchesPage from './Pages/batches/BatchesPage';
 import BatchCards from './Components/batchcomponent/BatchCards';
 import OfficeBearerDashboard from './Pages/officeBearerDashboard/OfficeBearerDashboard';
+import GetOtp from './Pages/ForgotPassword/GetOtp';
+import ResetPassword from './Pages/ForgotPassword/ResetPassword';
 
 
 
@@ -34,9 +36,8 @@ function App() {
         <Route path="/hod-bonafide-approval" element={<HodBonafideApproval/>} />
         <Route path="/office-bearer-dashboard" element={<OfficeBearer/>} />
         <Route path="/principal-dashboard" element={<Principaldashboard/>} />
-
-
-
+        <Route path='/forgot-password' element={<GetOtp/>}/>
+        <Route path='/reset-password' element={<ResetPassword/>}/>
       </Routes>
     </div>
   );
