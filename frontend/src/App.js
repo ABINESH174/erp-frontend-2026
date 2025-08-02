@@ -23,7 +23,7 @@ function App() {
         <Route path="/faculty-dashboard" element={<Facultydashboard />} />
         <Route path="/hod-dashboard" element={<Headofthedepartmentdashboard />} >
           <Route index element={<BatchCards/>} />
-          <Route path='batch-one' element={<BatchesPage/>}/>
+          <Route path='/hod-dashboard/batch-one' element={<BatchesPage/>}/>
         </Route>
         <Route path="/faculty-registration" element={<Facultyregistration />} />
         <Route path="/bonafide-page" element={<Bonafide />} />
