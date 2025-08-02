@@ -3,6 +3,7 @@ import './Facultydashboard.css';
 import { FaFileAlt } from 'react-icons/fa';
 import { BsPerson } from 'react-icons/bs';
 import { Search } from 'lucide-react';
+import 'react-toastify/dist/ReactToastify.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import * as XLSX from 'xlsx';
@@ -242,11 +243,19 @@ const handleViewClick = async (student) => {
               </div>
             </div>
           )}
-
           {openAddClassModal && (
-            <Facultyfields onClose={closeModal} />
+          <Facultyfields
+          onClose={closeModal}
+          role="STUDENT"
+          fields={[
+            { label: 'Name', inputname: 'Name', fieldtype: 'text' },
+            { label: 'Register Number', inputname: 'RegisterNumber', fieldtype: 'text' },
+            { label: 'Mobile Number', inputname: 'MobileNumber', fieldtype: 'text' },
+            { label: 'Mail Id', inputname: 'MailId', fieldtype: 'text' },
+            { label: 'Aadhar Number', inputname: 'AadharNumber', fieldtype: 'text' }
+          ]}
+        />
           )}
-
           {openExcelUploadModal && (
             <ExcelFileUpload onClose={closeModal} />
           )}
