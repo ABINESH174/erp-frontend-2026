@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './StudentDetailModal.css'; // Create a light blue theme here
+import './StudentDetailModal.css';
 
 function StudentDetailModal({ student, onClose }) {
   const [activeSection, setActiveSection] = useState('personal');
@@ -25,6 +25,7 @@ function StudentDetailModal({ student, onClose }) {
               <li style={getLinkStyle("academic")} onClick={() => setActiveSection('academic')}>Academic</li>
             </ul>
           </div>
+
           <div className="student-modal-content-area">
             {activeSection === 'personal' && (
               <table>

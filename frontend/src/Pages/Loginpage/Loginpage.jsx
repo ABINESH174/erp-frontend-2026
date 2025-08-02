@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import axios from "axios";
 import './Loginpage.css';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Loginbutton } from '../../Components';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaRegEye } from "react-icons/fa";
 import { IoMdEyeOff } from "react-icons/io";
-import {clgimage}from '../../Assets/clgimage.jpg';
+import { clgimage } from '../../Assets/clgimage.jpg';
 
 function Loginpage() {
   const [userId, setUserId] = useState('');  // Changed setuserId to setUserId for convention
@@ -29,7 +29,7 @@ function Loginpage() {
         toast.success("Login Successful");
         await new Promise((resolve) => setTimeout(resolve, 1000));
         navigate('/profile-page', { state: { userId } });
-      } 
+      }
       else if (res.data === "Form not filled") {
         toast.info("Login Successful");
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -50,14 +50,14 @@ function Loginpage() {
         localStorage.setItem('facultyId', userId);
         localStorage.setItem('facultyEmail', userId);
 
-      console.log("Saved facultyId and facultyEmail to localStorage:", userId);
+        console.log("Saved facultyId and facultyEmail to localStorage:", userId);
         navigate('/faculty-dashboard', { state: { userId } });
       }
       else if (res.data === "HOD Authentication Successful") {
         toast.success("Login Successful");
         await new Promise((resolve) => setTimeout(resolve, 1000));
         localStorage.setItem('hodEmail', userId);
-      console.log("Saved hod email to localStorage:", userId);
+        console.log("Saved hod email to localStorage:", userId);
         navigate('/hod-dashboard', { state: { userId } });
       }
       else if (res.data === "Office Bearer Authentication Successful") {
@@ -66,11 +66,11 @@ function Loginpage() {
         localStorage.setItem('officeBearerEmail', userId);
         navigate('/office-bearer-dashboard', { state: { userId } });
       }
-      else if(res.data === "Principal Authentication Successful"){
+      else if (res.data === "Principal Authentication Successful") {
         toast("Login Successful");
         await new Promise((resolve) => setTimeout(resolve, 1000));
-        navigate('/principal-dashboard',{state: {userId}})
-        }
+        navigate('/principal-dashboard', { state: { userId } })
+      }
       else {
         toast.error("Login failed");
       }
@@ -115,6 +115,10 @@ function Loginpage() {
               <div className='login-button-space'>
                 <Loginbutton type="submit" />
               </div>
+              <p className="forgot-link">
+                <Link to="/forgot-password">Forgot Password?</Link>
+              </p>
+
             </form>
           </div>
         </div>

@@ -1,17 +1,93 @@
-.batch-container{
-    background-color:transparent;
-    width: 100%;
-    height: 100%;
+/* Container for the whole batch details section */
+.hod-student-batch-box {
+  max-width: 1400px;
+  height: 90vh;
+  margin: 40px auto;
+  padding: 32px;
+  background-color: #e0f3fa;
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: box-shadow 0.3s ease;
+  margin-top: 30px;
 }
-.top-faculty-batchbox{
-    background-color: thistle;
-    width: 100%;
-    height: 35%;
-}
-.student-down-batchbox{
-    background-color:aqua;
-    width: 100%;
-    height: 65%;
-    border-bottom-right-radius: 15px;
 
+.hod-student-batch-box:hover {
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+}
+
+/* Table styling */
+.hod-student-tables {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 24px;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #fefefe;
+}
+
+/* Header styling */
+.hod-student-tables thead {
+  background-color: #005f99;
+  color: #ffffff;
+  text-align: left;
+}
+
+.hod-student-tables th,
+.hod-student-tables td {
+  padding: 16px 20px;
+  font-size: 15px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* Alternate row background */
+.hod-student-tables tbody tr:nth-child(even) {
+  background-color: #f6f9fc;
+}
+
+/* Hover row */
+.hod-student-tables tbody tr:hover {
+  background-color: #e0f7ff;
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* Cell text */
+.hod-student-tables td {
+  color: #2c2c2c;
+}
+
+/* Responsive design */
+@media screen and (max-width: 768px) {
+  .hod-student-tables {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    border-radius: 8px;
+  }
+
+  .hod-student-batch-box {
+    padding: 20px;
+  }
+}
+
+/* Paragraph messages */
+.hod-student-batch-box p {
+  font-size: 17px;
+  margin-top: 20px;
+  color: #444;
+}
+
+/* Optional: Heading */
+.hod-student-batch-box h2 {
+  font-size: 26px;
+  margin-bottom: 10px;
+  color: #003049;
+}
+
+
+.assign{
+  background-color: #6cc3f2;
+  width: 100%;
+  height: 20%;
 }
