@@ -6,6 +6,7 @@ import Formtitle from '../../Components/Formtitle/Formtitle';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import Nextwhite from '../../Assets/Nextwhite.svg';
+import AxiosInstance from '../../Api/AxiosInstance';
 
 function Facultyregistration() {
   const navigate = useNavigate();
@@ -32,8 +33,9 @@ function Facultyregistration() {
     e.preventDefault();
 
     try {
-      const response = await axios.post('/api/faculty/post', formData, {
-        headers: { 'Content-Type': 'application/json' }
+      const response = await AxiosInstance.post('/faculty/post', formData, {
+        headers: { 'Content-Type': 'application/json' },
+        withCredentials:false,
       }); 
       console.log('Form submitted successfully:', response.data);
       localStorage.clear();

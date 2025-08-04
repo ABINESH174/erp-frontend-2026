@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from "axios";
 import './Loginpage.css';
 import { Link, useNavigate } from 'react-router-dom';
@@ -8,12 +8,29 @@ import 'react-toastify/dist/ReactToastify.css';
 import { FaRegEye } from "react-icons/fa";
 import { IoMdEyeOff } from "react-icons/io";
 import { clgimage } from '../../Assets/clgimage.jpg';
+import AxiosInstance from '../../Api/AxiosInstance';
+import { getCurrentUser, logoutUser } from '../../Api/AuthService';
+import { getStudentByRegisterNo } from '../../Api/StudentService';
+import { getFacultyByEmail } from '../../Api/FacultyService';
+
+
 
 function Loginpage() {
-  const [userId, setUserId] = useState('');  // Changed setuserId to setUserId for convention
+  const [email, setEmail] = useState('');  // Changed setuserId to setUserId for convention
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(() => {
+    async function resetCookie() {
+      try {
+        const res = await logoutUser();
+      } catch(err) {
+        console.log(err);
+      }
+    }
+    resetCookie();
+  } ,[])
 
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
@@ -23,62 +40,74 @@ function Loginpage() {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const res = await axios.post(`/api/authentication/authenticate`, { userId, password });
+      const res = await AxiosInstance.post(`/authentication/authenticate`, { email, password });
       console.log(res);
-      if (res.data === "Student Authentication Successful") {
-        toast.success("Login Successful");
+      if (res.status === 202) {
+        try {
+          toast.info("Register Yourself");
         await new Promise((resolve) => setTimeout(resolve, 1000));
-        navigate('/profile-page', { state: { userId } });
-      }
-      else if (res.data === "Form not filled") {
-        toast.info("Login Successful");
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        navigate('/registration-form', { state: { userId } });
-      }
-      else if (res.data === "Invalid Register Number") {
-        toast.error("Invalid Register Number or Password");
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      }
-      else if (res.data === "Faculty Registration Not Successful") {
-        toast.info("Login Successful");
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        navigate('/faculty-registration', { state: { userId } });
-      }
-      else if (res.data === "Faculty Authentication Successful") {
-        toast.success("Login Successful");
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        localStorage.setItem('facultyId', userId);
-        localStorage.setItem('facultyEmail', userId);
 
-        console.log("Saved facultyId and facultyEmail to localStorage:", userId);
-        navigate('/faculty-dashboard', { state: { userId } });
+        switch (res.data.data.role) {
+          case "STUDENT":
+            navigate('/registration-form', { state: { userId : res.data.data.userId } })
+            break;
+          case "FACULTY":
+            navigate('/faculty-registration', { state: { userId : res.data.data.userId } })
+            break;
+          default:
+            navigate('/')
+        }
+        } catch (error) {
+            toast.error("Invalid User ID or Password");
+            console.log(error);
+        }
       }
-      else if (res.data === "HOD Authentication Successful") {
+
+      if (res.status === 200) {
         toast.success("Login Successful");
         await new Promise((resolve) => setTimeout(resolve, 1000));
-        localStorage.setItem('hodEmail', userId);
-        console.log("Saved hod email to localStorage:", userId);
-        navigate('/hod-dashboard', { state: { userId } });
-      }
-      else if (res.data === "Office Bearer Authentication Successful") {
-        toast.success("Login Successful");
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        localStorage.setItem('officeBearerEmail', userId);
-        navigate('/office-bearer-dashboard', { state: { userId } });
-      }
-      else if (res.data === "Principal Authentication Successful") {
-        toast("Login Successful");
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        navigate('/principal-dashboard', { state: { userId } })
-      }
-      else {
-        toast.error("Login failed");
+
+        const user = await getCurrentUser();
+
+        if(user && user.role) {
+          let redirectPath = "/";
+          switch (user.role) {
+            case "ROLE_STUDENT":
+              const student = await getStudentByRegisterNo(user.userId);
+              if(student===null || student.firstName === null ) {
+                redirectPath = "/registration-form"
+              } else {
+                redirectPath = "/profile-page";
+              }
+              break;
+            case "ROLE_FACULTY":
+              redirectPath = (await getFacultyByEmail(user.userId) === null)? "/faculty-registration":"/faculty-dashboard";
+              break;
+            case "ROLE_HOD":
+              redirectPath = "/hod-dashboard";
+              break;
+            case "ROLE_OB":
+              redirectPath = "/office-bearer-dashboard";
+              break;
+            case "ROLE_PRINCIPAL":
+              redirectPath = "/principal-dashboard";
+              break;
+            default:
+              redirectPath = "/";
+          }
+          navigate(redirectPath, { state: { userId: user.userId } });
+        } else {
+          toast.error("Unable to fetch user details ");
+        }
+      } else {
+        toast.error("Login failed ");
       }
     } catch (err) {
       console.error(err);
-      toast.error("Invalid Register Number or Password");
+      toast.error("Invalid User ID or Password");
     }
   };
+
 
   return (
     <div>
@@ -91,8 +120,8 @@ function Loginpage() {
               <input
                 type="text"
                 id='input-mail'
-                value={userId}   // Added value to userId input
-                onChange={e => setUserId(e.target.value)}
+                value={email}   // Added value to userId input
+                onChange={e => setEmail(e.target.value)}
                 required
               />
               <label className='login-password' htmlFor="password">Password</label>
