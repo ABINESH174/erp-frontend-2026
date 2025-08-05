@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import axios from "axios";
+import { useEffect, useState } from 'react';
 import './Loginpage.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { Loginbutton } from '../../Components';
@@ -7,11 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaRegEye } from "react-icons/fa";
 import { IoMdEyeOff } from "react-icons/io";
-import { clgimage } from '../../Assets/clgimage.jpg';
-import AxiosInstance from '../../Api/AxiosInstance';
-import { getCurrentUser, logoutUser } from '../../Api/AuthService';
-import { getStudentByRegisterNo } from '../../Api/StudentService';
-import { getFacultyByEmail } from '../../Api/FacultyService';
+import { AuthService } from '../../Api/AuthService';
 
 
 
@@ -22,14 +17,9 @@ function Loginpage() {
   const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    async function resetCookie() {
-      try {
-        const res = await logoutUser();
-      } catch(err) {
-        console.log(err);
-      }
-    }
-    resetCookie();
+    localStorage.removeItem('token');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userId');
   } ,[])
 
   const handleTogglePassword = () => {
@@ -40,19 +30,18 @@ function Loginpage() {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const res = await AxiosInstance.post(`/authentication/authenticate`, { email, password });
-      console.log(res);
-      if (res.status === 202) {
+      const response = await AuthService.login(email, password);
+      console.log(response);
+      if (response.status === 202) {
         try {
           toast.info("Register Yourself");
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        switch (res.data.data.role) {
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+        switch (response.data.data.role) {
           case "STUDENT":
-            navigate('/registration-form', { state: { userId : res.data.data.userId } })
+            navigate('/registration-form', { state: { userId : response.data.data.userId} })
             break;
           case "FACULTY":
-            navigate('/faculty-registration', { state: { userId : res.data.data.userId } })
+            navigate('/faculty-registration', { state: { userId : response.data.data.userId } })
             break;
           default:
             navigate('/')
@@ -63,25 +52,21 @@ function Loginpage() {
         }
       }
 
-      if (res.status === 200) {
+      if (response.status === 200) {
         toast.success("Login Successful");
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        const user = await getCurrentUser();
+        const user = AuthService.getCurrentUser();
 
-        if(user && user.role) {
+        console.log("Current User in login page", user);
+        if( user && user.userRole ) {
           let redirectPath = "/";
-          switch (user.role) {
+          switch (user.userRole) {
             case "ROLE_STUDENT":
-              const student = await getStudentByRegisterNo(user.userId);
-              if(student===null || student.firstName === null ) {
-                redirectPath = "/registration-form"
-              } else {
                 redirectPath = "/profile-page";
-              }
               break;
             case "ROLE_FACULTY":
-              redirectPath = (await getFacultyByEmail(user.userId) === null)? "/faculty-registration":"/faculty-dashboard";
+              redirectPath = "/faculty-dashboard";
               break;
             case "ROLE_HOD":
               redirectPath = "/hod-dashboard";

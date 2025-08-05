@@ -7,6 +7,7 @@ import StudentDetailModal from '../../Components/StudentDetailModal/StudentDetai
 import Allbutton from '../../Components/Allbuttons/Allbuttons';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AxiosInstance from '../../Api/AxiosInstance';
 
 const yearEnumMap = {
   'I YEAR': 'FIRST',
@@ -60,11 +61,11 @@ const BatchesPage = () => {
         setLoading(true);
         setError(null);
 
-        const url = `http://localhost:8080/api/student/get/discipline/year?discipline=${encodeURIComponent(
+        const url = `/student/get/discipline/year?discipline=${encodeURIComponent(
           discipline
         )}&year=${year}`;
 
-        const response = await fetch(url);
+        const response = await AxiosInstance.get(url);
         const result = await response.json();
 
         if (!response.ok) {
@@ -76,8 +77,8 @@ const BatchesPage = () => {
 
         if (studentList.length > 0) {
           const defaultRegisterNo = studentList[0].registerNo;
-          const defaultRes = await axios.get(
-            `http://localhost:8080/api/student/${encodeURIComponent(defaultRegisterNo)}`
+          const defaultRes = await AxiosInstance.get(
+            `/student/${encodeURIComponent(defaultRegisterNo)}`
           );
           setDefaultStudent(defaultRes.data);
         }
@@ -96,8 +97,8 @@ const BatchesPage = () => {
     const fetchAssignedFaculty = async () => {
       if (defaultStudent?.facultyId) {
         try {
-          const res = await axios.get(
-            `http://localhost:8080/api/faculty/get-faculty/${defaultStudent.facultyId}`
+          const res = await AxiosInstance.get(
+            `/faculty/get-faculty/${defaultStudent.facultyId}`
           );
           setAssignedFaculty(res.data.data);
         } catch (err) {
@@ -113,9 +114,8 @@ const BatchesPage = () => {
 
   const handleViewClick = async (student) => {
     try {
-      const response = await axios.get(
-        `http://localhost:8080/api/student/${encodeURIComponent(student.registerNo)}`
-        `http://localhost:8080/api/student/${encodeURIComponent(student.registerNo)}`
+      const response = await AxiosInstance.get(
+        `/student/${encodeURIComponent(student.registerNo)}`
       );
       setSelectedStudent(response.data);
       setOpenModal(true);
@@ -132,7 +132,7 @@ const BatchesPage = () => {
 
   const handleAssignFaculty = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/faculty/unassigned-faculties`);
+      const response = await AxiosInstance.get(`/faculty/unassigned-faculties`);
       const facultyList =
         Array.isArray(response.data) ? response.data : response.data.data || [];
       setUnassignedFaculty(facultyList);
@@ -159,8 +159,8 @@ const BatchesPage = () => {
     };
 
     try {
-      const response = await axios.put(
-        `http://localhost:8080/api/faculty/assign-students`,
+      const response = await AxiosInstance.put(
+        `/faculty/assign-students`,
         {},
         {
           params: queryParams,
@@ -178,8 +178,8 @@ const BatchesPage = () => {
       );
 
       if (defaultStudent?.registerNo) {
-        const updatedRes = await axios.get(
-          `http://localhost:8080/api/student/${encodeURIComponent(defaultStudent.registerNo)}`
+        const updatedRes = await AxiosInstance.get(
+          `/student/${encodeURIComponent(defaultStudent.registerNo)}`
         );
         setDefaultStudent(updatedRes.data);
       }
@@ -200,8 +200,8 @@ const BatchesPage = () => {
         return;
       }
 
-      const response = await axios.get(
-        `http://localhost:8080/api/faculty/get-faculty/${facultyId}`
+      const response = await AxiosInstance.get(
+        `/faculty/get-faculty/${facultyId}`
       );
       const facultyEmail = response.data?.data?.email;
 
@@ -210,7 +210,7 @@ const BatchesPage = () => {
         return;
       }
 
-      await axios.put(`http://localhost:8080/api/faculty/update-dismiss`, null, {
+      await AxiosInstance.put(`/faculty/update-dismiss`, null, {
         params: { email: facultyEmail },
       });
 

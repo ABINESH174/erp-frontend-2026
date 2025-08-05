@@ -1,16 +1,13 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import './Facultydashboard.css';
 import { FaFileAlt } from 'react-icons/fa';
 import { BsPerson } from 'react-icons/bs';
 import { Search } from 'lucide-react';
 import 'react-toastify/dist/ReactToastify.css';
 import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import * as XLSX from 'xlsx';
 
 import Header from '../../Components/Header/Header.jsx';
-import Footer from '../../Components/Footer/Footer.jsx';
-import Modal from '../../Components/Modal/Modal.jsx';
 import Allbuttons from '../../Components/Allbuttons/Allbuttons.jsx';
 import Facultyfields from '../../Components/Facultyfields/Facultyfields.jsx';
 import ExcelFileUpload from '../../Components/excelupload/excelupload.jsx';
@@ -23,6 +20,9 @@ import Logout from '../../Assets/logout.svg';
 import stud from '../../Assets/studenticondash.svg';
 import BonafideCount from '../../Components/BonafideCounter/BonafideCount.jsx';
 import StudentDetailModal from '../../Components/StudentDetailModal/StudentDetailModal.jsx';
+import AxiosInstance from '../../Api/AxiosInstance.js';
+import { AuthService } from '../../Api/AuthService.js';
+import { toast, ToastContainer } from 'react-toastify';
 
 function Facultydashboard() {
   const [faculty, setFaculty] = useState(null);
@@ -47,7 +47,7 @@ function Facultydashboard() {
 
   const fetchFaculty = useCallback(async () => {
     try {
-      const response = await axios.get(`/api/faculty/${facultyId}`);
+      const response = await AxiosInstance.get(`/faculty/${facultyId}`);
       setFaculty(response.data.data);
     } catch (error) {
       console.error('Error fetching faculty:', error);
@@ -61,23 +61,28 @@ function Facultydashboard() {
   }, [fetchFaculty]);
 
   const handleLogoutClick = () => {
-    navigate('/login-page');
+    AuthService.logout();
+    toast.success("Logged out successfully");
+    setTimeout(() => {
+       navigate('/login-page');
+    },1000)
+   
   };
 
-  const handleItemClick = useCallback(async (className, batchYear) => {
-    try {
-      const queryParams = new URLSearchParams({
-        email: facultyId,
-        className,
-        batchYear,
-      });
+  // const handleItemClick = useCallback(async (className, batchYear) => {
+  //   try {
+  //     const queryParams = new URLSearchParams({
+  //       email: facultyId,
+  //       className,
+  //       batchYear,
+  //     });
 
-      const response = await axios.get(`/api/faculty/filter?${queryParams.toString()}`);
-      setFaculty(response.data);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  }, [facultyId]);
+  //     const response = await axios.get(`/api/faculty/filter?${queryParams.toString()}`);
+  //     setFaculty(response.data);
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error);
+  //   }
+  // }, [facultyId]);
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -110,23 +115,23 @@ function Facultydashboard() {
     setOpenExportPopup(false);
   };
 
-  const Card = ({ title, items: [subject, dept, batchYear, semester] }) => (
-    <div className="card" onClick={() => handleItemClick(dept, batchYear)}>
-      <h3>{title}</h3><br />
-      <div className="class_card_items">
-        <ul className='carditem_container'>
-          <div className='dept_batch'>
-            <li id='dept'>{dept || 'N/A'}</li>
-            <li id='batchYear'>{batchYear || 'N/A'}</li>
-          </div><br />
-          <div className='sub_sem'>
-            <li id='subject'>{subject || 'N/A'}</li>
-            <li id='semester'>{semester || 'N/A'}</li>
-          </div>
-        </ul>
-      </div>
-    </div>
-  );
+  // const Card = ({ title, items: [subject, dept, batchYear, semester] }) => (
+  //   <div className="card" onClick={() => handleItemClick(dept, batchYear)}>
+  //     <h3>{title}</h3><br />
+  //     <div className="class_card_items">
+  //       <ul className='carditem_container'>
+  //         <div className='dept_batch'>
+  //           <li id='dept'>{dept || 'N/A'}</li>
+  //           <li id='batchYear'>{batchYear || 'N/A'}</li>
+  //         </div><br />
+  //         <div className='sub_sem'>
+  //           <li id='subject'>{subject || 'N/A'}</li>
+  //           <li id='semester'>{semester || 'N/A'}</li>
+  //         </div>
+  //       </ul>
+  //     </div>
+  //   </div>
+  // );
 
 const handleViewClick = async (student) => {
   const registerNo = student.registerNo?.trim();
@@ -137,7 +142,7 @@ const handleViewClick = async (student) => {
     setOpenModal(true);
     setOpenProfile(false);
 
-    const response = await axios.get(`http://localhost:8080/api/student/${registerNo}`);
+    const response = await AxiosInstance.get(`/student/${registerNo}`);
     setSelectedStudent(response.data); // ← full StudentDto from backend
   } catch (error) {
     console.error("Error fetching student data:", error);
@@ -183,9 +188,8 @@ const handleViewClick = async (student) => {
               <p >Bonafide 
   {facultyId && (
     <BonafideCount 
-      emailKey="facultyEmail"
-      getIdApi={`http://localhost:8080/api/faculty`}
-      getBonafideApi={`http://localhost:8080/api/faculty/get-pending-bonafides`}
+      getIdApi={`/faculty`}
+      getBonafideApi={`/faculty/get-pending-bonafides`}
       statusFilter="PENDING"
       render={(count) => count > 0 && (
         <span className='counter-bonafide'>{count}</span>
@@ -277,7 +281,7 @@ const handleViewClick = async (student) => {
             </div>
           )}
 
-          <div className="card-container">
+          {/* <div className="card-container">
             {[...Array(maxLength)].map((_, index) => (
               <Card
                 key={index}
@@ -290,7 +294,7 @@ const handleViewClick = async (student) => {
                 ]}
               />
             ))}
-          </div>
+          </div> */}
 
           <div className="student_table_options">
             <button id="export_button" className="All-button" onClick={() => setOpenExportPopup(true)}>Export</button>
@@ -338,6 +342,7 @@ const handleViewClick = async (student) => {
           {openModal && (
             <StudentDetailModal student={selectedStudent} onClose={closeModal}/>
           )}
+          <ToastContainer/>
         </div>
       </div>
     </div>

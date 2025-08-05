@@ -5,6 +5,7 @@ import { FaRegEye } from "react-icons/fa";
 import { IoMdEyeOff } from "react-icons/io";
 import './ForgotPassword.css';
 import { useNavigate } from 'react-router-dom';
+import AxiosInstance from '../../Api/AxiosInstance';
 
 const ResetPassword = () => {
   const [email, setEmail] = useState('');
@@ -20,7 +21,7 @@ const ResetPassword = () => {
   const generateNewPassword = async (e) => {
     e.preventDefault();
     try {
-      await axios.put('http://localhost:8080/api/authentication/set-password', { email, otp, newPassword });
+      await AxiosInstance.put('/authentication/set-password', { email, otp, newPassword });
       toast.success("Password Changed Successfully");
     } catch (error) {
       toast.error("Failed to Reset Password");

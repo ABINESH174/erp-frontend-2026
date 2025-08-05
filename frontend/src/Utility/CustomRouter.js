@@ -21,6 +21,7 @@ import BatchCards from "../Components/batchcomponent/BatchCards";
 import GetOtp from "../Pages/ForgotPassword/GetOtp";
 import ResetPassword from "../Pages/ForgotPassword/ResetPassword";
 import ProtectedRoute from "./ProtectedRoute";
+import OfficeBearer from "../Pages/OfficeBearer/OfficeBearer";
 
 const CustomRouter = () => {
   return (
@@ -121,7 +122,7 @@ const CustomRouter = () => {
         path="/office-bearer-dashboard"
         element={
           <ProtectedRoute allowedRoles={["ROLE_OB"]}>
-            <OfficeBearerDashboard />
+            <OfficeBearer/>
           </ProtectedRoute>
         }
       />

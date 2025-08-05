@@ -43,7 +43,7 @@ const Modal = ({ student, onClose , userId}) => {
               headers: { 'Content-Type': 'multipart/form-data' }
           });
   
-          localStorage.clear();
+          // localStorage.clear();
           
           if (userId != null) {
             console.log(response.data);

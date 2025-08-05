@@ -1,17 +1,17 @@
 // src/components/ProtectedRoute.js
-import React from "react";
 import { Navigate } from "react-router-dom";
-import { useAuth } from "../Hooks/useAuth";
+import { AuthService } from "../Api/AuthService";
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
-  const { user, loading } = useAuth();
+  // const { user, loading } = useAuth();
+  const user = AuthService.getCurrentUser();
 
-  if (loading) return <p>Loading...</p>; //Show loader until user is fetched
+ // if (loading) return <p>Loading...</p>; //Show loader until user is fetched
 
   if (!user) return <Navigate to="/login-page" />; //If not logged in → redirect
 
-  if (allowedRoles && !allowedRoles.includes(user.role)) {
-    return <Navigate to="/unauthorized" />; //If role is not allowed
+  if (allowedRoles && !allowedRoles.includes(user.userRole)) {
+    return <Navigate to="/login-page" />; //If role is not allowed
   }
 
   return children; //Render the page if authenticated

@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import './Bonafide.css';
 import Header from '../../Components/Header/Header';
 import axios from 'axios';
+import AxiosInstance from '../../Api/AxiosInstance';
 
 function Bonafide() {
     const location = useLocation();
@@ -57,7 +58,7 @@ function Bonafide() {
     useEffect(() => {
         const fetchApplicableBonafide = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/bonafide/getApplicableBonafide/${userId}`);
+                const response = await AxiosInstance.get(`/bonafide/getApplicableBonafide/${userId}`);
                 if (response.data?.data) {
                     setApplicableBonafide(response.data.data);
                     console.log("Received eligibility data:", response.data.data);
@@ -180,7 +181,7 @@ function Bonafide() {
     });
 
     try {
-        await axios.post('/api/bonafide/create', formData, {
+        await AxiosInstance.post('/bonafide/create', formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
         });
 
@@ -197,7 +198,7 @@ function Bonafide() {
     }
 
     try {
-        await axios.post(`/api/email/notify-faculty/${userId}`);
+        await AxiosInstance.post(`/email/notify-faculty/${userId}`);
     } catch (notifyErr) {
         toast.info("Failed to notify Faculty");
     }

@@ -1,24 +1,41 @@
+
 import AxiosInstance from "./AxiosInstance"
 
-export const getCurrentUser = async () => {
-  try {
-    const res = await AxiosInstance.get("/authentication/current-user", {
-        withCredentials: true, // send cookies
-    });
-    return res.data.data; // {userId, role}
-  } catch (err) {
-    return null;
-  }
-};
+export const AuthService = {
 
-export const logoutUser = async () => {
-  try {
-    const res = await AxiosInstance.post("/authentication/logout",{},{
-      withCredentials:true,
+  login: async (email, password) => {
+   
+    const response = await AxiosInstance.post('/authentication/authenticate', {
+      email,
+      password
     });
-    return res.data;
-  } catch (error) {
-    return null;
+    const{token} = response.data;
+    if(token) {
+      localStorage.setItem('token',token);
+      const payload = JSON.parse(atob(token.split('.')[1]))
+
+      const userRole = payload.role;
+      localStorage.setItem('userRole',userRole);
+
+      const userId = payload.sub // username(email || register Number)
+      localStorage.setItem('userId',userId);
+    }
+    return response;
+  },
+
+  logout: () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userId');
+    localStorage.clear();
+  },
+
+  getCurrentUser: () => {
+    return {
+      userId : localStorage.getItem('userId'),
+      userRole : localStorage.getItem('userRole')
+    }
   }
+  
 }
 

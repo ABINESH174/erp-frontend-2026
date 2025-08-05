@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import './ForgotPassword.css';
+import AxiosInstance from '../../Api/AxiosInstance';
 
 const GetOtp = () => {
   const [email, setEmail] = useState("");
@@ -11,7 +12,7 @@ const GetOtp = () => {
   const getOtp = async (e) => {
     e.preventDefault();
     try {
-      await axios.get('http://localhost:8080/api/authentication/get-otp', {
+      await AxiosInstance.get('/authentication/get-otp', {
         params: { userEmail: email }
       });
       toast.success("OTP Sent to Email Successfully");
