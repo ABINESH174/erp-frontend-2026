@@ -18,7 +18,7 @@ const yearEnumMap = {
 
 const BatchesPage = () => {
   const { search } = useLocation();
-  const facultyListRef = useRef(null); // ⬅️ Added ref
+  const facultyListRef = useRef(null); //  Added ref
 
   const queryParams = useMemo(() => new URLSearchParams(search), [search]);
   const rawYearFromQuery = queryParams.get('year');
@@ -66,9 +66,9 @@ const BatchesPage = () => {
         )}&year=${year}`;
 
         const response = await AxiosInstance.get(url);
-        const result = await response.json();
+        const result = response.data;
 
-        if (!response.ok) {
+        if (!(response.status === 200)) {
           throw new Error(result.message || 'Failed to fetch students');
         }
 
@@ -132,7 +132,8 @@ const BatchesPage = () => {
 
   const handleAssignFaculty = async () => {
     try {
-      const response = await AxiosInstance.get(`/faculty/unassigned-faculties`);
+      const response = await AxiosInstance.get(`/faculty/unassigned-faculties/${discipline}`);
+      console.log(response);
       const facultyList =
         Array.isArray(response.data) ? response.data : response.data.data || [];
       setUnassignedFaculty(facultyList);
