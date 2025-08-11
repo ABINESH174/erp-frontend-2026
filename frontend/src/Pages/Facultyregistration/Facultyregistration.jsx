@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './Facultyregistration.css';
 import { Allfields, Allbuttons } from '../../Components';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Formtitle from '../../Components/Formtitle/Formtitle'; 
 import { toast } from 'react-toastify';
-import axios from 'axios';
 import Nextwhite from '../../Assets/Nextwhite.svg';
+import AxiosInstance from '../../Api/AxiosInstance';
 
 function Facultyregistration() {
   const navigate = useNavigate();
@@ -32,13 +32,13 @@ function Facultyregistration() {
     e.preventDefault();
 
     try {
-      const response = await axios.post('/api/faculty/post', formData, {
+      const response = await AxiosInstance.post('/faculty/post', formData, {
         headers: { 'Content-Type': 'application/json' }
       }); 
       console.log('Form submitted successfully:', response.data);
-      localStorage.clear();
+      // localStorage.clear();
       toast("Registration Successful");
-      localStorage.clear();
+      // localStorage.clear();
       await new Promise((resolve) => setTimeout(resolve, 1000));
       navigate('/login-page');
     } catch (error) {

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import AxiosInstance from '../../Api/AxiosInstance';
+import { AuthService } from '../../Api/AuthService';
 
 const BonafideCount = ({
-  emailKey = '',
   getIdApi,
   getBonafideApi,
   statusFilter = '',
@@ -18,15 +18,15 @@ const BonafideCount = ({
         setLoading(true);
         setError(null);
 
-        const email = localStorage.getItem(emailKey);
-        if (!email) throw new Error(`Email not found for key: ${emailKey}`);
+        const email = AuthService.getCurrentUser().userId;
+        if (!email) throw new Error(`Email not found for key: ${email}`);
 
-        const idRes = await axios.get(`${getIdApi}/${email}`);
+        const idRes = await AxiosInstance.get(`${getIdApi}/${email}`);
         const userData = idRes.data?.data || {};
         const userId = userData.facultyId || userData.hodId;
         if (!userId) throw new Error('User ID not found');
 
-        const bonafideRes = await axios.get(`${getBonafideApi}/${userId}`);
+        const bonafideRes = await AxiosInstance.get(`${getBonafideApi}/${userId}`);
         const bonafides = Array.isArray(bonafideRes.data?.data) ? bonafideRes.data.data : [];
 
         const filtered = statusFilter
@@ -44,7 +44,7 @@ const BonafideCount = ({
     };
 
     fetchCounts();
-  }, [emailKey, getIdApi, getBonafideApi, statusFilter]);
+  }, [getIdApi, getBonafideApi, statusFilter]);
 
   if (loading || error) return null;
 

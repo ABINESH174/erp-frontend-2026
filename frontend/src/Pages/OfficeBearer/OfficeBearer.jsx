@@ -9,6 +9,7 @@ import BackButton from '../../Components/backbutton/BackButton';
 import BonafideViewModal from '../../Components/BonafideViewModal/BonafideViewModal';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import AxiosInstance from '../../Api/AxiosInstance';
 
 const OfficeBearer = () => {
   const [activeTab, setActiveTab] = useState('bonafides');
@@ -37,7 +38,7 @@ const OfficeBearer = () => {
   const fetchHodApprovedBonafides = async () => {
   setLoading(true);
   try {
-    const res = await axios.get('http://localhost:8080/api/bonafide/getHodApproved');
+    const res = await AxiosInstance.get('/bonafide/getHodApproved');
 
     const bonafides = res.data?.data || [];
 
@@ -68,7 +69,7 @@ const OfficeBearer = () => {
   const fetchPrincipalApproved = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:8080/api/bonafide/getPrincipalApproved');
+      const res = await AxiosInstance.get('/bonafide/getPrincipalApproved');
       console.log('Principal Approved response:', res.data);
       setPrincipalApprovedData(res.data.data || []);
       setActiveTab('principalApproved');
@@ -82,7 +83,7 @@ const OfficeBearer = () => {
   const fetchNotifiedBonafides = async () => {
     setLoading(true);
     try{
-      const res = await axios.get('http://localhost:8080/api/bonafide/getNotifiedBonafides');
+      const res = await AxiosInstance.get('/bonafide/getNotifiedBonafides');
       console.log('Notified Bonafides response:', res.data);
       setPrincipalApprovedData(res.data.data || []);
       setActiveTab('notifiedBonafides');
@@ -95,7 +96,7 @@ const OfficeBearer = () => {
 
   const approveBonafide = async (bonafideId, registerNo) => {
     try {
-      const res = await axios.put('http://localhost:8080/api/bonafide/updateBonafideWithBonafideStatus', null, {
+      const res = await AxiosInstance.put('/bonafide/updateBonafideWithBonafideStatus', null, {
         params: { bonafideId, registerNo, status: 'PRINCIPAL_APPROVED' },
       });
 
@@ -108,7 +109,7 @@ const OfficeBearer = () => {
 
   const rejectBonafide = async (bonafideId, registerNo, rejectionMessage) => {
     try {
-      const res = await axios.put('http://localhost:8080/api/bonafide/updateObRejectedBonafide', null, {
+      const res = await AxiosInstance.put('/bonafide/updateObRejectedBonafide', null, {
         params: { bonafideId, registerNo,status: 'OB_REJECTED',rejectionMessage },
       });
       toast.success(res.data.message || 'Bonafide rejected successfully!');
@@ -121,11 +122,11 @@ const OfficeBearer = () => {
   const handleNotifyStudent = async (bonafideId, registerNo) => {
     try {
       const statusMessage = "NOTIFIED";  // enum status string
-      await axios.put('http://localhost:8080/api/bonafide/updateBonafideWithBonafideStatus', null, {
+      await AxiosInstance.put('/bonafide/updateBonafideWithBonafideStatus', null, {
         params: { bonafideId, registerNo, status: statusMessage },
       });
     try {
-      await axios.post('http://localhost:8080/api/email/notify-approver', {bonafideId, status: 'NOTIFIED', registerNo
+      await AxiosInstance.post('/email/notify-approver', {bonafideId, status: 'NOTIFIED', registerNo
       });
     } catch (emailErr) {
       console.error('Email sending failed:', emailErr);
@@ -175,8 +176,8 @@ const handleDownload = async (bonafideId, registerNo) => {
   console.log('Downloading bonafide ID:', bonafideId, 'Register No:', registerNo);
 
   try {
-    const response = await axios.get(
-      `http://localhost:8080/api/bonafide/getCertificate/${bonafideId}`,
+    const response = await AxiosInstance.get(
+      `/bonafide/getCertificate/${bonafideId}`,
       {
         params: { registerNo }, 
         responseType: 'blob',
