@@ -11,6 +11,7 @@ import { FaFileAlt } from "react-icons/fa";
 import Logout from '../../Assets/logout.svg';
 import Allbuttons from '../../Components/Allbuttons/Allbuttons.jsx';
 import BonafideCount from '../../Components/BonafideCounter/BonafideCount.jsx';
+import AxiosInstance from '../../Api/AxiosInstance.js';
 
 function Headofthedepartmentdashboard() {
   const location = useLocation();
@@ -42,7 +43,7 @@ function Headofthedepartmentdashboard() {
 
     const fetchHod = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/api/hod/getHodByEmail/${encodeURIComponent(userId)}`);
+        const res = await AxiosInstance.get(`/hod/getHodByEmail/${encodeURIComponent(userId)}`);
         setHodData(res.data.data);
       } catch (err) {
         console.error('Error fetching HOD data:', err);
@@ -80,9 +81,8 @@ function Headofthedepartmentdashboard() {
                 <FaFileAlt /> Bonafide
                 {userId && (
                   <BonafideCount
-                    emailKey="hodEmail"
-                    getIdApi="http://localhost:8080/api/hod/getHodByEmail"
-                    getBonafideApi="http://localhost:8080/api/hod/getFacultyApprovedBonafidesByHodId"
+                    getIdApi="/hod/getHodByEmail"
+                    getBonafideApi="/hod/getFacultyApprovedBonafidesByHodId"
                     statusFilter="FACULTY_APPROVED"
                     render={(count) => count > 0 && (
                       <span className='hod-bonafide-count'>{count}</span>

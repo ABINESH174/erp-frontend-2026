@@ -12,6 +12,7 @@ import BackButton from '../../Components/backbutton/BackButton';
 import { Allbuttons } from '../../Components';
 import View from '../../Assets/eyewhite.svg';
 import BonafideViewModal from '../../Components/BonafideViewModal/BonafideViewModal';
+import AxiosInstance from '../../Api/AxiosInstance';
 
 const HodBonafideApproval = () => {
   const navigate = useNavigate();
@@ -32,8 +33,8 @@ const HodBonafideApproval = () => {
  useEffect(() => {
   const handleFetchBonafides = async () => {
     try {
-      const bonafideRes = await axios.get(
-        `http://localhost:8080/api/hod/getFacultyApprovedBonafidesByHodId/${hodId}`,
+      const bonafideRes = await AxiosInstance.get(
+        `/hod/getFacultyApprovedBonafidesByHodId/${hodId}`,
         { headers: { Accept: 'application/json' } }
       );
 
@@ -78,8 +79,8 @@ const HodBonafideApproval = () => {
           return;
         }
 
-        const hodRes = await axios.get(
-          `http://localhost:8080/api/hod/getHodByEmail/${email}`,
+        const hodRes = await AxiosInstance.get(
+          `/hod/getHodByEmail/${email}`,
           { headers: { Accept: 'application/json' } }
         );
 
@@ -106,7 +107,7 @@ const handleApprove = (bonafideId, registerNo) => {
           try {
             await Promise.all([
               handleStatusUpdate(bonafideId, registerNo, 'HOD_APPROVED'),
-              axios.post(`/api/email/notify-approver`, {
+              AxiosInstance.post(`/email/notify-approver`, {
                 bonafideId,
                 registerNo,
                 status: 'HOD_APPROVED',
@@ -129,8 +130,8 @@ const handleApprove = (bonafideId, registerNo) => {
   try {
     setProcessingId(bonafideId);
 
-    const res = await axios.put(
-      'http://localhost:8080/api/bonafide/updateBonafideWithBonafideStatus',
+    const res = await AxiosInstance.put(
+      '/bonafide/updateBonafideWithBonafideStatus',
       null,
       {
         params: { bonafideId, registerNo, status },
@@ -188,8 +189,8 @@ const handleApprove = (bonafideId, registerNo) => {
   const rejectBonafide = async (bonafideId, registerNo, message) => {
     try {
       setProcessingId(bonafideId);
-      const res = await axios.put(
-        'http://localhost:8080/api/bonafide/updateObRejectedBonafide',
+      const res = await AxiosInstance.put(
+        '/bonafide/updateObRejectedBonafide',
         null,
         {
           params: {

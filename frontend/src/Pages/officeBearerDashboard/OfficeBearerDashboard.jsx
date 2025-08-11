@@ -8,6 +8,7 @@ import Allbuttons from '../../Components/Allbuttons/Allbuttons.jsx';
 import Logout from '../../Assets/logout.svg';
 import BonafideCount from '../../Components/BonafideCounter/BonafideCount.jsx';
 import './OfficeBearerDashboard.css';
+import AxiosInstance from '../../Api/AxiosInstance.js';
 
 function OfficeBearerDashboard() {
   const location = useLocation();
@@ -21,7 +22,7 @@ function OfficeBearerDashboard() {
     const fetchHeadofthedepartment = async () => {
       try {
         const { userId } = location.state || {};
-        const response = await axios.get(`http://localhost:8080/api/hod/getHodByEmail/${userId}`);
+        const response = await AxiosInstance.get(`/hod/getHodByEmail/${userId}`);
         setHeadofthedepartment(response.data.data);
         setUserId(userId);
       } catch (error) {
@@ -77,12 +78,6 @@ function OfficeBearerDashboard() {
             <h2>Office Bearer Dashboard</h2>
             <p>profile</p>
             <p onClick={() => navigate('/office-bearer-dashboard', { state: { userId: userId } })}>Bonafide</p>
-            {/* <span >{userId ? <BonafideCount  className='ob-bonafide-count'
-            emailKey="obEmail"
-            getIdApi={`http://localhost:8080/api/hod/getHodByEmail`}
-            getBonafideApi={`http://localhost:8080/api/hod/getFacultyApprovedBonafidesByHodId`}
-            statusFilter="HOD_APPROVED"
-            /> : 0}</span> */}
             
             
             

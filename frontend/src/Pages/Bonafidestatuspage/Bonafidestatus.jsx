@@ -5,6 +5,7 @@ import Header from '../../Components/Header/Header';
 import './Bonafidestatus.css';
 import { FaDownload } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
+import AxiosInstance from '../../Api/AxiosInstance';
 
 const BonafideStatus = () => {
   const location = useLocation();
@@ -31,7 +32,7 @@ const BonafideStatus = () => {
 
   const fetchBonafideDetails = async () => {
     try {
-      const res = await axios.get(`http://localhost:8080/api/bonafide/getAllBonafidesByRegisterNo?registerNo=${registerNo}`);
+      const res = await AxiosInstance.get(`/bonafide/getAllBonafidesByRegisterNo?registerNo=${registerNo}`);
       const updatedData = (res.data.data || []).map(item => ({ ...item, reuploadDone: item.reuploadDone || false }));
       setBonafideDetails(updatedData);
     } catch (err) {
@@ -91,13 +92,13 @@ const requiredFiles = purposeFileMap[selectedBonafide.purpose?.toLowerCase()] ||
         formData.append(key, file);
       });
 
-      const res = await axios.post("http://localhost:8080/api/bonafide/create", formData, {
+      const res = await AxiosInstance.post("/bonafide/create", formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
 
       if (res.status === 201) {
-        const deleteUrl = `http://localhost:8080/api/bonafide/deleteBonafide?registerNo=${selectedBonafide.registerNo}&bonafideId=${selectedBonafide.bonafideId}`;
-        await axios.delete(deleteUrl);
+        const deleteUrl = `/bonafide/deleteBonafide?registerNo=${selectedBonafide.registerNo}&bonafideId=${selectedBonafide.bonafideId}`;
+        await AxiosInstance.delete(deleteUrl);
 
         await fetchBonafideDetails();
 

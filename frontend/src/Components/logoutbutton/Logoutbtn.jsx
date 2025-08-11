@@ -1,23 +1,31 @@
-import React from 'react'
-import './Logoutbtn.css';
-import { useNavigate } from 'react-router-dom';
-import { RiLogoutCircleLine } from "react-icons/ri";
 
+import "./Logoutbtn.css";
+import { useNavigate } from "react-router-dom";
+import { RiLogoutCircleLine } from "react-icons/ri";
+import { toast, ToastContainer } from "react-toastify";
+import { AuthService } from "../../Api/AuthService";
 
 const Logoutbtn = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    AuthService.logout();
+    toast.success("Logged out successfully");
+    setTimeout(() => {
+       navigate('/login-page');
+    },1000)
+  };
+
   return (
     <div>
-        
-<button class="logout-Btn"  onClick={()=> navigate('/Login-page')}> 
-  
- <RiLogoutCircleLine /> Logout 
-</button>
-
-
-
+      <button className="logout-Btn" onClick={handleLogout}>
+        <RiLogoutCircleLine /> Logout
+      </button>
+      <ToastContainer />
     </div>
-  )
-}
 
-export default Logoutbtn
+
+  );
+};
+
+export default Logoutbtn;

@@ -4,9 +4,13 @@ import Allbuttons from '../../Components/Allbuttons/Allbuttons.jsx';
 import Nextwhite from '../../Assets/Nextwhite.svg';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import AxiosInstance from '../../Api/AxiosInstance.js';
+import { AuthService } from '../../Api/AuthService.js';
 
 function ExcelFileUpload({ onClose }) {
   const [file, setFile] = useState(null);
+
+  const user = AuthService.getCurrentUser();
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
@@ -22,7 +26,7 @@ function ExcelFileUpload({ onClose }) {
     formData.append('file', file);
 
     try {
-      const response = await axios.post('http://localhost:8080/api/authentication/upload-students', formData, {
+      const response = await AxiosInstance.post(`/authentication/upload-students/${user.userId}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

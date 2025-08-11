@@ -18,6 +18,7 @@ const BatchCards = () => {
     if (!discipline) return <p>No valid discipline provided.</p>;
 
     if (discipline === 'Science and Humanities') {
+      const firstYear = "I YEAR"
       return [
         ...coreBranches.map(branch => (
           <div className="batch-card" key={`I-${branch}`}>
@@ -25,7 +26,7 @@ const BatchCards = () => {
             <button
               className="batch-carry-btn"
               onClick={() =>
-                navigate(`/students?year=I YEAR&branch=${encodeURIComponent(branch)}`)
+                navigate(`batch-one?year=${firstYear}&section=${encodeURIComponent(' ')}&discipline=${encodeURIComponent(branch)}`)
               }
             >
               View
@@ -38,7 +39,7 @@ const BatchCards = () => {
             <button
               className="batch-carry-btn"
               onClick={() =>
-                navigate(`/students?year=I YEAR&branch=Mechanical Engineering&section=${sec}`)
+                navigate(`batch-one?year=${firstYear}&discipline=${encodeURIComponent('Mechanical Engineering')}&section=${sec}`)
               }
             >
               View
@@ -51,7 +52,7 @@ const BatchCards = () => {
             <button
               className="batch-carry-btn"
               onClick={() =>
-                navigate(`/students?year=I YEAR&branch=Electrical and Electronics Engineering&section=${sec}`)
+                navigate(`batch-one?year=${firstYear}&discipline=${encodeURIComponent('Electrical and Electronics Engineering')}&section=${sec}`)
               }
             >
               View
@@ -72,7 +73,7 @@ const BatchCards = () => {
             <button
               className="batch-carry-btn"
               onClick={() =>
-                navigate(`/students?year=${year}&section=${sec}&branch=${encodeURIComponent(discipline)}`)
+                navigate(`batch-one?year=${year}&section=${sec}&discipline=${encodeURIComponent(discipline)}`)
               }
             >
               View
@@ -88,7 +89,7 @@ const BatchCards = () => {
         <button
           className="batch-carry-btn"
           onClick={() =>
-            navigate(`batch-one?year=${encodeURIComponent(year)}&discipline=${encodeURIComponent(discipline)}`)
+            navigate(`batch-one?year=${encodeURIComponent(year)}&section=${encodeURIComponent(' ')}&discipline=${encodeURIComponent(discipline)}`)
           }
         >
           View
