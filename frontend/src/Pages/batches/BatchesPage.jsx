@@ -120,12 +120,13 @@ const BatchesPage = () => {
   const handleViewClick = async (student) => {
     try {
       
-  console.log("Clicked on student:", student); // 👈 Add this
+  console.log("Clicked on student:", student); 
       const response = await AxiosInstance.get(
         `/student/${encodeURIComponent(student.registerNo)}`
       );
-      console.log("Response:", response); // 👈 Add this
-      setSelectedStudent(response.data.data);
+      console.log("Response:", response);
+      setSelectedStudent(response.data);
+
       setOpenModal(true);
     } catch (err) {
       console.error('Fetch error:', err);
@@ -263,8 +264,6 @@ const BatchesPage = () => {
     <div className="batches-page-container">
       <div className="hod-student-batch-box">
         <div className="assign">
-          <h2 className="faculty-details-header">Faculty Details</h2>
-
           <div className="faculty-prop">
             {defaultStudent?.facultyId !== null && assignedFaculty && (
               <div className="faculty-details">
@@ -274,13 +273,7 @@ const BatchesPage = () => {
                 </p>
                 <p>
                   <strong>Email:</strong> {assignedFaculty.email}
-                </p>
-                <p>
-                  <strong>Phone:</strong> {assignedFaculty.mobileNumber}
-                </p>
-                <p>
-                  <strong>Discipline:</strong> {assignedFaculty.discipline}
-                </p>
+                </p> 
               </div>
             )}
 
@@ -389,7 +382,7 @@ const BatchesPage = () => {
         )}
       </div>
 
-      {openModal && selectedStudent && (
+      {openModal &&(
         <StudentDetailModal student={selectedStudent} onClose={closeModal} />
       )}
 

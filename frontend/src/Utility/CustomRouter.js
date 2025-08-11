@@ -108,6 +108,7 @@ const CustomRouter = () => {
       >
         <Route index element={<BatchCards />} />
         <Route path="batch-one" element={<BatchesPage />} />
+        <Route path="bonafide-page" element={<HodBonafideApproval />}/>
       </Route>
 
       <Route

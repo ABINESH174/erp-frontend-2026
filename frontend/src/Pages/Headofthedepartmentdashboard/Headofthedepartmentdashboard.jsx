@@ -77,7 +77,7 @@ function Headofthedepartmentdashboard() {
             <h2>HOD Dashboard</h2>
             <div className="hod-navigation-bar">
               <p className='hod-nav-item' onClick={() => setOpen(!open)}><BsPerson /> Profile</p>
-              <p className='hod-bonafide-nav-item' onClick={() => navigate('/hod-bonafide-approval', { state: { userId } })}>
+              <p className='hod-bonafide-nav-item' onClick={() => navigate('bonafide-page', { state: { userId } })}>
                 <FaFileAlt /> Bonafide
                 {userId && (
                   <BonafideCount
@@ -100,11 +100,10 @@ function Headofthedepartmentdashboard() {
                 <p>Welcome! Head of the {hodData?.discipline || '...'} Department</p>
                 <p className="acadamic-year">Academic Year: {getAcademicYear()}</p>
               </div>
-              <div className="nav">
                 <div className="faculty_profile_icon" onClick={() => setOpen(!open)}>
                   <img id="profile_icon" src={Profileicon} alt="Profile Icon" />
                 </div>
-              </div>
+              
               {open && (
                 <div className="faculty_profile_details">
                   <div className="faculty-profile">

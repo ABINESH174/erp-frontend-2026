@@ -10,13 +10,14 @@
     background-color:white;
 }
 
-.bonafide-heading-bar {
+.bonafide-content h1 {
+    text-align: center;
     width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: #123458;
+    color: #0e0948;
     padding: 20px;
 }
 
@@ -29,7 +30,7 @@
     background-color: white;
 }
 .bonafide-display-container h2 {
-    color:#0582ca;
+    color:#190e94;
     font-size: 2rem;
     font-weight: 600;
     margin-top: 20px;

@@ -217,16 +217,8 @@ const handleApprove = (bonafideId, registerNo) => {
 
   return (
     <div>
-      <Header />
       <div className="hod-bonafide-student">
-        <div className="hod-bonafide-navbar">
-          <ul className="hod-navlist" style={{ listStyleType: 'none' }}>
-            <li className="hodbonafide-navitem">Bonafides</li>
-            <li className="hodbonafide-navitem">Previous</li>
-            <li className="hodbonafide-navitem">Approved</li>
-            <li className="hodbonafide-navitem">Rejected</li>
-          </ul>
-        </div>
+       
         <div className="hod-topstud-container">
           <div className="bonafide-header-bar">
             <h3 className="name-bar-title">HOD Bonafide Approval Page</h3>

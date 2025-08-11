@@ -133,6 +133,8 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  width: fit-content;
+  border-radius: 15px;
 }
 .assign-faculty-btn{
   width: fit-content;
@@ -159,7 +161,7 @@
 }
 
 .dismiss-faculty-btn{
-  width: fit-content;
+  width:14%;
   height: 35px;
   background:linear-gradient(95deg,rgb(157, 15, 102), rgb(255, 0, 123)) ;
   border-radius: 10px;
@@ -170,21 +172,30 @@
   font-weight: 500;
   border: none;
   padding: 10px;
-  margin-left:36rem;
-  margin-top: 87px;
+  margin-left: 20%;
+  margin-top: 20px;
 }
 .faculty-prop{
   display: flex;
   flex-direction:row;
   gap: 10px;
+  width: 100%;
 }
 .faculty-details {
+  display: flex;
+  flex-direction:row;
+  gap: 10px;
+  width: fit-content;
+  padding: 10px;
+  border-radius: 10px;
+}
+.faculty-details p{
   background-color: #f0f8ff;
   padding: 10px;
   border-radius: 8px;
-  width:fit-content;
   height: fit-content;
-  margin-left: 50px;
+  display: flex;
+  flex-direction: row;
 }
 .faculty-details h3 {
   margin: 0;
