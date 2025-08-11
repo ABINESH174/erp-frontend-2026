@@ -12,6 +12,8 @@ import Logout from '../../Assets/logout.svg';
 import Allbuttons from '../../Components/Allbuttons/Allbuttons.jsx';
 import BonafideCount from '../../Components/BonafideCounter/BonafideCount.jsx';
 import AxiosInstance from '../../Api/AxiosInstance.js';
+import { Facultyfields } from '../../Components/index.js';
+import Add from '../../Assets/add.svg';
 
 function Headofthedepartmentdashboard() {
   const location = useLocation();
@@ -20,6 +22,7 @@ function Headofthedepartmentdashboard() {
   const [userId, setUserId] = useState('');
   const [open, setOpen] = useState(false);
   const [hodData, setHodData] = useState(null);
+  const [openAddFacultyModal, setOpenAddFacultyModal] = useState(false);
   const [error, setError] = useState(null);
 
   // Step 1: Set userId from location.state or localStorage
@@ -76,7 +79,7 @@ function Headofthedepartmentdashboard() {
           <div className="hod-nav-sidebar">
             <h2>HOD Dashboard</h2>
             <div className="hod-navigation-bar">
-              <p className='hod-nav-item' onClick={() => setOpen(!open)}><BsPerson /> Profile</p>
+              <p className='hod-nav-item' onClick={(e) => { e.stopPropagation(); setOpen(!open); }}><BsPerson /> Profile</p>
               <p className='hod-bonafide-nav-item' onClick={() => navigate('bonafide-page', { state: { userId } })}>
                 <FaFileAlt /> Bonafide
                 {userId && (
@@ -100,12 +103,13 @@ function Headofthedepartmentdashboard() {
                 <p>Welcome! Head of the {hodData?.discipline || '...'} Department</p>
                 <p className="acadamic-year">Academic Year: {getAcademicYear()}</p>
               </div>
+              <div className="nav">
                 <div className="faculty_profile_icon" onClick={() => setOpen(!open)}>
                   <img id="profile_icon" src={Profileicon} alt="Profile Icon" />
                 </div>
               
               {open && (
-                <div className="faculty_profile_details">
+                <div className="faculty_profile_details" onClick={(e) => e.stopPropagation()}>
                   <div className="faculty-profile">
                     <p className="field_background">{hodData?.firstName} {hodData?.lastName}</p>
                     <p className="field_background">{hodData?.discipline}</p>
@@ -115,6 +119,22 @@ function Headofthedepartmentdashboard() {
                   </div>
                 </div>
               )}
+
+              {open && (document.onclick = () => setOpen(false))}
+
+              {openAddFacultyModal && (
+            <Facultyfields
+              onClose={()=>{setOpenAddFacultyModal(false)}}
+              role="FACULTY"
+              fields={[
+                { label: 'Name', inputname: 'Name', fieldtype: 'text' },
+                // { label: 'Register Number', inputname: 'RegisterNumber', fieldtype: 'text' },
+                { label: 'Mobile Number', inputname: 'MobileNumber', fieldtype: 'text' },
+                { label: 'Mail Id', inputname: 'MailId', fieldtype: 'text' },
+                { label: 'Aadhar Number', inputname: 'AadharNumber', fieldtype: 'text' }
+              ]}
+            />
+          )}
             </div>
 
             <div className="hod-content-space">

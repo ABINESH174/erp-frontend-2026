@@ -64,9 +64,9 @@ function Facultydashboard() {
     AuthService.logout();
     toast.success("Logged out successfully");
     setTimeout(() => {
-       navigate('/login-page');
-    },1000)
-   
+      navigate('/login-page');
+    }, 1000)
+
   };
 
   // const handleItemClick = useCallback(async (className, batchYear) => {
@@ -133,21 +133,21 @@ function Facultydashboard() {
   //   </div>
   // );
 
-const handleViewClick = async (student) => {
-  const registerNo = student.registerNo?.trim();
-  console.log("View clicked for:", registerNo);
+  const handleViewClick = async (student) => {
+    const registerNo = student.registerNo?.trim();
+    console.log("View clicked for:", registerNo);
 
-  try {
-    setSelectedStudent(null);
-    setOpenModal(true);
-    setOpenProfile(false);
+    try {
+      setSelectedStudent(null);
+      setOpenModal(true);
+      setOpenProfile(false);
 
-    const response = await AxiosInstance.get(`/student/${registerNo}`);
-    setSelectedStudent(response.data); // ← full StudentDto from backend
-  } catch (error) {
-    console.error("Error fetching student data:", error);
-  }
-};
+      const response = await AxiosInstance.get(`/student/${registerNo}`);
+      setSelectedStudent(response.data); // ← full StudentDto from backend
+    } catch (error) {
+      console.error("Error fetching student data:", error);
+    }
+  };
 
 
   const closeModal = () => {
@@ -179,23 +179,23 @@ const handleViewClick = async (student) => {
         <div className="full-container">
           <p className="faculty-heading-tag">faculty dashboard</p>
           <div className="faculty-side">
-            <div className="faculty-profile-bar" onClick={toggleProfile}>
+            <div className="faculty-profile-bar" onClick={(e) => {e.stopPropagation();setOpenProfile(!openProfile); }}>
               <BsPerson /><p>profile</p>
             </div>
 
             <div className="bonafide-view" onClick={() => navigate('/bonafide-student', { state: { userId: facultyId } })}>
               <FaFileAlt />
-              <p >Bonafide 
-  {facultyId && (
-    <BonafideCount 
-      getIdApi={`/faculty`}
-      getBonafideApi={`/faculty/get-pending-bonafides`}
-      statusFilter="PENDING"
-      render={(count) => count > 0 && (
-        <span className='counter-bonafide'>{count}</span>
-      )}
-    />
-  )}</p>
+              <p >Bonafide
+                {facultyId && (
+                  <BonafideCount
+                    getIdApi={`/faculty`}
+                    getBonafideApi={`/faculty/get-pending-bonafides`}
+                    statusFilter="PENDING"
+                    render={(count) => count > 0 && (
+                      <span className='counter-bonafide'>{count}</span>
+                    )}
+                  />
+                )}</p>
             </div>
 
             <div className="fa-logout">
@@ -231,13 +231,13 @@ const handleViewClick = async (student) => {
             <div className="class_add_button">
               <Allbuttons image={Add} value="Add Student" target={() => setOpenAddClassModal(true)} />
             </div>
-            <div className="faculty_profile_icon" onClick={toggleProfile}>
+            <div className="faculty_profile_icon" onClick={(e) => {e.stopPropagation();setOpenProfile(!openProfile)}}>
               <img id="profile_icon" src={Profileicon} alt="Profile Icon" />
             </div>
           </div>
 
           {openProfile && (
-            <div className="faculty_profile_details">
+            <div className="faculty_profile_details" onClick={(e) => e.stopPropagation()}>
               <div className="faculty-profile">
                 <p className="field_background">{faculty.firstName} {faculty.lastName}</p>
                 <p className="field_background">{faculty.discipline}</p>
@@ -247,18 +247,19 @@ const handleViewClick = async (student) => {
               </div>
             </div>
           )}
+          {openProfile && (document.onclick = () => setOpenProfile(false))}
           {openAddClassModal && (
-          <Facultyfields
-          onClose={closeModal}
-          role="STUDENT"
-          fields={[
-            { label: 'Name', inputname: 'Name', fieldtype: 'text' },
-            { label: 'Register Number', inputname: 'RegisterNumber', fieldtype: 'text' },
-            { label: 'Mobile Number', inputname: 'MobileNumber', fieldtype: 'text' },
-            { label: 'Mail Id', inputname: 'MailId', fieldtype: 'text' },
-            { label: 'Aadhar Number', inputname: 'AadharNumber', fieldtype: 'text' }
-          ]}
-        />
+            <Facultyfields
+              onClose={closeModal}
+              role="STUDENT"
+              fields={[
+                { label: 'Name', inputname: 'Name', fieldtype: 'text' },
+                { label: 'Register Number', inputname: 'RegisterNumber', fieldtype: 'text' },
+                { label: 'Mobile Number', inputname: 'MobileNumber', fieldtype: 'text' },
+                { label: 'Mail Id', inputname: 'MailId', fieldtype: 'text' },
+                { label: 'Aadhar Number', inputname: 'AadharNumber', fieldtype: 'text' }
+              ]}
+            />
           )}
           {openExcelUploadModal && (
             <ExcelFileUpload onClose={closeModal} />
@@ -314,23 +315,23 @@ const handleViewClick = async (student) => {
                 </thead>
                 <tbody>
                   {faculty.students.filter(student =>
-  `${student.firstName} ${student.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  student.registerNo.toLowerCase().includes(searchTerm.toLowerCase())
-).map((student, index) => (
-  <tr key={student.registerNo}>
-    <td>{index + 1}</td>
-    <td>{student.firstName} {student.lastName}</td>
-    <td>{student.registerNo}</td>
-    <td>{student.emailId}</td>
-    <td>
-      <Allbuttons 
-        value="View" 
-        image={View} 
-        target={() => handleViewClick(student)} 
-      />
-    </td>
-  </tr>
-))}
+                    `${student.firstName} ${student.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    student.registerNo.toLowerCase().includes(searchTerm.toLowerCase())
+                  ).map((student, index) => (
+                    <tr key={student.registerNo}>
+                      <td>{index + 1}</td>
+                      <td>{student.firstName} {student.lastName}</td>
+                      <td>{student.registerNo}</td>
+                      <td>{student.emailId}</td>
+                      <td>
+                        <Allbuttons
+                          value="View"
+                          image={View}
+                          target={() => handleViewClick(student)}
+                        />
+                      </td>
+                    </tr>
+                  ))}
 
                 </tbody>
               </table>
@@ -340,9 +341,9 @@ const handleViewClick = async (student) => {
           </div>
 
           {openModal && (
-            <StudentDetailModal student={selectedStudent} onClose={closeModal}/>
+            <StudentDetailModal student={selectedStudent} onClose={closeModal} />
           )}
-          <ToastContainer/>
+          <ToastContainer />
         </div>
       </div>
     </div>
