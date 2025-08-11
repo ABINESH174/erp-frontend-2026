@@ -1,14 +1,14 @@
 import React from 'react';
 import './BonafideViewModal.css';
-import axios from 'axios';
+import AxiosInstance from '../../Api/AxiosInstance';
 
 const BonafideViewModal = ({ showModal, setShowModal, selectedBonafide }) => {
   if (!showModal || !selectedBonafide) return null;
 
   const handleDownload = async (filePath) => {
     try {
-      // const response = await fetch(`http://localhost:8080/api/bonafide/downloadFile?filePath=${encodeURIComponent(filePath)}`);
-      // if (!response.ok) throw new Error('Download failed');
+      const response = await AxiosInstance.get(`/bonafide/?filePath=${encodeURIComponent(filePath)}`);
+      if (!response.status===200) throw new Error('Download failed');
 
       const response = await axios.get(`http://localhost:8080/api/bonafide/downloadFile?filePath=${encodeURIComponent(filePath)}`, {
         responseType: 'blob', // Important for binary data
@@ -32,8 +32,8 @@ const BonafideViewModal = ({ showModal, setShowModal, selectedBonafide }) => {
 
   const handlePreview = async (filePath) => {
     try {
-      // const response = await fetch(`http://localhost:8080/api/bonafide/previewFile?filePath=${encodeURIComponent(filePath)}`);
-      // if (!response.ok) throw new Error(`Preview failed: ${response.statusText}`);
+      const response = await AxiosInstance.get(`/bonafide/previewFile?filePath=${encodeURIComponent(filePath)}`);
+      if (!response.status === 200) throw new Error(`Preview failed: ${response.statusText}`);
 
       const response =await axios.get(`http://localhost:8080/api/bonafide/previewFile?filePath=${encodeURIComponent(filePath)}`, {
         responseType: 'blob',

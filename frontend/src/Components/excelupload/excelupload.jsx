@@ -4,6 +4,7 @@ import Allbuttons from '../../Components/Allbuttons/Allbuttons.jsx';
 import Nextwhite from '../../Assets/Nextwhite.svg';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import AxiosInstance from '../../Api/AxiosInstance.js';
 
 function ExcelFileUpload({ onClose }) {
   const [file, setFile] = useState(null);
@@ -22,7 +23,7 @@ function ExcelFileUpload({ onClose }) {
     formData.append('file', file);
 
     try {
-      const response = await axios.post('http://localhost:8080/api/authentication/upload-students', formData, {
+      const response = await AxiosInstance.post('/authentication/upload-students', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

@@ -7,6 +7,7 @@ import StudentDetailModal from '../../Components/StudentDetailModal/StudentDetai
 import Allbutton from '../../Components/Allbuttons/Allbuttons';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AxiosInstance from '../../Api/AxiosInstance';
 
 const yearEnumMap = {
   'I YEAR': 'FIRST',
@@ -17,14 +18,16 @@ const yearEnumMap = {
 
 const BatchesPage = () => {
   const { search } = useLocation();
-  const facultyListRef = useRef(null); // ⬅️ Added ref
+  const facultyListRef = useRef(null); //  Added ref
 
   const queryParams = useMemo(() => new URLSearchParams(search), [search]);
   const rawYearFromQuery = queryParams.get('year');
   const disciplineFromQuery = queryParams.get('discipline');
+  const sectionFromQuery = queryParams.get('section');
 
   const rawYear = rawYearFromQuery || localStorage.getItem('year');
   const discipline = disciplineFromQuery || localStorage.getItem('discipline');
+  const section = sectionFromQuery || localStorage.getItem('section');
   const year = yearEnumMap[rawYear?.toUpperCase()] || null;
 
   const [students, setStudents] = useState([]);
@@ -47,6 +50,7 @@ const BatchesPage = () => {
 
   useEffect(() => {
     if (!rawYear || !discipline) {
+      console.log("rawYear",year,"discipline",discipline);
       setError('Missing or invalid year or discipline.');
       setLoading(false);
       return;
@@ -54,20 +58,22 @@ const BatchesPage = () => {
 
     localStorage.setItem('year', rawYear);
     localStorage.setItem('discipline', discipline);
+    localStorage.setItem('section',section);
 
     const fetchStudents = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        const url = `http://localhost:8080/api/student/get/discipline/year?discipline=${encodeURIComponent(
+        const url = `/student/get/discipline/year/section?discipline=${encodeURIComponent(
           discipline
-        )}&year=${year}`;
+        )}&year=${year}
+        &classSection=${encodeURIComponent(section)}`;
 
-        const response = await fetch(url);
-        const result = await response.json();
+        const response = await AxiosInstance.get(url);
+        const result = response.data;
 
-        if (!response.ok) {
+        if (!(response.status === 200)) {
           throw new Error(result.message || 'Failed to fetch students');
         }
 
@@ -76,8 +82,8 @@ const BatchesPage = () => {
 
         if (studentList.length > 0) {
           const defaultRegisterNo = studentList[0].registerNo;
-          const defaultRes = await axios.get(
-            `http://localhost:8080/api/student/${encodeURIComponent(defaultRegisterNo)}`
+          const defaultRes = await AxiosInstance.get(
+            `/student/${encodeURIComponent(defaultRegisterNo)}`
           );
           setDefaultStudent(defaultRes.data);
         }
@@ -90,14 +96,14 @@ const BatchesPage = () => {
     };
 
     fetchStudents();
-  }, [rawYear, discipline, year]);
+  }, [rawYear, discipline, year,section]);
 
   useEffect(() => {
     const fetchAssignedFaculty = async () => {
       if (defaultStudent?.facultyId) {
         try {
-          const res = await axios.get(
-            `http://localhost:8080/api/faculty/get-faculty/${defaultStudent.facultyId}`
+          const res = await AxiosInstance.get(
+            `/faculty/get-faculty/${defaultStudent.facultyId}`
           );
           setAssignedFaculty(res.data.data);
         } catch (err) {
@@ -113,11 +119,13 @@ const BatchesPage = () => {
 
   const handleViewClick = async (student) => {
     try {
-      const response = await axios.get(
-        `http://localhost:8080/api/student/${encodeURIComponent(student.registerNo)}`
-        `http://localhost:8080/api/student/${encodeURIComponent(student.registerNo)}`
+      
+  console.log("Clicked on student:", student); // 👈 Add this
+      const response = await AxiosInstance.get(
+        `/student/${encodeURIComponent(student.registerNo)}`
       );
-      setSelectedStudent(response.data);
+      console.log("Response:", response); // 👈 Add this
+      setSelectedStudent(response.data.data);
       setOpenModal(true);
     } catch (err) {
       console.error('Fetch error:', err);
@@ -132,7 +140,12 @@ const BatchesPage = () => {
 
   const handleAssignFaculty = async () => {
     try {
-      const response = await axios.get(`http://localhost:8080/api/faculty/unassigned-faculties`);
+
+      const response = (year === 'FIRST') ? (
+        await AxiosInstance.get(`/faculty/unassigned-faculties/${encodeURIComponent('Science and humanities')}`)
+      ) : (await AxiosInstance.get(`/faculty/unassigned-faculties/${discipline}`));
+
+      console.log(response);
       const facultyList =
         Array.isArray(response.data) ? response.data : response.data.data || [];
       setUnassignedFaculty(facultyList);
@@ -159,8 +172,8 @@ const BatchesPage = () => {
     };
 
     try {
-      const response = await axios.put(
-        `http://localhost:8080/api/faculty/assign-students`,
+      const response = await AxiosInstance.put(
+        `/faculty/assign-students`,
         {},
         {
           params: queryParams,
@@ -178,8 +191,8 @@ const BatchesPage = () => {
       );
 
       if (defaultStudent?.registerNo) {
-        const updatedRes = await axios.get(
-          `http://localhost:8080/api/student/${encodeURIComponent(defaultStudent.registerNo)}`
+        const updatedRes = await AxiosInstance.get(
+          `/student/${encodeURIComponent(defaultStudent.registerNo)}`
         );
         setDefaultStudent(updatedRes.data);
       }
@@ -200,8 +213,8 @@ const BatchesPage = () => {
         return;
       }
 
-      const response = await axios.get(
-        `http://localhost:8080/api/faculty/get-faculty/${facultyId}`
+      const response = await AxiosInstance.get(
+        `/faculty/get-faculty/${facultyId}`
       );
       const facultyEmail = response.data?.data?.email;
 
@@ -210,7 +223,7 @@ const BatchesPage = () => {
         return;
       }
 
-      await axios.put(`http://localhost:8080/api/faculty/update-dismiss`, null, {
+      await AxiosInstance.put(`/faculty/update-dismiss`, null, {
         params: { email: facultyEmail },
       });
 

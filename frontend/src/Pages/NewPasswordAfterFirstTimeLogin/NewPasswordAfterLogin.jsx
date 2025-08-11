@@ -1,54 +1,49 @@
-import axios from 'axios';
 import React, { useState } from 'react';
-import { toast, ToastContainer } from 'react-toastify';
-import { FaRegEye } from "react-icons/fa";
-import { IoMdEyeOff } from "react-icons/io";
-import './ForgotPassword.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AxiosInstance from '../../Api/AxiosInstance';
+import { toast } from 'react-toastify';
+import { IoMdEyeOff } from 'react-icons/io';
+import { FaRegEye } from 'react-icons/fa';
+import './NewPasswordAfterLogin.css'; // <-- create and paste your CSS here
 
-const ResetPassword = () => {
- 
-  const [otp, setOtp] = useState('');
+const NewPasswordAfterLogin = () => {
   const [newPassword, setNewPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
   const location = useLocation();
-  const email = location.state.email;
+  const navigate = useNavigate();
+  const userId = location.state.userId;
 
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
   };
 
-  const generateNewPassword = async (e) => {
+  async function generateNewPassword(e) {
     e.preventDefault();
     try {
-      await AxiosInstance.put('/authentication/set-password', { email, otp, newPassword });
-      toast.success("Password Changed Successfully");
+      await AxiosInstance.put('/authentication/new-password', { userId, newPassword });
+      toast.success('Password Updated Successfully');
     } catch (error) {
-      toast.error("Failed to Reset Password");
+      toast.error('Failed to Update Password');
     } finally {
       setTimeout(() => {
-        navigate('/login-page')
-      }, 1500)
+        navigate('/login-page');
+      }, 1000);
     }
-  };
+  }
 
   return (
     <div className="forgot-container">
       <div className="forgot-card">
-        <h2>Reset Password</h2>
         <form onSubmit={generateNewPassword}>
-          <label>Email:</label>
-          <input type='email' value={email} disabled />
+          <h2>Update Password</h2>
 
-          <label>OTP:</label>
-          <input type='text' value={otp} onChange={(e) => setOtp(e.target.value)} required />
+          <label>User ID</label>
+          <input type="text" value={userId} disabled />
 
-          <label>New Password:</label>
+          <label>New Password</label>
           <div className="password-box">
             <input
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               required
@@ -60,12 +55,11 @@ const ResetPassword = () => {
             )}
           </div>
 
-          <button type='submit'>Reset Password</button>
+          <button type="submit">Update Password</button>
         </form>
-        <ToastContainer />
       </div>
     </div>
   );
 };
 
-export default ResetPassword;
+export default NewPasswordAfterLogin;
