@@ -7,10 +7,13 @@ const BonafideViewModal = ({ showModal, setShowModal, selectedBonafide }) => {
 
   const handleDownload = async (filePath) => {
     try {
-      const response = await AxiosInstance.get(`/bonafide/?filePath=${encodeURIComponent(filePath)}`);
-      if (!response.status===200) throw new Error('Download failed');
+     const response = await AxiosInstance.get(`/bonafide/downloadFile?filePath=${encodeURIComponent(filePath)}`, {
+        responseType: 'blob', // Important for binary data
+      });
+       if (response.status !== 200) throw new Error('Download failed');
 
-      const blob = await response.blob();
+      const blob = response.data;
+      
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -27,11 +30,13 @@ const BonafideViewModal = ({ showModal, setShowModal, selectedBonafide }) => {
 
   const handlePreview = async (filePath) => {
     try {
-      const response = await AxiosInstance.get(`/bonafide/previewFile?filePath=${encodeURIComponent(filePath)}`);
-      if (!response.status === 200) throw new Error(`Preview failed: ${response.statusText}`);
-
-      const contentType = response.headers.get('content-type');
-      const blob = await response.blob();
+      const response = await AxiosInstance.get(`/bonafide/previewFile?filePath=${encodeURIComponent(filePath)}`, {
+        responseType: 'blob',
+      });
+    if (response.status !== 200) throw new Error(`Preview failed: ${response.statusText}`);
+      const contentType = response.headers['content-type'];
+      // const blob = await response.blob();
+      const blob = response.data;
       const url = window.URL.createObjectURL(blob);
 
       const previewableTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/gif', 'text/plain', 'text/html'];
