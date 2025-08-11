@@ -20,7 +20,7 @@ function Loginpage() {
     localStorage.removeItem('token');
     localStorage.removeItem('userRole');
     localStorage.removeItem('userId');
-  } ,[])
+  }, [])
 
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
@@ -36,34 +36,38 @@ function Loginpage() {
         try {
           toast.info("Register Yourself");
           await new Promise((resolve) => setTimeout(resolve, 1000));
-        switch (response.data.data.role) {
-          case "STUDENT":
-            navigate('/registration-form', { state: { userId : response.data.data.userId} })
-            break;
-          case "FACULTY":
-            navigate('/faculty-registration', { state: { userId : response.data.data.userId } })
-            break;
-          default:
-            navigate('/')
-        }
+          switch (response.data.data.role) {
+            case "STUDENT":
+              navigate('/registration-form', { state: { userId: response.data.data.userId } })
+              break;
+            case "FACULTY":
+              navigate('/faculty-registration', { state: { userId: response.data.data.userId } })
+              break;
+            default:
+              navigate('/')
+          }
         } catch (error) {
-            toast.error("Invalid User ID or Password");
-            console.log(error);
+          toast.error("Invalid User ID or Password");
+          console.log(error);
         }
       }
 
       if (response.status === 200) {
+        const user = AuthService.getCurrentUser();
+        if (response.data.firstTimePasswordResetFlag) {
+          toast.info("Update Your Password")
+          setTimeout(() => {
+            navigate('/new-password-after-login', { state: { userId: user.userId } })
+          }, 1500)
+        } else {
         toast.success("Login Successful");
         await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        const user = AuthService.getCurrentUser();
-
         console.log("Current User in login page", user);
-        if( user && user.userRole ) {
+        if (user && user.userRole) {
           let redirectPath = "/";
           switch (user.userRole) {
             case "ROLE_STUDENT":
-                redirectPath = "/profile-page";
+              redirectPath = "/profile-page";
               break;
             case "ROLE_FACULTY":
               redirectPath = "/faculty-dashboard";
@@ -84,14 +88,17 @@ function Loginpage() {
         } else {
           toast.error("Unable to fetch user details ");
         }
+
+        }
       } else {
         toast.error("Login failed ");
       }
+
     } catch (err) {
       console.error(err);
       toast.error("Invalid User ID or Password");
     }
-  };
+  }
 
 
   return (

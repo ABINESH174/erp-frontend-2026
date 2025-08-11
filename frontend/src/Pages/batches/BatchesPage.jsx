@@ -23,9 +23,11 @@ const BatchesPage = () => {
   const queryParams = useMemo(() => new URLSearchParams(search), [search]);
   const rawYearFromQuery = queryParams.get('year');
   const disciplineFromQuery = queryParams.get('discipline');
+  const sectionFromQuery = queryParams.get('section');
 
   const rawYear = rawYearFromQuery || localStorage.getItem('year');
   const discipline = disciplineFromQuery || localStorage.getItem('discipline');
+  const section = sectionFromQuery || localStorage.getItem('section');
   const year = yearEnumMap[rawYear?.toUpperCase()] || null;
 
   const [students, setStudents] = useState([]);
@@ -48,6 +50,7 @@ const BatchesPage = () => {
 
   useEffect(() => {
     if (!rawYear || !discipline) {
+      console.log("rawYear",year,"discipline",discipline);
       setError('Missing or invalid year or discipline.');
       setLoading(false);
       return;
@@ -55,15 +58,17 @@ const BatchesPage = () => {
 
     localStorage.setItem('year', rawYear);
     localStorage.setItem('discipline', discipline);
+    localStorage.setItem('section',section);
 
     const fetchStudents = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        const url = `/student/get/discipline/year?discipline=${encodeURIComponent(
+        const url = `/student/get/discipline/year/section?discipline=${encodeURIComponent(
           discipline
-        )}&year=${year}`;
+        )}&year=${year}
+        &classSection=${encodeURIComponent(section)}`;
 
         const response = await AxiosInstance.get(url);
         const result = response.data;
@@ -91,7 +96,7 @@ const BatchesPage = () => {
     };
 
     fetchStudents();
-  }, [rawYear, discipline, year]);
+  }, [rawYear, discipline, year,section]);
 
   useEffect(() => {
     const fetchAssignedFaculty = async () => {
@@ -114,10 +119,13 @@ const BatchesPage = () => {
 
   const handleViewClick = async (student) => {
     try {
+      
+  console.log("Clicked on student:", student); // 👈 Add this
       const response = await AxiosInstance.get(
         `/student/${encodeURIComponent(student.registerNo)}`
       );
-      setSelectedStudent(response.data);
+      console.log("Response:", response); // 👈 Add this
+      setSelectedStudent(response.data.data);
       setOpenModal(true);
     } catch (err) {
       console.error('Fetch error:', err);
@@ -132,7 +140,11 @@ const BatchesPage = () => {
 
   const handleAssignFaculty = async () => {
     try {
-      const response = await AxiosInstance.get(`/faculty/unassigned-faculties/${discipline}`);
+
+      const response = (year === 'FIRST') ? (
+        await AxiosInstance.get(`/faculty/unassigned-faculties/${encodeURIComponent('Science and humanities')}`)
+      ) : (await AxiosInstance.get(`/faculty/unassigned-faculties/${discipline}`));
+
       console.log(response);
       const facultyList =
         Array.isArray(response.data) ? response.data : response.data.data || [];

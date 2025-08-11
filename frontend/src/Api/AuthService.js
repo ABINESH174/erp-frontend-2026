@@ -9,7 +9,7 @@ export const AuthService = {
       email,
       password
     });
-    const{token} = response.data;
+    const token = response.data.token;
     if(token) {
       localStorage.setItem('token',token);
       const payload = JSON.parse(atob(token.split('.')[1]))
@@ -19,6 +19,7 @@ export const AuthService = {
 
       const userId = payload.sub // username(email || register Number)
       localStorage.setItem('userId',userId);
+
     }
     return response;
   },

@@ -78,12 +78,6 @@ function OfficeBearerDashboard() {
             <h2>Office Bearer Dashboard</h2>
             <p>profile</p>
             <p onClick={() => navigate('/office-bearer-dashboard', { state: { userId: userId } })}>Bonafide</p>
-            {/* <span >{userId ? <BonafideCount  className='ob-bonafide-count'
-            emailKey="obEmail"
-            getIdApi={`http://localhost:8080/api/hod/getHodByEmail`}
-            getBonafideApi={`http://localhost:8080/api/hod/getFacultyApprovedBonafidesByHodId`}
-            statusFilter="HOD_APPROVED"
-            /> : 0}</span> */}
             
             
             

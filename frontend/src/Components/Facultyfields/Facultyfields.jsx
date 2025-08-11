@@ -5,6 +5,7 @@ import Nextwhite from '../../Assets/Nextwhite.svg';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import AxiosInstance from '../../Api/AxiosInstance';
 
 function Facultyfields({ onClose, fields = [], role }) {
   const initialFormData = fields.reduce((acc, field) => {
@@ -53,7 +54,7 @@ function Facultyfields({ onClose, fields = [], role }) {
       const password = formData.AadharNumber;
       const payload = { userId, password, role };
 
-      const response = await axios.post(`http://localhost:8080/api/authentication/create`, payload);
+      const response = await AxiosInstance.post(`/authentication/create`, payload);
 
       toast.success(`${role} added successfully`);
       console.log('Data submitted successfully:', response.data);

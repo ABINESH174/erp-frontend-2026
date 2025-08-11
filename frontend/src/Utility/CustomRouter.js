@@ -22,6 +22,7 @@ import GetOtp from "../Pages/ForgotPassword/GetOtp";
 import ResetPassword from "../Pages/ForgotPassword/ResetPassword";
 import ProtectedRoute from "./ProtectedRoute";
 import OfficeBearer from "../Pages/OfficeBearer/OfficeBearer";
+import NewPasswordAfterLogin from "../Pages/NewPasswordAfterFirstTimeLogin/NewPasswordAfterLogin";
 
 const CustomRouter = () => {
   return (
@@ -29,6 +30,7 @@ const CustomRouter = () => {
       {/*Public Routes */}
       <Route path="/" element={<Landingpage />} />
       <Route path="/login-page" element={<Loginpage />} />
+      <Route path="/new-password-after-login" element={<NewPasswordAfterLogin/>}/>
       <Route path="/forgot-password" element={<GetOtp />} />
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/registration-form" element={<Registrationform />} />
