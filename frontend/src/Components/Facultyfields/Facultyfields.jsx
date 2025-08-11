@@ -6,6 +6,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AxiosInstance from '../../Api/AxiosInstance';
+import { AuthService } from '../../Api/AuthService';
 
 function Facultyfields({ onClose, fields = [], role }) {
   const initialFormData = fields.reduce((acc, field) => {
@@ -50,11 +51,17 @@ function Facultyfields({ onClose, fields = [], role }) {
     }
 
     try {
-      const userId = formData.MailId;
+      const currentUser = AuthService.getCurrentUser();
+      const userId = (role === "STUDENT") ? formData.RegisterNumber : formData.MailId;
       const password = formData.AadharNumber;
       const payload = { userId, password, role };
 
-      const response = await AxiosInstance.post(`/authentication/create`, payload);
+      let response;
+      if(role === "STUDENT") {
+        response = await AxiosInstance.post(`/authentication/create/student/${currentUser.userId}`, payload);
+      } else {
+        response = await AxiosInstance.post(`/authentication/create`, payload);
+      }
 
       toast.success(`${role} added successfully`);
       console.log('Data submitted successfully:', response.data);
