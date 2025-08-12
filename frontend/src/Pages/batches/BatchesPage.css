@@ -4,7 +4,7 @@
   height: 90vh;
   margin: 40px auto;
   padding: 18px;
-  background-color: #e0f3fa;
+  background-color: #d6ecf3;
   border-radius: 12px;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -161,7 +161,7 @@
 }
 
 .dismiss-faculty-btn{
-  width:14%;
+  width:12%;
   height: 35px;
   background:linear-gradient(95deg,rgb(157, 15, 102), rgb(255, 0, 123)) ;
   border-radius: 10px;
@@ -174,6 +174,10 @@
   padding: 10px;
   margin-left: 20%;
   margin-top: 20px;
+}
+.dismiss-faculty-btn:hover{
+  background:linear-gradient(95deg,rgb(241, 5, 99), rgb(140, 7, 33)) ;
+  transform: scale(1.05);
 }
 .faculty-prop{
   display: flex;
@@ -210,8 +214,4 @@
   margin: 6px 30px;
 }
 
-.back-btn-hod {
-  align-items: center;
-  background-color: rebeccapurple;
-  
-}
+

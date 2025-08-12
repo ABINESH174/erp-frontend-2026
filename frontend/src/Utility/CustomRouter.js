@@ -23,6 +23,7 @@ import ResetPassword from "../Pages/ForgotPassword/ResetPassword";
 import ProtectedRoute from "./ProtectedRoute";
 import OfficeBearer from "../Pages/OfficeBearer/OfficeBearer";
 import NewPasswordAfterLogin from "../Pages/NewPasswordAfterFirstTimeLogin/NewPasswordAfterLogin";
+import FacultyStudentPage from "../Components/FacultyStudent/FacultyStudentPage";
 
 const CustomRouter = () => {
   return (
@@ -95,7 +96,10 @@ const CustomRouter = () => {
             <Facultydashboard />
           </ProtectedRoute>
         }
-      />
+      >
+       <Route index element={<FacultyStudentPage/>} />
+      <Route path="faculty-bonafide" element={<BonafideStudent />} />
+      </Route>
 
       {/*HOD ROUTES */}
       <Route
@@ -106,6 +110,7 @@ const CustomRouter = () => {
           </ProtectedRoute>
         }
       >
+        {/* <Route index element={<BatchCards />} /> */}
         <Route index element={<BatchCards />} />
         <Route path="batch-one" element={<BatchesPage />} />
         <Route path="bonafide-page" element={<HodBonafideApproval />}/>

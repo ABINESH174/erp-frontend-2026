@@ -190,24 +190,11 @@ useEffect(() => {
 
   return (
     <div>
-      <Header />
-      <div className="bonafide-student">
-        <div className="bonafide-sidebar-container">
-          <ul className="bonafide-sidebar-list" style={{ listStyleType: 'none' }}>
-            <li className="bonafide-sidebar-item">Bonafides</li>
-            <li className="bonafide-sidebar-item">Previous</li>
-            <li className="bonafide-sidebar-item">Approved</li>
-            <li className="bonafide-sidebar-item">Rejected</li>
-          </ul>
-        </div>
-
         <div className="topstud-container">
           <div className="name-bar">
             <h3 className="name-bar-title">Bonafide Notification Page</h3>
           </div>
-          <div className="bonafide-backbtn">
-            <BackButton />
-          </div>
+         
 
           {loading ? (
             <p>Loading...</p>
@@ -261,7 +248,7 @@ useEffect(() => {
             </div>
           )}
         </div>
-      </div>
+     
 
       {/* Rejection Modal */}
       {rejectionModalOpen && (

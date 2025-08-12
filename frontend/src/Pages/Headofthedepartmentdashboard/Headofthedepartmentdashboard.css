@@ -143,6 +143,8 @@
 .welcome-bar p{
     font-size: 19px;
     text-transform: capitalize;
+    margin-top: 12px;
+    text-align: center;
    }
 .acadamic-year{
     display: flex;

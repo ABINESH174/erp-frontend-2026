@@ -1,30 +1,27 @@
+import React from 'react'
 import { useEffect, useState, useCallback } from 'react';
-import './Facultydashboard.css';
-import { FaFileAlt } from 'react-icons/fa';
-import { BsPeople, BsPerson } from 'react-icons/bs';
+import './FacultyStudentPage.css';
 import { Search } from 'lucide-react';
 import 'react-toastify/dist/ReactToastify.css';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import * as XLSX from 'xlsx';
 
-import Header from '../../Components/Header/Header.jsx';
 import Allbuttons from '../../Components/Allbuttons/Allbuttons.jsx';
 import Facultyfields from '../../Components/Facultyfields/Facultyfields.jsx';
 import ExcelFileUpload from '../../Components/excelupload/excelupload.jsx';
-import Logoutbtn from '../../Components/logoutbutton/Logoutbtn.jsx';
 
 import Profileicon from '../../Assets/profile.svg';
 import View from '../../Assets/eyewhite.svg';
 import Add from '../../Assets/add.svg';
 import Logout from '../../Assets/logout.svg';
 import stud from '../../Assets/studenticondash.svg';
-import BonafideCount from '../../Components/BonafideCounter/BonafideCount.jsx';
+import StudentDetailModal from '../../Components/StudentDetailModal/StudentDetailModal.jsx';
 import AxiosInstance from '../../Api/AxiosInstance.js';
 import { AuthService } from '../../Api/AuthService.js';
 import { toast, ToastContainer } from 'react-toastify';
 
-function Facultydashboard() {
-  const [faculty, setFaculty] = useState(null);
+const FacultyStudentPage = () => {
+      const [faculty, setFaculty] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [openProfile, setOpenProfile] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -135,14 +132,15 @@ function Facultydashboard() {
   const handleViewClick = async (student) => {
     const registerNo = student.registerNo?.trim();
     console.log("View clicked for:", registerNo);
+    
 
     try {
       setSelectedStudent(null);
       setOpenModal(true);
       setOpenProfile(false);
-
+      
       const response = await AxiosInstance.get(`/student/${registerNo}`);
-      setSelectedStudent(response.data); // ← full StudentDto from backend
+      setSelectedStudent(response.data);
     } catch (error) {
       console.error("Error fetching student data:", error);
     }
@@ -170,45 +168,9 @@ function Facultydashboard() {
   const deptList = faculty.handlingDept ? faculty.handlingDept.split('#') : [];
   const batchList = faculty.batch ? faculty.batch.split('#') : [];
   const maxLength = Math.max(subjectList.length, semesterList.length, deptList.length, batchList.length);
-
   return (
-    <div>
-      <Header />
-      <div className="parent">
-        <div className="full-container">
-          <p className="faculty-heading-tag">faculty dashboard</p>
-          <div className="faculty-side">
-            <div className="faculty-profile-bar" onClick={(e) => {e.stopPropagation();setOpenProfile(!openProfile); }}>
-              <BsPerson /><p>profile</p>
-            </div>
-
-            <div className="faculty-profile-bar" onClick={() => navigate('/faculty-dashboard', { state: { userId: facultyId } })}><BsPeople />Students</div>
-
-            <div className="bonafide-view" onClick={() => navigate('faculty-bonafide', { state: { userId: facultyId } })}>
-              <FaFileAlt />
-              <p >Bonafide
-                {facultyId && (
-                  <BonafideCount
-                    getIdApi={`/faculty`}
-                    getBonafideApi={`/faculty/get-pending-bonafides`}
-                    statusFilter="PENDING"
-                    render={(count) => count > 0 && (
-                      <span className='counter-bonafide'>{count}</span>
-                    )}
-                  />
-                )}</p>
-            </div>
-
-            <div className="fa-logout">
-              <Logoutbtn />
-            </div>
-          </div>
-        </div>
-            <div className="top-sidebox">
-              <Outlet />
-            </div>
-
-        {/* <div className="top-sidebox">
+    <div> 
+        <div className="top-container">
           <div className="nav">
             <div className="student-count">
               <img src={stud} alt="Student Icon" />
@@ -299,7 +261,7 @@ function Facultydashboard() {
                 ]}
               />
             ))}
-          </div> 
+          </div> */}
 
           <div className="student_table_options">
             <button id="export_button" className="All-button" onClick={() => setOpenExportPopup(true)}>Export</button>
@@ -348,10 +310,9 @@ function Facultydashboard() {
             <StudentDetailModal student={selectedStudent} onClose={closeModal} />
           )}
           <ToastContainer />
-        </div> */}
-      </div>
+        </div>
     </div>
-  );
+  )
 }
 
-export default Facultydashboard;
+export default FacultyStudentPage

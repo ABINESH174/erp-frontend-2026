@@ -218,15 +218,8 @@ const handleApprove = (bonafideId, registerNo) => {
   return (
     <div>
       <div className="hod-bonafide-student">
-       
         <div className="hod-topstud-container">
-          <div className="bonafide-header-bar">
-            <h3 className="name-bar-title">HOD Bonafide Approval Page</h3>
-          </div>
-          <div className="bonafide-backbtn">
-            <BackButton />
-          </div>
-
+      
           {loading ? (
             <p>Loading...</p>
           ) : error ? (
