@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import './BatchCards.css';
+
+import group from '../../Assets/group.png'; 
 
 const BatchCards = () => {
   const navigate = useNavigate();
@@ -14,106 +16,94 @@ const BatchCards = () => {
   const years = ['II YEAR', 'III YEAR', 'IV YEAR'];
   const sections = ['A', 'B'];
 
-  const renderCards = () => {
+  const renderCards = useMemo(() => {
     if (!discipline) return <p>No valid discipline provided.</p>;
 
     if (discipline === 'Science and Humanities') {
-      const cards = [];
-
-      coreBranches.forEach((branch) => {
-        cards.push(
+      const firstYear = "I YEAR"
+      return [
+        ...coreBranches.map(branch => (
           <div className="batch-card" key={`I-${branch}`}>
-            <h3>{`${branch}`}</h3>
+            <h3>{branch}</h3>
             <button
               className="batch-carry-btn"
               onClick={() =>
-                navigate(`/students?year=I YEAR&branch=${encodeURIComponent(branch)}`)
+                navigate(`batch-one?year=${firstYear}&section=${encodeURIComponent(' ')}&discipline=${encodeURIComponent(branch)}`)
               }
             >
               View
             </button>
           </div>
-        );
-      });
-
-      sections.forEach((section) => {
-        cards.push(
-          <div className="batch-card" key={`I-MECH-${section}`}>
-            <h3>{` Mechanical Engineering - Section ${section}`}</h3>
+        )),
+        ...sections.map(sec => (
+          <div className="batch-card" key={`I-MECH-${sec}`}>
+            <h3>Mechanical Engineering – Section {sec}</h3>
             <button
               className="batch-carry-btn"
               onClick={() =>
-                navigate(
-                  `/students?year=I YEAR&branch=Mechanical Engineering&section=${section}`
-                )
+                navigate(`batch-one?year=${firstYear}&discipline=${encodeURIComponent('Mechanical Engineering')}&section=${sec}`)
               }
             >
               View
             </button>
           </div>
-        );
-      });
-
-      sections.forEach((section) => {
-        cards.push(
-          <div className="batch-card" key={`I-EEE-${section}`}>
-            <h3>{`Electrical and Electronics Engineering - Section ${section}`}</h3>
+        )),
+        ...sections.map(sec => (
+          <div className="batch-card" key={`I-EEE-${sec}`}>
+            <h3>Electrical & Electronics Engineering – Section {sec}</h3>
             <button
               className="batch-carry-btn"
               onClick={() =>
-                navigate(
-                  `/students?year=I YEAR&branch=Electrical and Electronics Engineering&section=${section}`
-                )
-              }
-            >
-              View
-            </button>
-          </div>
-        );
-      });
-
-      return cards;
-    }
-
-    if (
-      discipline === 'Mechanical Engineering' ||
-      discipline === 'Electrical and Electronics Engineering'
-    ) {
-      return years.flatMap((year) =>
-        sections.map((section) => (
-          <div className="batch-card" key={`${year}-${section}`}>
-            <h3>{`${year} - Section ${section}`}</h3>
-            <button
-              className="batch-carry-btn"
-              onClick={() =>
-                navigate(`/students?year=${year}&section=${section}`)
+                navigate(`batch-one?year=${firstYear}&discipline=${encodeURIComponent('Electrical and Electronics Engineering')}&section=${sec}`)
               }
             >
               View
             </button>
           </div>
         ))
+      ];
+    }
+
+    if (
+      discipline === 'Mechanical Engineering' ||
+      discipline === 'Electrical and Electronics Engineering'
+    ) {
+      return years.flatMap(year =>
+        sections.map(sec => (
+          <div className="batch-card" key={`${year}-${sec}`}>
+            <img src={group} alt="icon" />
+            <h3>{`${year} – Section ${sec}`}</h3>
+            <button
+              className="batch-carry-btn"
+              onClick={() =>
+                navigate(`batch-one?year=${year}&section=${sec}&discipline=${encodeURIComponent(discipline)}`)
+              }
+            >
+              View 
+            </button>
+          </div>
+        ))
       );
     }
 
-    return years.map((year) => (
-  <div className="batch-card" key={year}>
-    <h3>{year}</h3>
-    <button
-      className="batch-carry-btn"
-      onClick={() =>
-        navigate(`/hod-dashboard/batch-one?year=${year}&discipline=${discipline}`)
-      }
-    >
-      View
-    </button>
-  </div>
-));
+    return years.map(year => (
+      <div className="batch-card" key={year}>
+               <img className="group-icon" src={group} alt="icon" />
 
+        <h3>{year}</h3>
+        <button
+          className="batch-carry-btn"
+          onClick={() =>
+            navigate(`batch-one?year=${encodeURIComponent(year)}&section=${encodeURIComponent(' ')}&discipline=${encodeURIComponent(discipline)}`)
+          }
+        >
+          View
+        </button>
+      </div>
+    ));
+  }, [discipline, navigate]);
 
-  };
-
-  return <div className="batchbox">{renderCards()}</div>;
+  return <div className="batchbox">{renderCards}</div>;
 };
 
 export default BatchCards;

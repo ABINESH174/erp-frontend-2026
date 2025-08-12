@@ -8,6 +8,7 @@ import Logout from '../../Assets/logout.svg';
 import Menu from '../../Assets/menu.svg';
 import bonafide from '../../Assets/bonafide.svg';
 import bonafidestatus from '../../Assets/bonafidestatus.svg';
+import AxiosInstance from "../../Api/AxiosInstance.js";
 
 
 function StudentDisplay() {
@@ -77,8 +78,8 @@ function StudentDisplay() {
         try {
             console.log("Fetching data for Student ID:", studentId);
             
-            const response = await axios.get(
-                `/api/student/${studentId}`
+            const response = await AxiosInstance.get(
+                `/student/${studentId}`
             );
             console.log("Response data:", response.data);
             setStudentWithFiles(response.data);

@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import './Bonafide.css';
 import Header from '../../Components/Header/Header';
 import axios from 'axios';
+import AxiosInstance from '../../Api/AxiosInstance';
 
 function Bonafide() {
     const location = useLocation();
@@ -47,17 +48,17 @@ function Bonafide() {
         others: true
     };
 
-    const allWelfareTypes = ["Labour Welfare", "Tailor Welfare", "Farmer Welfare"];
-    const allPostMatricTypes = ["BC/MBC/DNC Post Matric Scholarship", "SC/ST/SCA Post Matric Scholarship"];
+    const allWelfareTypes = ["Bonafide for Labour Welfare", "Bonafide for Tailor Welfare", "Bonafide for Farmer Welfare"];
+    const allPostMatricTypes = ["Bonafide for BC/MBC/DNC Post Matric Scholarship", "Bonafide for SC/ST/SCA Post Matric Scholarship"];
  const typeToKeyMap = {
-  "BC/MBC/DNC Post Matric Scholarship": "bcMbcDncPostMatricScholarship",
-  "SC/ST/SCA Post Matric Scholarship": "scStScaPostMatricScholarship",
+  "Bonafide for BC/MBC/DNC Post Matric Scholarship": "bcMbcDncPostMatricScholarship",
+  "Bonafide for SC/ST/SCA Post Matric Scholarship": "scStScaPostMatricScholarship",
 };
 
     useEffect(() => {
         const fetchApplicableBonafide = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/bonafide/getApplicableBonafide/${userId}`);
+                const response = await AxiosInstance.get(`/bonafide/getApplicableBonafide/${userId}`);
                 if (response.data?.data) {
                     setApplicableBonafide(response.data.data);
                     console.log("Received eligibility data:", response.data.data);
@@ -159,12 +160,13 @@ function Bonafide() {
 
     setIsSubmitting(true);
 
-    const formData = new FormData();
-    formData.append('registerNo', userId);
-    formData.append('purpose', uploads.selectedScholarship.toLowerCase().trim());
-    formData.append('bonafideStatus', 'PENDING');
-    formData.append('date', new Date().toISOString().split('T')[0]);
-    formData.append('academicYear', uploads.academicYear);
+            const formData = new FormData();
+            formData.append('registerNo', userId);
+            formData.append('purpose', uploads.selectedScholarship.toLowerCase().trim());
+            console.log("Purpose being sent to backend:", uploads.selectedScholarship.toLowerCase().trim());
+            formData.append('bonafideStatus', 'PENDING');
+            formData.append('date', new Date().toISOString().split('T')[0]);
+            formData.append('academicYear', uploads.academicYear);
 
     if (uploads.companyName) {
         formData.append('companyName', uploads.companyName);
@@ -179,7 +181,7 @@ function Bonafide() {
     });
 
     try {
-        await axios.post('/api/bonafide/create', formData, {
+        await AxiosInstance.post('/bonafide/create', formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
         });
 
@@ -196,7 +198,7 @@ function Bonafide() {
     }
 
     try {
-        await axios.post(`/api/email/notify-faculty/${userId}`);
+        await AxiosInstance.post(`/email/notify-faculty/${userId}`);
     } catch (notifyErr) {
         toast.info("Failed to notify Faculty");
     }
@@ -223,10 +225,8 @@ function Bonafide() {
         <div className="bonafide-container">
             <Header />
             <div className="bonafide-content">
-                <div className="bonafide-heading-bar">
-                    <p>Bonafide Certificate Request</p>
-                </div>
-                <div className="bonafide-eligibility-container">
+                    <h1>Bonafide Certificate Request</h1>
+                {/* <div className="bonafide-eligibility-container">
 
                    <div className="eligibility-box">
   <ul className="scrolling-list">
@@ -238,7 +238,7 @@ function Bonafide() {
                    <div className="events-list-box">
                     <h1 className='events-head'>Ongoing Events</h1>
                    </div>
-                </div>
+                </div> */}
 
                 <div className="bonafide-display-container">
                     <h2>Select The Bonafide</h2>

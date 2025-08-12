@@ -11,6 +11,7 @@ import Logoutbtn from '../../Components/logoutbutton/Logoutbtn.jsx';
 import View from '../../Assets/eyewhite.svg';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';  
+import AxiosInstance from '../../Api/AxiosInstance.js';
 
 const Principaldashboard = () => {
   const [bonafides, setBonafides] = useState([]);
@@ -26,7 +27,7 @@ const Principaldashboard = () => {
   const fetchBonafides = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/principal/officeBearersApprovedBonafides');
+      const response = await AxiosInstance.get('/principal/officeBearersApprovedBonafides');
       const data = response.data?.data || [];
       setBonafides(data);
       if (data.length === 0) {
@@ -44,7 +45,7 @@ const Principaldashboard = () => {
 
   const handleUpdateStatus = async (bonafideId, registerNo, newStatus) => {
     try {
-      await axios.put('/api/bonafide/updateBonafideWithBonafideStatus', null, {
+      await AxiosInstance.put('/bonafide/updateBonafideWithBonafideStatus', null, {
         params: {
           bonafideId,
           registerNo,

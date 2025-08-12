@@ -11,6 +11,8 @@ import View from '../../Assets/eyewhite.svg';
 import BonafideViewModal from '../BonafideViewModal/BonafideViewModal';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import { AuthService } from '../../Api/AuthService';
+import AxiosInstance from '../../Api/AxiosInstance';
 
 const BonafideStudent = () => {
   const navigate = useNavigate();
@@ -33,13 +35,13 @@ useEffect(() => {
     setError(null);
 
     try {
-      const email = localStorage.getItem('facultyEmail');
+      const email = AuthService.getCurrentUser().userId;
       if (!email) {
         setError('User email not found. Please login again.');
         return;
       }
 
-      const facultyRes = await axios.get(`http://localhost:8080/api/faculty/${email}`);
+      const facultyRes = await AxiosInstance.get(`/faculty/${email}`);
       const fetchedFacultyId = facultyRes.data?.data?.facultyId;
       if (!fetchedFacultyId) {
         setError('Faculty ID not found for this email.');
@@ -48,8 +50,8 @@ useEffect(() => {
 
       setFacultyId(fetchedFacultyId);
 
-      const bonafideRes = await axios.get(
-        `http://localhost:8080/api/faculty/get-pending-bonafides/${fetchedFacultyId}`
+      const bonafideRes = await AxiosInstance.get(
+        `/faculty/get-pending-bonafides/${fetchedFacultyId}`
       );
 
       const bonafides = bonafideRes.data?.data || [];
@@ -94,7 +96,7 @@ useEffect(() => {
           onClick: async () => {
                 try {
                 await handleApproveRequest(bonafideId, registerNo);
-                await axios.post(`/api/email/notify-approver`, { bonafideId, registerNo, status: 'FACULTY_APPROVED' });
+                await AxiosInstance.post(`/email/notify-approver`, { bonafideId, registerNo, status: 'FACULTY_APPROVED' });
                 } catch (err) {
                 console.error(err);
                 toast.error('Something went wrong.');
@@ -111,8 +113,8 @@ useEffect(() => {
   const handleApproveRequest = async (bonafideId, registerNo) => {
     try {
       setProcessingId(bonafideId);
-      const res = await axios.put(
-        'http://localhost:8080/api/bonafide/updateBonafideWithBonafideStatus',
+      const res = await AxiosInstance.put(
+        '/bonafide/updateBonafideWithBonafideStatus',
         null,
         { params: { bonafideId, registerNo, status: 'FACULTY_APPROVED' } }
       );
@@ -156,14 +158,14 @@ useEffect(() => {
   try {
     setProcessingId(bonafideId);
 
-    const res = await axios.put(
-      'http://localhost:8080/api/bonafide/updateObRejectedBonafide',
+    const res = await AxiosInstance.put(
+      '/bonafide/updateObRejectedBonafide',
       null,
       {
         params: {
           bonafideId,
           registerNo,
-          status: 'FACULTY_REJECTED', // ✅ Added to match backend expectation
+          status: 'FACULTY_REJECTED', //Added to match backend expectation
           rejectionMessage: message,
         },
       }
@@ -188,24 +190,11 @@ useEffect(() => {
 
   return (
     <div>
-      <Header />
-      <div className="bonafide-student">
-        <div className="bonafide-sidebar-container">
-          <ul className="bonafide-sidebar-list" style={{ listStyleType: 'none' }}>
-            <li className="bonafide-sidebar-item">Bonafides</li>
-            <li className="bonafide-sidebar-item">Previous</li>
-            <li className="bonafide-sidebar-item">Approved</li>
-            <li className="bonafide-sidebar-item">Rejected</li>
-          </ul>
-        </div>
-
         <div className="topstud-container">
           <div className="name-bar">
             <h3 className="name-bar-title">Bonafide Notification Page</h3>
           </div>
-          <div className="bonafide-backbtn">
-            <BackButton />
-          </div>
+         
 
           {loading ? (
             <p>Loading...</p>
@@ -259,7 +248,7 @@ useEffect(() => {
             </div>
           )}
         </div>
-      </div>
+     
 
       {/* Rejection Modal */}
       {rejectionModalOpen && (

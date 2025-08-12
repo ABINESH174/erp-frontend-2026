@@ -1,140 +1,176 @@
-*{
-    box-sizing: border-box;
-}
-#login-title{
-    text-align: center;
-    color:white;
-    font-size: 38px;
-    font-weight: 700;
-}
-#login-title:hover{
-    cursor: default;
-
+* {
+  box-sizing: border-box;
 }
 
-.logincontainer{
-    display: flex;
-    justify-content: center;
-    height: 100vh;
-    background-image: url("../../Assets/clgimage.jpg");
-    background-repeat: no-repeat;
-    background-size: cover; 
- 
+#login-title {
+  text-align: center;
+  /* color: #1055bb; */
+  font-size: 38px;
+  font-weight: 700;
+  background: linear-gradient(95deg, #061d3e,#183c71, #0066ff, #0845a1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 4px rgba(0, 0, 0.3, 0.2);
 }
 
-.login-mailid{
-    margin-top: 30px;
+#login-title:hover {
+  cursor: default;
 }
-.login-password{
-    margin-top: 20px;
+
+.logincontainer {
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  background-image: url("../../Assets/clgimage.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.login-mailid {
+  margin-top: 30px;
+  color: #097fc4;
+  font-weight: 500;
+}
+
+.login-password {
+  margin-top: 20px;
+  color: #097fc4;
+  font-weight: 500;
 }
 
 .Loginform {
-    margin: auto;
-    width: 400px;
-    height: fit-content;
-    border-radius: 30px;
-    opacity: 0;
-    background: rgba(255, 255, 255, 0.27);
-    box-sizing: border-box;
-    border: 1px solid rgba(255, 255, 255, 0.68);
-    backdrop-filter: blur(3.6px);
-    
-    animation: fadeIn 0.8s ease-in-out forwards;
-    transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
+  margin: auto;
+  width: 400px;
+  height: fit-content;
+  border-radius: 30px;
+  opacity: 0;
+  background: rgba(255, 255, 255, 0.151);
+  box-sizing: border-box;
+  border: 1px solid rgb(255, 255, 255);
+  backdrop-filter: blur(3.6px);
+  animation: fadeIn 0.8s ease-in-out forwards;
+  transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(80px); }
-    to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(80px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .Loginform:hover {
-    /* transform: scale(1.05) rotate(2deg); */
-    box-shadow: 0px 10px 20px rgba(255, 255, 255, 0.2);
+  box-shadow: 0px 10px 20px rgba(255, 255, 255, 0.2);
 }
 
-.form{
-    color: #fafafa;
-    margin: 10%;
-}
-.forgotpassword{
-    margin-top: 5px;
-    margin-bottom: 25px;
-    color: #fafafa;
-    text-align: right;
-}
-#forgotpassword{
-    text-decoration: none;
+.form {
+  color: #097fc4;
+  margin: 10%;
 }
 
 .password-box {
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 100%;
-  }
-  
-  .password-box input {
-    width: 100%;
-    padding: 10px;
-    font-size: 18px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    outline: none;
-    
-  }
-  
-  input:focus, input:active {
-    border-color: #ccc !important;  
-    background-color: white !important; 
-    outline: none;
-  }
-  
-  .eye-icon {
-    position: absolute;
-    right: 12px;
-    cursor: pointer;
-    font-size: 20px;
-    color: rgba(1, 119, 193, 0.7) ;
-  }
-  
-  .eye-icon:hover {
-    color: #097fc4;
-  }
-.login-button-space{
-    text-align:center;
-    margin-top: 15px;
-    
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
 }
-.or{
-    margin-top: 20px;
-    color: #fafafa;
-    text-align: center;
-}
-.new-register:hover{
-    cursor: pointer;
 
+.password-box input {
+  width: 100%;
+  padding: 10px;
+  font-size: 18px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  outline: none;
 }
-input[type="password"]{
-    width: 100%;
-    background-color: #fafafa;
-    border-radius: 8px;
-    padding: 20px;
-    border: none;
-    height: 40px;
-}
-#input-mail{
-    background-color: #fafafa;
-} 
 
+input:focus,
+input:active {
+  border-color: #ccc !important;
+  background-color: white !important;
+  outline: none;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 12px;
+  cursor: pointer;
+  font-size: 20px;
+  color: rgba(1, 119, 193, 0.7);
+}
+
+.eye-icon:hover {
+  color: #097fc4;
+}
+
+.login-button-space {
+  text-align: center;
+  margin-top: 15px;
+}
+
+/* 🔹 Button Styling */
+.login-button-space button,
+.login-button-space input[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  background: #097fc4;
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.login-button-space button:hover,
+.login-button-space input[type="submit"]:hover {
+  background: #066da7;
+}
+
+.or {
+  margin-top: 20px;
+  color: #097fc4;
+  text-align: center;
+}
+
+input[type="password"] {
+  width: 100%;
+  background-color: #fafafa;
+  border-radius: 8px;
+  padding: 20px;
+  border: none;
+  height: 40px;
+}
+
+#input-mail {
+  background-color: #fafafa;
+}
+
+/* 🔹 Forgot Password Link Styling */
+.forgot-link {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.forgot-link a {
+  color: #fff;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.forgot-link a:hover {
+  color: #065a8d;
+  text-decoration: underline;
+}
 
 @media (width<=600px) {
-    .Loginform{
-        width: 85%;
-    }
-    #forgotpassword{
-        font-size: small;
-    }
-
+  .Loginform {
+    width: 85%;
+  }
 }
