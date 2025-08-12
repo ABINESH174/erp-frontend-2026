@@ -225,10 +225,8 @@ function Bonafide() {
         <div className="bonafide-container">
             <Header />
             <div className="bonafide-content">
-                <div className="bonafide-heading-bar">
-                    <p>Bonafide Certificate Request</p>
-                </div>
-                <div className="bonafide-eligibility-container">
+                    <h1>Bonafide Certificate Request</h1>
+                {/* <div className="bonafide-eligibility-container">
 
                    <div className="eligibility-box">
   <ul className="scrolling-list">
@@ -240,7 +238,7 @@ function Bonafide() {
                    <div className="events-list-box">
                     <h1 className='events-head'>Ongoing Events</h1>
                    </div>
-                </div>
+                </div> */}
 
                 <div className="bonafide-display-container">
                     <h2>Select The Bonafide</h2>

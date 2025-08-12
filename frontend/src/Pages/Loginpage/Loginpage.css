@@ -4,9 +4,13 @@
 
 #login-title {
   text-align: center;
-  color: #097fc4;
+  /* color: #1055bb; */
   font-size: 38px;
   font-weight: 700;
+  background: linear-gradient(95deg, #061d3e,#183c71, #0066ff, #0845a1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 4px rgba(0, 0, 0.3, 0.2);
 }
 
 #login-title:hover {
@@ -44,7 +48,6 @@
   box-sizing: border-box;
   border: 1px solid rgb(255, 255, 255);
   backdrop-filter: blur(3.6px);
-
   animation: fadeIn 0.8s ease-in-out forwards;
   transition: transform 0.4s ease-in-out, box-shadow 0.4s ease-in-out;
 }

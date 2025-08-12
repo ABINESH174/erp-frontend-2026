@@ -88,8 +88,7 @@ const BatchesPage = () => {
           setDefaultStudent(defaultRes.data);
         }
       } catch (err) {
-        setError(err.message || 'Something went wrong while fetching students.');
-        setError(err.message || 'Something went wrong while fetching students.');
+        setError( 'No Students Found.');
       } finally {
         setLoading(false);
       }
@@ -119,16 +118,14 @@ const BatchesPage = () => {
 
   const handleViewClick = async (student) => {
     try {
-      
-  console.log("Clicked on student:", student); // 👈 Add this
-      const response = await AxiosInstance.get(
+        const response = await AxiosInstance.get(
         `/student/${encodeURIComponent(student.registerNo)}`
       );
-      console.log("Response:", response); // 👈 Add this
-      setSelectedStudent(response.data.data);
+      setSelectedStudent(response.data);
+            console.log("Fetched student data:", response.data);
+
       setOpenModal(true);
     } catch (err) {
-      console.error('Fetch error:', err);
       setError('Failed to get student details.');
     } 
   };
@@ -145,13 +142,11 @@ const BatchesPage = () => {
         await AxiosInstance.get(`/faculty/unassigned-faculties/${encodeURIComponent('Science and humanities')}`)
       ) : (await AxiosInstance.get(`/faculty/unassigned-faculties/${discipline}`));
 
-      console.log(response);
       const facultyList =
         Array.isArray(response.data) ? response.data : response.data.data || [];
       setUnassignedFaculty(facultyList);
       setShowFacultyList(true);
     } catch (error) {
-      console.error('Error fetching unassigned faculties:', error);
       setError('Failed to fetch unassigned faculty.');
     }
   };
@@ -200,7 +195,6 @@ const BatchesPage = () => {
       setShowFacultyList(false);
       setSelectedFaculty(null);
     } catch (error) {
-      console.error('Error assigning faculty to batch:', error);
       toast.error('Failed to assign faculty to batch.');
     }
   };
@@ -234,7 +228,6 @@ const BatchesPage = () => {
 
       toast.success('Faculty dismissed successfully.');
     } catch (error) {
-      console.error('Error dismissing faculty:', error);
       toast.error('Failed to dismiss faculty.');
     }
   };
@@ -263,8 +256,6 @@ const BatchesPage = () => {
     <div className="batches-page-container">
       <div className="hod-student-batch-box">
         <div className="assign">
-          <h2 className="faculty-details-header">Faculty Details</h2>
-
           <div className="faculty-prop">
             {defaultStudent?.facultyId !== null && assignedFaculty && (
               <div className="faculty-details">
@@ -274,13 +265,7 @@ const BatchesPage = () => {
                 </p>
                 <p>
                   <strong>Email:</strong> {assignedFaculty.email}
-                </p>
-                <p>
-                  <strong>Phone:</strong> {assignedFaculty.mobileNumber}
-                </p>
-                <p>
-                  <strong>Discipline:</strong> {assignedFaculty.discipline}
-                </p>
+                </p> 
               </div>
             )}
 
@@ -297,7 +282,7 @@ const BatchesPage = () => {
                 )
               )
             ) : (
-              <p>Loading faculty status...</p>
+              <p>Since there are no students available, no Faculty can be assigned.</p>
             )}
           </div>
 
@@ -389,7 +374,7 @@ const BatchesPage = () => {
         )}
       </div>
 
-      {openModal && selectedStudent && (
+      {openModal &&(
         <StudentDetailModal student={selectedStudent} onClose={closeModal} />
       )}
 
