@@ -113,3 +113,25 @@
 
 
 
+.not-found-message{
+    width: fit-content;
+    height: 150px;
+    border-radius: 15px;
+    background: linear-gradient(235deg, #c8eaff, #6dabe9);
+    color: rgb(23, 23, 23);
+    font-size: 20px;
+    font-weight: 400;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    margin-left: 18%;
+    margin-top:15%;
+}
+.not-found-message:hover{
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    transform: scale(1.02);
+    background: linear-gradient(235deg, #f0f0f0, #e0e0e0);
+}

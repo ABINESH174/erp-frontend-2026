@@ -4,7 +4,7 @@
   height: 90vh;
   margin: 40px auto;
   padding: 18px;
-  background-color: #d6ecf3;
+background-color: #d6ecf3;
   border-radius: 12px;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -15,7 +15,12 @@
 .hod-student-batch-box:hover {
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
 }
-
+.hodstud-table-box{
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
 /* Table styling */
 .hod-student-tables {
   width: 100%;
@@ -25,6 +30,7 @@
   overflow: hidden;
   background-color: #fefefe;
 }
+
 
 /* Header styling */
 .hod-student-tables thead {
@@ -47,9 +53,9 @@
 
 /* Hover row */
 .hod-student-tables tbody tr:hover {
-  background-color: #e0f7ff;
+  background-color: #f1f4f5;
   transition: background-color 0.2s ease-in-out;
-}
+} 
 
 /* Cell text */
 .hod-student-tables td {
@@ -215,3 +221,7 @@
 }
 
 
+.not-found-message{
+  margin-left: 27rem;
+  font-weight: 500;
+}

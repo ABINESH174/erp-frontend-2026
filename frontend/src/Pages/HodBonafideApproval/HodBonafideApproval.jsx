@@ -13,6 +13,7 @@ import { Allbuttons } from '../../Components';
 import View from '../../Assets/eyewhite.svg';
 import BonafideViewModal from '../../Components/BonafideViewModal/BonafideViewModal';
 import AxiosInstance from '../../Api/AxiosInstance';
+import notFound from '../../Assets/not found.png';
 
 const HodBonafideApproval = () => {
   const navigate = useNavigate();
@@ -49,7 +50,6 @@ const HodBonafideApproval = () => {
       }
 
     } catch (error) {
-      console.error('Error fetching bonafides:', error);
 
       if (error.response?.status === 404) {
         // Backend returned 404 with no data
@@ -87,7 +87,6 @@ const HodBonafideApproval = () => {
         const fetchedHodId = hodRes.data.data.hodId;
         setHodId(fetchedHodId);
       } catch (err) {
-        console.error('Error fetching data:', err);
         setError('Failed to fetch data from server.');
       } finally {
         setLoading(false);
@@ -115,7 +114,6 @@ const handleApprove = (bonafideId, registerNo) => {
             ]);
             toast.success('Bonafide approved successfully.');
           } catch (err) {
-            console.error('Approval failed:', err.response?.data || err.message || err);
             toast.error('Something went wrong.');
           }
         },
@@ -223,7 +221,10 @@ const handleApprove = (bonafideId, registerNo) => {
           {loading ? (
             <p>Loading...</p>
           ) : error ? (
-            <p className="error-message">{error}</p>
+            <div className="not-found-message">
+              <p>No Bonafides have Applied yet❕  </p>
+              <img src={notFound} alt="" />
+            </div>
           ) : (
             <div className="hod-bonafide-table-container">
               <table className="hod-bonafide-table">

@@ -79,7 +79,7 @@ function Facultyfields({ onClose, fields = [], role }) {
   };
 
   return (
-    <div className="faculty_fields_container">
+    <div className="faculty_fields_containers">
       <div>
         <span className="close" onClick={onClose}>&times;</span>
       </div>

@@ -105,8 +105,8 @@ function Headofthedepartmentdashboard() {
                 <p>Welcome! Head of the {hodData?.discipline || '...'} Department</p>
                 <p className="acadamic-year">Academic Year: {UtilityService.getAcademicYear()}</p>
               </div>
-              <div>
-                <Allbuttons image={Add} value="Create Faculty" target={() => setOpenAddFacultyModal(true)} />
+              <div className='create-faculty-button'>
+                <Allbuttons image={Add} value="Add Faculty" target={() => setOpenAddFacultyModal(true)} />
               </div>
               
                 <div className="faculty_profile_icon" onClick={(e) => { e.stopPropagation(); setOpen(!open); }}>
