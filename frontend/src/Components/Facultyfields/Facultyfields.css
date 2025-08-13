@@ -1,13 +1,16 @@
 .faculty_fields_containers {
-    position: absolute; 
-    top: 50%; 
-    left: 50%; 
+    position: fixed; 
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
     background-color: rgb(241, 241, 241);
     padding: 20px 40px;
     width: 500px;
     border-radius: 20px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    z-index: 9999;
 }
+
 
 .faculty_fields_containers > * {
     padding-bottom: 10px;

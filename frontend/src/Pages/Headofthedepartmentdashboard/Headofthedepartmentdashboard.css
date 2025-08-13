@@ -35,7 +35,7 @@
 /* break */
 .hod-outer-container{
     width: 99vw;
-    height: 100vh;
+    height:100vh;
     padding: 14px;
     background:linear-gradient(45deg, #3f1f55, #0f4492,#422165);
 }

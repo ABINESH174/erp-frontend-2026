@@ -341,11 +341,13 @@ const BatchesPage = () => {
         </div>
 
         {loading && <p>Loading students...</p>}
-        {/* {error && <p style={{ color: 'red' }}>{error}</p>} */}
+        {error && (
             <div className="not-found-message">
               <p>No Students Available for this Batch </p>
               <img src={notFound} alt="" />
-            </div>        {!loading && !error && students.length === 0 && <p>No students found.</p>}
+            </div>
+        )}
+        {!loading && !error && students.length === 0 && <p>No students found.</p>}
         {!loading && !error && students.length > 0 && (
           <div className="hodstud-table-box">
           <table className="hod-student-tables">

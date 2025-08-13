@@ -124,8 +124,8 @@ function Headofthedepartmentdashboard() {
                   </div>
                 </div>
               )}
-
-              {open && (document.onclick = () => setOpen(false))}
+            </div>
+             {open && (document.onclick = () => setOpen(false))}
 
               {openAddFacultyModal && (
             <Facultyfields
@@ -140,7 +140,6 @@ function Headofthedepartmentdashboard() {
               ]}
             />
           )}
-            </div>
           </div>
             <div className="hod-content-space">
               <Outlet context={{ discipline: hodData?.discipline }} />
