@@ -14,6 +14,7 @@ import BonafideCount from '../../Components/BonafideCounter/BonafideCount.jsx';
 import AxiosInstance from '../../Api/AxiosInstance.js';
 import { Facultyfields } from '../../Components/index.js';
 import Add from '../../Assets/add.svg';
+import { UtilityService } from '../../Utility/UtilityService.js';
 
 function Headofthedepartmentdashboard() {
   const location = useLocation();
@@ -62,14 +63,14 @@ function Headofthedepartmentdashboard() {
     navigate('/login-page');
   };
 
-  const getAcademicYear = () => {
-    const now = new Date();
-    const year = now.getFullYear();
-    return now.getMonth() >= 7 ? `${year}-${year + 1}` : `${year - 1}-${year}`;
-  };
+  // const getAcademicYear = () => {
+  //   const now = new Date();
+  //   const year = now.getFullYear();
+  //   return now.getMonth() >= 7 ? `${year}-${year + 1}` : `${year - 1}-${year}`;
+  // };
 
-  const goToFacultyInfo = () => navigate('/facultyinfohod-page', { state: { userId } });
-  const goToStudentInfo = () => navigate('/studentinfohod-page', { state: { userId } });
+  // const goToFacultyInfo = () => navigate('/facultyinfohod-page', { state: { userId } });
+  // const goToStudentInfo = () => navigate('/studentinfohod-page', { state: { userId } });
 
   return (
     <div>
@@ -80,7 +81,8 @@ function Headofthedepartmentdashboard() {
             <h2>HOD Dashboard</h2>
             <div className="hod-navigation-bar">
               <p className='hod-nav-item' onClick={(e) => { e.stopPropagation(); setOpen(!open); }}><BsPerson /> Profile</p>
-              <p className='hod-bonafide-nav-item' onClick={() => navigate('/hod-bonafide-approval', { state: { userId } })}>
+              <p className='hod-nav-item' onClick={()=> navigate('/hod-dashboard',{state:{userId}})}><BsPeople />Students</p>
+              <p className='hod-bonafide-nav-item' onClick={() => navigate('bonafide-page', { state: { userId } })}>
                 <FaFileAlt /> Bonafide
                 {userId && (
                   <BonafideCount
@@ -104,16 +106,16 @@ function Headofthedepartmentdashboard() {
             <div className="headbar">
               <div className="welcome-bar">
                 <p>Welcome! Head of the {hodData?.discipline || '...'} Department</p>
-                <p className="acadamic-year">Academic Year: {getAcademicYear()}</p>
+                <p className="acadamic-year">Academic Year: {UtilityService.getAcademicYear()}</p>
               </div>
-              <div className="">
+              <div className='create-faculty-button'>
                 <Allbuttons image={Add} value="Add Faculty" target={() => setOpenAddFacultyModal(true)} />
               </div>
-              <div className="nav">
-                <div className="faculty_profile_icon" onClick={(e) => {e.stopPropagation();setOpen(!open)}}>
-                  <img id="profile_icon" src={Profileicon} alt="Profile Icon"/>
-                </div>
-              </div>
+              
+                <div className="faculty_profile_icon" onClick={(e) => { e.stopPropagation(); setOpen(!open); }}>
+                  <img id="profile_icon" src={Profileicon} alt="Profile Icon" />
+                
+              
               {open && (
                 <div className="faculty_profile_details" onClick={(e) => e.stopPropagation()}>
                   <div className="faculty-profile">
@@ -125,8 +127,8 @@ function Headofthedepartmentdashboard() {
                   </div>
                 </div>
               )}
-
-              {open && (document.onclick = () => setOpen(false))}
+            </div>
+             {open && (document.onclick = () => setOpen(false))}
 
               {openAddFacultyModal && (
             <Facultyfields
@@ -141,21 +143,19 @@ function Headofthedepartmentdashboard() {
               ]}
             />
           )}
-            </div>
-
+          </div>
             <div className="hod-content-space">
               <Outlet context={{ discipline: hodData?.discipline }} />
             </div>
           </div>
         </div>
       </div>
-
       {/* Uncomment if you want footer */}
       {/* <div className="Headofthedepartmentdashboard_footer">
         <Footer />
       </div> */}
     </div>
   );
-}
+};
 
 export default Headofthedepartmentdashboard;

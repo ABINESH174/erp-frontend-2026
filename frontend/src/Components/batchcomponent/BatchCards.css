@@ -6,29 +6,63 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 40px;
     margin-left:2.5rem;
+    padding: 10px;
+    animation:fromBottom 0.8s ease-in-out;
 }
+@keyframes fromBottom {
+    from {
+        transform: translateY(80px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(10px);
+        opacity: 1;
+    }
+}
+
 .batch-card {
     background-color: #ffffff;
     border-radius: 12px;
     padding: 20px;
+    padding-left: 40px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     display: flex;
-    flex-direction: column;
-    gap: 16px;
+    flex-direction: row;
+    gap: 30px;
     align-items: center;
-    justify-content: center;
     width: 90%;
     height: 80%;
-    border-left: 6px solid #224488;
-    margin-top: 35px;
+    margin-top: 25px;
 }
 .batch-carry-btn{
-    background-color: #224488;
+     background: linear-gradient(235deg, #1f35b3, #2c6fd2 ,#11c5f2);
     color: white;
     border: none;
     padding: 8px 20px;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 16px;
     transition: background-color 0.3s ease;
+}
+.batch-carry-btn:hover {
+    background: linear-gradient(235deg,#11c5f2, #4857ab, #427ed8);
+    color: white;
+}
+
+.batch-card h3{
+    color: #16488f;
+}
+ .batchbox .batch-card:hover{
+    transform: scale(0.98);
+}
+.group-icon {
+    border-radius: 50px;
+    width: 35px;
+    height: 35px;
+    fill: black;
+}
+.batch-card:hover{
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+    background-color: rgb(251, 251, 251);
 }
