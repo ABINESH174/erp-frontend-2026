@@ -23,6 +23,7 @@ import ResetPassword from "../Pages/ForgotPassword/ResetPassword";
 import ProtectedRoute from "./ProtectedRoute";
 import OfficeBearer from "../Pages/OfficeBearer/OfficeBearer";
 import NewPasswordAfterLogin from "../Pages/NewPasswordAfterFirstTimeLogin/NewPasswordAfterLogin";
+import HodPreviousBonafide from "../Pages/Headofthedepartmentdashboard/HodPreviousBonafide";
 
 const CustomRouter = () => {
   return (
@@ -35,6 +36,7 @@ const CustomRouter = () => {
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/registration-form" element={<Registrationform />} />
       <Route path="/faculty-registration" element={<Facultyregistration />} />
+      <Route path="/hod-previous-bonafide" element={<HodPreviousBonafide />}/>
 
 
       {/*STUDENT ROUTES */}

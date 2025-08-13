@@ -6,7 +6,7 @@ import Footer from '../../Components/Footer/Footer.jsx';
 import Profileicon from '../../Assets/profile.svg';
 import axios from 'axios';
 import Logoutbtn from '../../Components/logoutbutton/Logoutbtn.jsx';
-import { BsPerson } from "react-icons/bs";
+import { BsBook, BsBookHalf, BsPerson } from "react-icons/bs";
 import { FaFileAlt } from "react-icons/fa";
 import Logout from '../../Assets/logout.svg';
 import Allbuttons from '../../Components/Allbuttons/Allbuttons.jsx';
@@ -92,6 +92,9 @@ function Headofthedepartmentdashboard() {
                     )}
                   />
                 )}
+              </p>
+              <p className='hod-bonafide-nav-item' onClick={() => navigate('/hod-previous-bonafide', { state: { userId }})}>
+                <BsBookHalf /> Previous
               </p>
             </div>
             <Logoutbtn className='hod-logout' />
