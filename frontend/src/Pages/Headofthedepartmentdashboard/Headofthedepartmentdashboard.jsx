@@ -4,7 +4,7 @@ import './Headofthedepartmentdashboard.css';
 import Header from '../../Components/Header/Header.jsx';
 import Profileicon from '../../Assets/profile.svg';
 import Logoutbtn from '../../Components/logoutbutton/Logoutbtn.jsx';
-import { BsBook, BsBookHalf, BsPerson } from "react-icons/bs";
+import { BsBook, BsBookHalf, BsPeople, BsPerson } from "react-icons/bs";
 import { FaFileAlt } from "react-icons/fa";
 import Logout from '../../Assets/logout.svg';
 import Allbuttons from '../../Components/Allbuttons/Allbuttons.jsx';
