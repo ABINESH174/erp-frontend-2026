@@ -3,8 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import './Bonafide.css';
 import Header from '../../Components/Header/Header';
-import axios from 'axios';
 import AxiosInstance from '../../Api/AxiosInstance';
+import { UtilityService } from '../../Utility/UtilityService';
 
 function Bonafide() {
     const location = useLocation();
@@ -135,10 +135,10 @@ function Bonafide() {
         if (allWelfareTypes.includes(uploads.selectedScholarship)) {
             required.push("aadharCardFile", "smartCardFile", "labourWelfareFile");
         }
-        if (!uploads.academicYear) {
-            toast.error("Please enter Academic Year");
-            return false;
-        }
+        // if (!uploads.academicYear) {
+        //     toast.error("Please enter Academic Year");
+        //     return false;
+        // }
 
         if (uploads.selectedOption === "internship" && !uploads.companyName) {
             toast.error("Please enter Company Name");
@@ -166,7 +166,9 @@ function Bonafide() {
             console.log("Purpose being sent to backend:", uploads.selectedScholarship.toLowerCase().trim());
             formData.append('bonafideStatus', 'PENDING');
             formData.append('date', new Date().toISOString().split('T')[0]);
-            formData.append('academicYear', uploads.academicYear);
+            formData.append('academicYear', UtilityService.getAcademicYear().toString());   
+
+            console.log("acadamic year:",formData.academicYear);
 
     if (uploads.companyName) {
         formData.append('companyName', uploads.companyName);
@@ -279,7 +281,7 @@ function Bonafide() {
               setUploads(prev => ({
                 ...prev,
                 showCentralScholarshipCheck: false,
-                selectedOption: "", // reset only for state
+                selectedOption: "", 
               }));
             } else {
               setUploads(prev => ({
@@ -340,10 +342,7 @@ function Bonafide() {
       <button onClick={() => setUploads(prev => ({ ...prev, showModal: false }))}>Close</button>
     </div>
   </div>
-)}
-
-
-
+)} 
                 {/* Upload Modal */}
                 {uploads.selectedScholarship && (
                     <div className="file-modal-overlay" onClick={() => setUploads(prev => ({ ...prev, selectedScholarship: "" }))}>
@@ -385,11 +384,11 @@ function Bonafide() {
                                     <input type="text" value={uploads.bankNameForEducationalLoan} onChange={e => setUploads(prev => ({ ...prev, bankNameForEducationalLoan: e.target.value }))} />
                                 </div>
                             )}
-
+{/* 
                             <div className="file-upload">
                                 <label>Academic Year</label>
                                 <input type="text" placeholder="e.g. 2024-2025" value={uploads.academicYear} onChange={e => setUploads(prev => ({ ...prev, academicYear: e.target.value }))} />
-                            </div>
+                            </div> */}
 
                             <div className="file-upload-buttons">
                                 <button className="submit-button" onClick={handleSubmit} disabled={isSubmitting}>
