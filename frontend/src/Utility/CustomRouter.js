@@ -24,9 +24,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import OfficeBearer from "../Pages/OfficeBearer/OfficeBearer";
 import NewPasswordAfterLogin from "../Pages/NewPasswordAfterFirstTimeLogin/NewPasswordAfterLogin";
 import FacultyStudentPage from "../Components/FacultyStudent/FacultyStudentPage";
-import HodPreviousBonafide from "../Pages/Headofthedepartmentdashboard/HodPreviousBonafide";
-
-
+import PreviousBonafides from "../Components/PreviousBonafides/PreviousBonafides";
 
 const CustomRouter = () => {
   return (
@@ -101,8 +99,9 @@ const CustomRouter = () => {
           </ProtectedRoute>
         }
       >
-       <Route index element={<FacultyStudentPage/>} />
+      <Route index element={<FacultyStudentPage/>} />
       <Route path="faculty-bonafide" element={<BonafideStudent />} />
+      <Route path="previous-bonafide" element={<PreviousBonafides />} />
       </Route>
 
       {/*HOD ROUTES */}
@@ -118,6 +117,7 @@ const CustomRouter = () => {
         <Route index element={<BatchCards />} />
         <Route path="batch-one" element={<BatchesPage />} />
         <Route path="bonafide-page" element={<HodBonafideApproval />}/>
+        <Route path="previous-bonafide" element={<PreviousBonafides />} />
       </Route>
 
       <Route

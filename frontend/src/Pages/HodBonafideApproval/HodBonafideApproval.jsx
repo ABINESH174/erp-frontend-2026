@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-
-import Header from '../../Components/Header/Header';
 import './HodBonafideApproval.css';
-import BackButton from '../../Components/backbutton/BackButton';
 import { Allbuttons } from '../../Components';
 import View from '../../Assets/eyewhite.svg';
 import BonafideViewModal from '../../Components/BonafideViewModal/BonafideViewModal';
@@ -16,8 +11,6 @@ import AxiosInstance from '../../Api/AxiosInstance';
 import notFound from '../../Assets/not found.png';
 
 const HodBonafideApproval = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
   const [hodId, setHodId] = useState(null);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,7 +19,6 @@ const HodBonafideApproval = () => {
   const [selectedBonafide, setSelectedBonafide] = useState(null);
   const [processingId, setProcessingId] = useState(null);
 
-  // Rejection modal states
   const [rejectionModalOpen, setRejectionModalOpen] = useState(false);
   const [rejectionItem, setRejectionItem] = useState(null);
   const [rejectionMessage, setRejectionMessage] = useState('');
@@ -52,11 +44,9 @@ const HodBonafideApproval = () => {
     } catch (error) {
 
       if (error.response?.status === 404) {
-        // Backend returned 404 with no data
         setData([]);
         setError('No bonafide requests found.');
       } else {
-        // Other errors like 500 or network
         setError('Error fetching bonafides');
       }
     }

@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import './Headofthedepartmentdashboard.css';
 import Header from '../../Components/Header/Header.jsx';
-import Footer from '../../Components/Footer/Footer.jsx';
 import Profileicon from '../../Assets/profile.svg';
-import axios from 'axios';
 import Logoutbtn from '../../Components/logoutbutton/Logoutbtn.jsx';
 import { BsBook, BsBookHalf, BsPerson } from "react-icons/bs";
 import { FaFileAlt } from "react-icons/fa";
@@ -15,6 +13,8 @@ import AxiosInstance from '../../Api/AxiosInstance.js';
 import { Facultyfields } from '../../Components/index.js';
 import Add from '../../Assets/add.svg';
 import { UtilityService } from '../../Utility/UtilityService.js';
+import previousBonafide from '../../Assets/previousbonafide.png';
+import pendingbonafide from '../../Assets/pendingbonafide.png';
 
 function Headofthedepartmentdashboard() {
   const location = useLocation();
@@ -25,8 +25,10 @@ function Headofthedepartmentdashboard() {
   const [hodData, setHodData] = useState(null);
   const [openAddFacultyModal, setOpenAddFacultyModal] = useState(false);
   const [error, setError] = useState(null);
+  const[isBonafideOpen,setIsBonafideOpen]=useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
-  // Step 1: Set userId from location.state or localStorage
+
   useEffect(() => {
     const idFromState = location.state?.userId;
     const storedId = localStorage.getItem('hodEmail');
@@ -41,7 +43,6 @@ function Headofthedepartmentdashboard() {
     }
   }, [location.state]);
 
-  // Step 2: Fetch HOD data once userId is available
   useEffect(() => {
     if (!userId) return;
 
@@ -82,9 +83,15 @@ function Headofthedepartmentdashboard() {
             <div className="hod-navigation-bar">
               <p className='hod-nav-item' onClick={(e) => { e.stopPropagation(); setOpen(!open); }}><BsPerson /> Profile</p>
               <p className='hod-nav-item' onClick={()=> navigate('/hod-dashboard',{state:{userId}})}><BsPeople />Students</p>
-              <p className='hod-bonafide-nav-item' onClick={() => navigate('bonafide-page', { state: { userId } })}>
-                <FaFileAlt /> Bonafide
-                {userId && (
+              <p className='hod-bonafide-nav-item'
+                onClick={()=> {setIsBonafideOpen(!isBonafideOpen);navigate('bonafide-page', { state: { userId } })}}>
+                 <FaFileAlt /> Bonafide{" "}
+              </p>
+              {isBonafideOpen &&(
+                <div className="bonafide-list">
+                  <div className="hod-bonafide"  onClick={() => navigate('bonafide-page', { state: { userId } })}>
+                    <img src={pendingbonafide} alt="" />Pending
+                     {userId && (
                   <BonafideCount
                     getIdApi="/hod/getHodByEmail"
                     getBonafideApi="/hod/getFacultyApprovedBonafidesByHodId"
@@ -94,10 +101,13 @@ function Headofthedepartmentdashboard() {
                     )}
                   />
                 )}
-              </p>
-              <p className='hod-bonafide-nav-item' onClick={() => navigate('/hod-previous-bonafide', { state: { userId }})}>
-                <BsBookHalf /> Previous
-              </p>
+                  </div>
+                 <div className="hod-bonafide"  onClick={() => navigate('previous-bonafide', { state: { userId, role: "HOD" } })}><img src={previousBonafide} alt="" />Previous</div>
+
+                </div>
+              )}
+
+
             </div>
             <Logoutbtn className='hod-logout' />
           </div>
@@ -145,7 +155,7 @@ function Headofthedepartmentdashboard() {
           )}
           </div>
             <div className="hod-content-space">
-              <Outlet context={{ discipline: hodData?.discipline }} />
+              <Outlet context={{ discipline: hodData?.discipline, role: "HOD" }} />
             </div>
           </div>
         </div>

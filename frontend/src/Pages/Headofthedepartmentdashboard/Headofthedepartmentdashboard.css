@@ -260,3 +260,39 @@
   color: #333;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
+
+
+.bonafide-list{
+    width: 100%;
+    height: max-content;
+    display: flex;
+    flex-direction: column;
+    margin-left: 40px;
+    gap: 18px;
+
+}
+.hod-bonafide{
+    /* background-color: rebeccapurple; */
+    padding: 8px 20px;
+    font-size: 18px;
+    margin-top: -18px;
+    width: 100%;
+    color: #0e1d5f;
+    font-weight: 400;
+    font-family: "Droid Sans", sans-serif;
+    cursor: pointer;
+    background-color: rgba(220, 220, 220, 0.552);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+}
+.hod-bonafide img {
+    width: 20px;
+    height: 20px;
+    color: #004B79;
+}
+.hod-bonafide:hover{
+   background: linear-gradient(135deg, #0374ca,#5f9fff, #4bb4e8, #91bfd6,#c6ddeb);
+   color: #ffffff;
+}
