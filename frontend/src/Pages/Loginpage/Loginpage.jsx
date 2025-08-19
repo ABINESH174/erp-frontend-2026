@@ -43,6 +43,15 @@ function Loginpage() {
             case "FACULTY":
               navigate('/faculty-registration', { state: { userId: response.data.data.userId } })
               break;
+            case "HOD":
+              navigate('/hod-registration', { state : { userId: response.data.data.userId }} )
+              break;
+             case "PRINCIPAL":
+              navigate('/principal-registration', { state : { userId: response.data.data.userId }} )
+              break;
+             case "OB":
+              navigate('/ob-registration', { state : { userId: response.data.data.userId }} )
+              break;
             default:
               navigate('/')
           }
@@ -80,6 +89,9 @@ function Loginpage() {
               break;
             case "ROLE_PRINCIPAL":
               redirectPath = "/principal-dashboard";
+              break;
+            case "ROLE_ADMIN":
+              redirectPath = "/admin-dashboard";
               break;
             default:
               redirectPath = "/";

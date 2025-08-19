@@ -4,7 +4,7 @@
   height: 90vh;
   margin: 40px auto;
   padding: 18px;
-  background-color: #e0f3fa;
+background-color: #d6ecf3;
   border-radius: 12px;
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -15,7 +15,12 @@
 .hod-student-batch-box:hover {
   box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
 }
-
+.hodstud-table-box{
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
+}
 /* Table styling */
 .hod-student-tables {
   width: 100%;
@@ -25,6 +30,7 @@
   overflow: hidden;
   background-color: #fefefe;
 }
+
 
 /* Header styling */
 .hod-student-tables thead {
@@ -47,9 +53,9 @@
 
 /* Hover row */
 .hod-student-tables tbody tr:hover {
-  background-color: #e0f7ff;
+  background-color: #f1f4f5;
   transition: background-color 0.2s ease-in-out;
-}
+} 
 
 /* Cell text */
 .hod-student-tables td {
@@ -133,6 +139,8 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  width: fit-content;
+  border-radius: 15px;
 }
 .assign-faculty-btn{
   width: fit-content;
@@ -159,7 +167,7 @@
 }
 
 .dismiss-faculty-btn{
-  width: fit-content;
+  width:12%;
   height: 35px;
   background:linear-gradient(95deg,rgb(157, 15, 102), rgb(255, 0, 123)) ;
   border-radius: 10px;
@@ -170,21 +178,35 @@
   font-weight: 500;
   border: none;
   padding: 10px;
-  margin-left:36rem;
-  margin-top: 87px;
+  margin-left: 20%;
+  margin-top: 20px;
+}
+.dismiss-faculty-btn:hover{
+  background:linear-gradient(95deg,rgb(241, 5, 99), rgb(140, 7, 33)) ;
+  transform: scale(1.05);
 }
 .faculty-prop{
   display: flex;
   flex-direction:row;
   gap: 10px;
+  width: 100%;
 }
 .faculty-details {
+  display: flex;
+  flex-direction:row;
+  gap: 10px;
+  width: fit-content;
+  padding: 10px;
+  border-radius: 10px;
+}
+.faculty-details p{
   background-color: #f0f8ff;
   padding: 10px;
   border-radius: 8px;
-  width:fit-content;
+  width: fit-content;
   height: fit-content;
-  margin-left: 50px;
+  display: flex;
+  flex-direction: row;
 }
 .faculty-details h3 {
   margin: 0;
@@ -195,12 +217,104 @@
   color: #474747;
   font-size: 16px;
   font-family: 'Roboto', sans-serif;
-  width: 100%;
   margin: 6px 30px;
 }
 
-.back-btn-hod {
-  align-items: center;
-  background-color: rebeccapurple;
-  
+
+.not-found-message{
+  margin-left: 27rem;
+  font-weight: 500;
+}
+
+/* Tablet and below (<=768px) */
+@media (max-width: 768px) {
+  .hod-student-batch-box {
+    height: auto;
+    padding: 15px;
+    margin: 20px;
+  }
+
+  .assign-selected-faculty-btn {
+    margin-left: auto;
+    margin-top: 10px;
+    align-self: flex-end;
+  }
+
+  .faculty-details,
+  .faculty-prop,
+  .unassigned-faculty {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    gap: 15px;
+  }
+
+  .faculty-details p {
+    margin: 6px 0;
+    width: 100%;
+  }
+
+  .dismiss-faculty-btn {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .assign-faculty-btn {
+    margin-left: 0;
+  }
+
+  .not-found-message {
+    margin-left: 0;
+    text-align: center;
+  }
+}
+
+/* Mobile Devices (<=425px) */
+@media (max-width: 425px) {
+  .hod-student-batch-box {
+    padding: 10px;
+    margin: 10px;
+    height: auto;
+  }
+
+  .hod-student-tables {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .assign {
+    padding: 10px 5px;
+  }
+
+  .assign-selected-faculty-btn,
+  .dismiss-faculty-btn,
+  .assign-faculty-btn {
+    width: 100%;
+    font-size: 14px;
+    margin: 10px 0;
+    text-align: center;
+  }
+
+  .faculty-details {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .faculty-details p {
+    font-size: 14px;
+    padding: 8px;
+    margin: 5px 0;
+  }
+
+  .faculty-details h3 {
+    font-size: 16px;
+  }
+
+  .not-found-message {
+    margin-left: 0;
+    font-size: 14px;
+    text-align: center;
+  }
 }

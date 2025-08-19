@@ -46,6 +46,7 @@ const PersonalForm = () => {
     income: null,
     maritalStatus: null,
     communityCertificate: null,
+    aadharCardFile: null,
     profilePhoto: null,
     mobileNumber: null,
     emailid: null,
@@ -290,9 +291,9 @@ const PersonalForm = () => {
       { field: formData.regulation, name: "Regulation" },
       { field: formData.batch, name: "Course Completion Year" },
       { field: formData.admissionNumber, name: "Admission Number", validate: isValidNumbers, errorMessage: "should contain only digits" },
-      { field: formData.abcId, name: "ABC Id", validate: isValidNumbers, errorMessage: "should contain only digits" },
+      // { field: formData.abcId, name: "ABC Id", validate: isValidNumbers, errorMessage: "should contain only digits" },
       { field: formData.courseType, name: "Course type" },
-      { field: formData.umisId, name: "UMIS Id", validate: isValidNumbers, errorMessage: "should contain only digits" },
+      // { field: formData.umisId, name: "UMIS Id", validate: isValidNumbers, errorMessage: "should contain only digits" },
       { field: formData.dateOfAdmission, name: "Date of Admission" },
       { field: formData.courseJoinedDate, name: "Course Joined Date" },
       { field: formData.semester, name: "Semester" },
@@ -554,6 +555,18 @@ const PersonalForm = () => {
                   {fileNames['communityCertificate'] && <p className="uploaded_file_name">{fileNames['communityCertificate']} Uploaded</p>}
                 </div>
               )}
+
+              <div className='aadhar-file'>
+                <input type='file' id='aadharCardFile' name='aadharCardFile' style={ {display: 'none'}} onChange={handleFileChange('aadharCardFile')}/>
+                <p className='marksheet_label'>Aadhar CardFile</p>
+                 <label htmlFor="aadharCardFile" className="File-upload-button" style={{ justifyContent: 'center' }} >
+                    <img className='icon' src={Upload} alt='' />
+                    <p>Upload</p>
+                  </label>
+                  {fileNames['aadharCardFile'] && <p className="uploaded_file_name">{fileNames['aadharCardFile']} Uploaded</p>}
+              </div>
+
+
               <div className="profile-photo">
 
                 <label htmlFor="file-input" id="profile_photo_label">Profile Photo</label>
@@ -896,9 +909,11 @@ const PersonalForm = () => {
                 <label htmlFor="batch">Course Completion Year</label>
                 <select className="dropdown" name="batch" value={formData.batch || ''} onChange={handleOtherField}>
                   <option value=''>Select</option>
-                  <option value="2025" >2025</option>
                   <option value="2026" >2026</option>
                   <option value="2027" >2027</option>
+                  <option value="2028" >2028</option>
+                  <option value="2029" >2029</option>
+                  <option value="2030" >2030</option>
                 </select>
               </div>
               <div className="admission_no">

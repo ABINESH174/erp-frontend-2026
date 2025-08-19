@@ -23,6 +23,12 @@ import ResetPassword from "../Pages/ForgotPassword/ResetPassword";
 import ProtectedRoute from "./ProtectedRoute";
 import OfficeBearer from "../Pages/OfficeBearer/OfficeBearer";
 import NewPasswordAfterLogin from "../Pages/NewPasswordAfterFirstTimeLogin/NewPasswordAfterLogin";
+import FacultyStudentPage from "../Components/FacultyStudent/FacultyStudentPage";
+import PreviousBonafides from "../Components/PreviousBonafides/PreviousBonafides";
+import AdminDashboard from "../Pages/AdminDashboard/AdminDashboard";
+import HodRegistration from "../Pages/HodRegistration/HodRegistration";
+import ObRegistration from "../Pages/ObRegisterPage/ObRegistration";
+import PrincipalRegistration from "../Pages/PrincipalRegistration/PrincipalRegistration";
 
 const CustomRouter = () => {
   return (
@@ -35,6 +41,11 @@ const CustomRouter = () => {
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route path="/registration-form" element={<Registrationform />} />
       <Route path="/faculty-registration" element={<Facultyregistration />} />
+      <Route path="/hod-registration" element={<HodRegistration />} />
+      <Route path="/principal-registration" element={<PrincipalRegistration />} />
+      <Route path="/ob-registration" element={<ObRegistration />} />      
+      <Route path="/hod-previous-bonafide" element={<PreviousBonafides />}/>
+      <Route path="/admin-dashboard" element={<AdminDashboard />}/>
 
 
       {/*STUDENT ROUTES */}
@@ -95,7 +106,11 @@ const CustomRouter = () => {
             <Facultydashboard />
           </ProtectedRoute>
         }
-      />
+      >
+      <Route index element={<FacultyStudentPage/>} />
+      <Route path="faculty-bonafide" element={<BonafideStudent />} />
+      <Route path="previous-bonafide" element={<PreviousBonafides />} />
+      </Route>
 
       {/*HOD ROUTES */}
       <Route
@@ -106,8 +121,11 @@ const CustomRouter = () => {
           </ProtectedRoute>
         }
       >
+        {/* <Route index element={<BatchCards />} /> */}
         <Route index element={<BatchCards />} />
         <Route path="batch-one" element={<BatchesPage />} />
+        <Route path="bonafide-page" element={<HodBonafideApproval />}/>
+        <Route path="previous-bonafide" element={<PreviousBonafides />} />
       </Route>
 
       <Route

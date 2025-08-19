@@ -2,6 +2,8 @@ import React, { useMemo } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 import './BatchCards.css';
 
+import group from '../../Assets/group.png'; 
+
 const BatchCards = () => {
   const navigate = useNavigate();
   const { discipline } = useOutletContext();
@@ -69,6 +71,7 @@ const BatchCards = () => {
       return years.flatMap(year =>
         sections.map(sec => (
           <div className="batch-card" key={`${year}-${sec}`}>
+            <img src={group} alt="icon" />
             <h3>{`${year} – Section ${sec}`}</h3>
             <button
               className="batch-carry-btn"
@@ -76,7 +79,7 @@ const BatchCards = () => {
                 navigate(`batch-one?year=${year}&section=${sec}&discipline=${encodeURIComponent(discipline)}`)
               }
             >
-              View
+              View 
             </button>
           </div>
         ))
@@ -85,6 +88,8 @@ const BatchCards = () => {
 
     return years.map(year => (
       <div className="batch-card" key={year}>
+               <img className="group-icon" src={group} alt="icon" />
+
         <h3>{year}</h3>
         <button
           className="batch-carry-btn"

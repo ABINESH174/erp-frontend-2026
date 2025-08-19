@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import './Facultyfields.css';
 import { Allfields, Allbuttons } from '..';
 import Nextwhite from '../../Assets/Nextwhite.svg';
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AxiosInstance from '../../Api/AxiosInstance';
+import { AuthService } from '../../Api/AuthService';
 
 function Facultyfields({ onClose, fields = [], role }) {
+  // Initialize form data
   const initialFormData = fields.reduce((acc, field) => {
     acc[field.inputname] = '';
     return acc;
@@ -16,11 +17,13 @@ function Facultyfields({ onClose, fields = [], role }) {
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
 
+  // Validation logic
   const validate = () => {
     const newErrors = {};
 
     fields.forEach((field) => {
       const value = formData[field.inputname].trim();
+
       if (!value) {
         newErrors[field.inputname] = `${field.label} should not be empty`;
       }
@@ -41,6 +44,7 @@ function Facultyfields({ onClose, fields = [], role }) {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -50,21 +54,35 @@ function Facultyfields({ onClose, fields = [], role }) {
     }
 
     try {
-      const userId = formData.MailId;
+      const currentUser = AuthService.getCurrentUser();
+      const userId =
+        role === 'STUDENT'
+          ? formData.RegisterNumber
+          : formData.MailId;
       const password = formData.AadharNumber;
       const payload = { userId, password, role };
 
-      const response = await AxiosInstance.post(`/authentication/create`, payload);
+      let response;
+      if (role === 'STUDENT') {
+        response = await AxiosInstance.post(
+          `/authentication/create/student/${currentUser.userId}`,
+          payload
+        );
+      } else {
+        response = await AxiosInstance.post(
+          `/authentication/create`,
+          payload
+        );
+      }
 
       toast.success(`${role} added successfully`);
       console.log('Data submitted successfully:', response.data);
+
       setFormData(initialFormData);
 
-      // Close popup only after short delay to allow toast to show
       setTimeout(() => {
         if (onClose) onClose();
       }, 1000);
-
     } catch (error) {
       console.error('Error submitting data:', error);
       toast.error('Submission failed');
@@ -72,9 +90,12 @@ function Facultyfields({ onClose, fields = [], role }) {
   };
 
   return (
-    <div className="faculty_fields_container">
+    <div className="faculty-fields-overlay">
+    <div className="faculty_fields_containers">
       <div>
-        <span className="close" onClick={onClose}>&times;</span>
+        <span className="close" onClick={onClose}>
+          &times;
+        </span>
       </div>
 
       {fields.map((field) => (
@@ -86,20 +107,32 @@ function Facultyfields({ onClose, fields = [], role }) {
             formData={formData}
             setFormData={setFormData}
           />
-          {errors[field.inputname] && (
-            <div style={{ color: 'red', fontSize: '12px', marginTop: '4px' }}>
-              * {errors[field.inputname]}
-            </div>
-          )}
+          <div
+            style={{
+              color: 'red',
+              fontSize: '12px',
+              marginTop: '4px',
+              minHeight: '16px',
+              visibility: errors[field.inputname]
+                ? 'visible'
+                : 'hidden'
+            }}
+          >
+            * {errors[field.inputname] || ''}
+          </div>
         </div>
       ))}
 
       <div id="faculty_field_button">
-        <Allbuttons value="Submit" image={Nextwhite} target={handleSubmit} />
+        <Allbuttons
+          value="Submit"
+          image={Nextwhite}
+          target={handleSubmit}
+        />
       </div>
 
-      {/* Place ToastContainer INSIDE return block with desired settings */}
-      <ToastContainer/>
+      <ToastContainer />
+    </div>
     </div>
   );
 }

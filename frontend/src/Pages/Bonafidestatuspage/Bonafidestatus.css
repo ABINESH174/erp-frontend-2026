@@ -75,3 +75,116 @@ td button:disabled {
   color: black;
 }
 
+/* Tablet Devices (width ≤ 1024px) */
+@media (max-width: 1024px) {
+  .bonafide-status h1 {
+    font-size: 22px;
+  }
+
+  table {
+    width: 95%;
+  }
+
+  th, td {
+    padding: 10px 12px;
+    font-size: 15px;
+  }
+
+  td button {
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+
+  .modal-content button {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+}
+
+/* Mobile Devices (width ≤ 768px) */
+@media (max-width: 768px) {
+  .bonafide-status {
+    padding: 15px 10px;
+  }
+
+  .bonafide-status h1 {
+    font-size: 20px;
+  }
+
+  table {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  th, td {
+    padding: 8px;
+    font-size: 13px;
+  }
+
+  td button {
+    padding: 5px 10px;
+    font-size: 13px;
+  }
+
+  .modal-content {
+    width: 95%;
+    padding: 20px;
+  }
+
+  .modal-content button {
+    padding: 6px 10px;
+    font-size: 13px;
+  }
+}
+
+/* Extra Small Devices (width ≤ 480px) */
+@media (max-width: 480px) {
+  .bonafide-status h1 {
+    font-size: 18px;
+  }
+
+  table, thead, tbody, th, td, tr {
+    display: block;
+    width: 100%;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tr {
+    margin-bottom: 15px;
+    background-color: rgba(0, 157, 255, 0.05);
+    border: 1px solid black;
+    border-radius: 10px;
+    padding: 10px;
+  }
+
+  td {
+    text-align: left;
+    padding: 10px;
+    position: relative;
+    font-size: 14px;
+  }
+
+  td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 10px;
+    font-weight: bold;
+    color: #009dff;
+  }
+
+  td button {
+    display: block;
+    width: 100%;
+    font-size: 13px;
+  }
+
+  .modal-content {
+    padding: 15px;
+    font-size: 14px;
+  }
+}
+
+

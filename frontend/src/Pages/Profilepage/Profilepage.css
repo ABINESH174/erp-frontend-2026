@@ -185,3 +185,105 @@
     }
 }
 
+/* Medium devices (tablets, 768px and below) */
+@media (max-width: 768px) {
+  .profile {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profile-links,
+  .profile-links-desktop {
+    width: 90%;
+    height: auto;
+    padding: 15px;
+    margin: 10px auto;
+    display: flex;
+    justify-content: center;
+  }
+
+  .profile-personal-display,
+  .profile-bank-display,
+  .profile-academic-display,
+  .profile-communication-display,
+  .profile-education-display {
+    grid-template-columns: repeat(2, 1fr);
+    width: 95vw;
+  }
+
+  .profile_profile_photo {
+    grid-area: auto;
+    order: -1;
+    margin-bottom: 20px;
+  }
+
+  #user_profile_photo {
+    width: 120px;
+    height: 120px;
+  }
+
+  .menu {
+    display: block;
+    margin-left: auto;
+  }
+}
+
+/* Small devices (phones, 425px and below) */
+@media (max-width: 425px) {
+  .profile {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .profile-links,
+  .profile-links-desktop {
+    width: 100px;
+    height: 30px;
+    padding: 10px;
+    border-radius: 20px;
+    margin: 10px;
+    font-size: 12px;
+    backdrop-filter: blur(10px);
+  }
+
+  .profile-links-desktop {
+    display: none;
+  }
+
+  .profile-personal-display,
+  .profile-bank-display,
+  .profile-academic-display,
+  .profile-communication-display,
+  .profile-education-display {
+    grid-template-columns: 1fr;
+    width: 100vw;
+    padding: 20px;
+  }
+
+  .profile-personal-display > *,
+  .profile-bank-display > *,
+  .profile-academic-display > *,
+  .profile-communication-display > *,
+  .profile-education-display > * {
+    grid-column: span 3;
+    margin-left: clamp(10px, 10vw, 80px);
+  }
+
+  .profile_profile_photo {
+    grid-area: 1/1/3/5;
+    margin: 0 auto 20px;
+  }
+
+  #user_profile_photo {
+    width: 100px;
+    height: 100px;
+  }
+
+  .hi {
+    display: flex;
+    position: absolute;
+    z-index: 2;
+  }
+}
+
+

@@ -15,6 +15,7 @@ function Facultyregistration() {
     lastName: '',
     email: location.state.userId,
     mobileNumber: '',
+    aadharNumber: '',
     discipline: '',
     faculty:'',
     handlingBatch:''
@@ -81,6 +82,11 @@ function Facultyregistration() {
           <input type='email' value={formData.email} disabled/>
           
           </div>
+
+          <div className='faculty_aadharnumber'>
+            <Allfields fieldtype="text" value="Aadhar Number" inputname="aadharNumber" formData={formData} setFormData={setFormData} />
+          </div>
+
           <div className='faculty_mobilenumber'>
           <Allfields fieldtype="text" value="Mobile Number" inputname="mobileNumber" req_flag={true} formData={formData} setFormData={setFormData} />
           </div>
