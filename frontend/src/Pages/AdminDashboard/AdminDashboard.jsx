@@ -63,7 +63,7 @@ const AdminDashboard = () => {
       <table className="admin-table">
         <thead>
           <tr>
-            <th>#</th>
+            <th>S.no</th>
             <th>Full Name</th>
             <th>Email</th>
             <th>Phone</th>

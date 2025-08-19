@@ -290,9 +290,9 @@ const PersonalForm = () => {
       { field: formData.regulation, name: "Regulation" },
       { field: formData.batch, name: "Course Completion Year" },
       { field: formData.admissionNumber, name: "Admission Number", validate: isValidNumbers, errorMessage: "should contain only digits" },
-      { field: formData.abcId, name: "ABC Id", validate: isValidNumbers, errorMessage: "should contain only digits" },
+      // { field: formData.abcId, name: "ABC Id", validate: isValidNumbers, errorMessage: "should contain only digits" },
       { field: formData.courseType, name: "Course type" },
-      { field: formData.umisId, name: "UMIS Id", validate: isValidNumbers, errorMessage: "should contain only digits" },
+      // { field: formData.umisId, name: "UMIS Id", validate: isValidNumbers, errorMessage: "should contain only digits" },
       { field: formData.dateOfAdmission, name: "Date of Admission" },
       { field: formData.courseJoinedDate, name: "Course Joined Date" },
       { field: formData.semester, name: "Semester" },
@@ -896,9 +896,11 @@ const PersonalForm = () => {
                 <label htmlFor="batch">Course Completion Year</label>
                 <select className="dropdown" name="batch" value={formData.batch || ''} onChange={handleOtherField}>
                   <option value=''>Select</option>
-                  <option value="2025" >2025</option>
                   <option value="2026" >2026</option>
                   <option value="2027" >2027</option>
+                  <option value="2028" >2028</option>
+                  <option value="2029" >2029</option>
+                  <option value="2030" >2030</option>
                 </select>
               </div>
               <div className="admission_no">

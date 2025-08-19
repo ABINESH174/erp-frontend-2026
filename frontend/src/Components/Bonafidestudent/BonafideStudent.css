@@ -58,7 +58,7 @@
 .approve-btn{
     width: 5rem;
     height: fit-content;
-    background-color: rgb(56, 148, 56);
+    background: linear-gradient(122deg,rgb(1, 133, 1),rgb(11, 132, 11),rgb(88, 184, 4));
     padding: 8px;
     border-radius: 10px;
     margin-right: 10px;
@@ -69,14 +69,14 @@
     transition: background-color 0.3s ease;
 }
 .approve-btn:hover{
-    background-color: rgb(45, 128, 45);
+    background: linear-gradient(122deg,green,rgb(6, 198, 6));
     transform: scale(1.05);
 }
 .reject-btn{
     width: 5rem;
     height: fit-content;
-    background-color: rgb(233, 38, 38);
     padding: 8px;
+    background: linear-gradient(102deg,rgb(182, 0, 0),rgb(237, 3, 3),rgb(244, 116, 137));
     border-radius: 10px;
     color: white;
     font-weight: bold;  
@@ -85,7 +85,7 @@
     transition: background-color 0.3s ease;
 }
 .reject-btn:hover{
-    background-color: rgb(213, 18, 18);
+    background: linear-gradient(122deg,rgb(174, 16, 16),rgb(243, 6, 6),pink);
     transform: scale(1.05);
 }
 

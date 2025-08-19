@@ -18,16 +18,17 @@ const BonafideStatus = () => {
   const [filesToUpload, setFilesToUpload] = useState({});
 
  const purposeFileMap = {
+  "bonafide for sc/st/sca post matric scholarship":['studentIdCardFile'],
   'bonafide for internship': ['studentIdCardFile'],
   'bonafide for bus pass': ['studentIdCardFile'],
   'bonafide for passport': ['studentIdCardFile'],
-  'educational support': ['studentIdCardFile'],
+  'bonafide for educational support': ['studentIdCardFile'],
   'pragati': ['studentIdCardFile'],
   'saksham': ['studentIdCardFile'],
   'swanath scholarship': ['studentIdCardFile'],
-  'labour welfare': ['studentIdCardFile', 'aadharCardFile', 'smartCardFile'],
-  'tailor welfare': ['studentIdCardFile', 'aadharCardFile', 'smartCardFile'],
-  'farmer welfare': ['studentIdCardFile', 'aadharCardFile', 'smartCardFile'],
+  'bonafide for labour welfare': ['studentIdCardFile', 'aadharCardFile', 'smartCardFile'],
+  'bonafide for tailor welfare': ['studentIdCardFile', 'aadharCardFile', 'smartCardFile'],
+  'bonafide for farmer welfare': ['studentIdCardFile', 'aadharCardFile', 'smartCardFile'],
 };
 
   const fetchBonafideDetails = async () => {
@@ -57,6 +58,7 @@ const BonafideStatus = () => {
 
   const handleReuploadClick = (item) => {
     setSelectedBonafide(item);
+    console.log("item:",item);
     setShowModal(true);
     setFilesToUpload({});
   };
@@ -174,11 +176,11 @@ const requiredFiles = purposeFileMap[selectedBonafide.purpose?.toLowerCase()] ||
   <div className="modal-overlay" onClick={() => setShowModal(false)}>
     <div className="modal-content" onClick={e => e.stopPropagation()}>
       <h3>Reupload Required Files</h3>
-
+       {console.log("sel bon:",{selectedBonafide})};
       {(purposeFileMap[selectedBonafide.purpose?.toLowerCase()] || []).length > 0 ? (
         purposeFileMap[selectedBonafide.purpose?.toLowerCase()].map(fileKey => (
           <div className="file-upload" key={fileKey}>
-            <label>{fileKey.replace(/([A-Z])/g, ' $1')}</label>
+            <label>{fileKey.replace(/([A-Z])/g, '$1')}</label>
             <input type="file" onChange={e => handleFileChange(e, fileKey)} />
           </div>
         ))
