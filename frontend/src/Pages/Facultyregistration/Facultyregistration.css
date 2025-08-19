@@ -12,7 +12,7 @@
     margin-top: 20px;
 }
 
-
+/* Tablet Devices (width ≤ 768px) */
 @media (max-width: 768px) {
     .faculty_registration_container {
         width: 90%;
@@ -32,9 +32,9 @@
         gap: 15px;
     }
 
-/* #faculty_form_submit_button {
+    #faculty_form_submit_button {
         margin-top: 15px;
         padding: 10px;
-        font-size: 14px;
-    } */
+        font-size: 14px;
+    }
 }

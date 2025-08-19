@@ -142,3 +142,122 @@
     transform: scale(1.02);
     background: linear-gradient(235deg, #f0f0f0, #e0e0e0);
 }
+
+/* Tablets (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .hod-bonafide-student {
+    flex-direction: column;
+    padding: 10px;
+    height: auto;
+  }
+
+  .hod-bonafide-navbar {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-bottom: 15px;
+  }
+
+  .hod-navlist {
+    margin-top: 1rem;
+    flex-direction: row;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .hodbonafide-navitem {
+    font-size: 16px;
+    width: auto;
+    margin: 0;
+    padding: 10px;
+  }
+
+  .hod-topstud-container {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .bonafide-header-bar {
+    font-size: 16px;
+    padding-left: 20px;
+  }
+
+  .hod-bonafide-table table {
+    font-size: 14px;
+  }
+
+  .hod-view-btn {
+    margin-left: 10px;
+    margin-top: 10px;
+  }
+
+  .not-found-message {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10%;
+    font-size: 18px;
+    padding: 15px;
+  }
+}
+
+/* Mobile Devices (max-width: 600px) */
+@media (max-width: 600px) {
+  .hod-bonafide-navbar {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hodbonafide-navitem {
+    font-size: 15px;
+    padding: 8px 12px;
+    width: 90%;
+    text-align: center;
+  }
+
+  .bonafide-header-bar {
+    font-size: 15px;
+    padding-left: 12px;
+  }
+
+  .hod-bonafide-table {
+    overflow-x: auto;
+  }
+
+  .hod-bonafide-table table {
+    width: 100%;
+    display: block;
+  }
+
+  .hod-bonafide-table thead,
+  .hod-bonafide-table tbody,
+  .hod-bonafide-table tr,
+  .hod-bonafide-table th,
+  .hod-bonafide-table td {
+    display: block;
+    text-align: left;
+  }
+
+  .hod-bonafide-table tr {
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #fff;
+  }
+
+  .hod-view-btn {
+    margin-left: 0;
+    margin-top: 10px;
+    width: fit-content;
+  }
+
+  .not-found-message {
+    margin: 30px auto;
+    font-size: 16px;
+    padding: 12px;
+    text-align: center;
+  }
+}
+

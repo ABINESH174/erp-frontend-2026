@@ -14,6 +14,7 @@ function ObRegistration() {
   const [formData, setFormData] = useState({
     name: '',
     email: location.state?.userId || '',
+    aadharNumber: '',
     handlingPurpose: ''
   });
 
@@ -44,6 +45,7 @@ function ObRegistration() {
         <Formtitle />
         <div className="ob_registration_container">
           <Allfields fieldtype="text" value="Name" inputname="name" req_flag={true} formData={formData} setFormData={setFormData} />
+          <Allfields fieldtype="text" value="Aadhar Number" inputname="aadharNumber" req_flag={true} formData={formData} setFormData={setFormData} />
 
           <label>Email</label>
           <input type="email" value={formData.email} disabled />
@@ -58,10 +60,10 @@ function ObRegistration() {
               required
             />
           </div> */}
-            <select name="handlingPurpose" className='dropdown' value={formData.handlingPurpose || ''} onChange={handleChange} required>
-              <option value=''>Select</option>
-              <option value="Bonafide">Bonafide</option>
-            </select>
+          <select name='handlingPurpose' className='dropdown' value={formData.handlingPurpose || ''} onChange={handleChange} required>
+            <option value=''>Select</option>
+            <option value='Bonafide'>Bonafide</option>
+          </select>
           </div>
 
           <div id="ob_form_submit_button">

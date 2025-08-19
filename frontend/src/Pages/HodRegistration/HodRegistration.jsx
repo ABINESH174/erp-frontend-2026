@@ -15,6 +15,7 @@ function HodRegistration() {
     lastName: '',
     email: location.state?.userId || '',
     mobileNumber: '',
+    aadharNumber: '',
     discipline: ''
   });
 
@@ -49,6 +50,7 @@ function HodRegistration() {
           <label>Email</label>
           <input type="email" value={formData.email} disabled />
           <Allfields fieldtype="text" value="Mobile Number" inputname="mobileNumber" req_flag={true} formData={formData} setFormData={setFormData} />
+          <Allfields fieldtype="text" value="Aadhar Number" inputname="aadharNumber" req_flag={true} formData={formData} setFormData={setFormData} />
 
           <div className="hod_discipline">
             <label htmlFor="discipline">Discipline</label>

@@ -175,8 +175,15 @@ input[type="radio"]{
     font-weight: 500;
 }
 
-.community_certificate,.profile-photo,.first_graduate_file,.specialCategory_file,.passbook{
+.community_certificate,.profile-photo,.first_graduate_file,.specialCategory_file,.passbook,.aadhar-file{
  margin-top: -30px;
+}
+
+.icon {
+    cursor: pointer;
+}
+.File-upload-button {
+    cursor: pointer;
 }
 
 #navigate_buttons_previous_communication_bank,#navigate_buttons_next_communication_bank,#navigate_buttons_previous_educational,#navigate_buttons_next_educational,#navigate_buttons_previous_academic,#form_submit_button{
@@ -291,7 +298,7 @@ input[type="radio"]{
     }
 
     textarea, .dropdown, input[type="date"] {
-        font-size: 15px;
+        font-size: 14px;
     }
 
     .uploaded_file_name {
@@ -299,3 +306,4 @@ input[type="radio"]{
         margin-left: 10px;
     }
 }
+
