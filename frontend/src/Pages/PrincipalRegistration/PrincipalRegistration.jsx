@@ -15,6 +15,7 @@ function PrincipalRegistration() {
     firstName: '',
     lastName: '',
     email: location.state?.userId || '',
+    aadharNumber: '',
     mobileNumber: ''
   });
 
@@ -50,7 +51,9 @@ function PrincipalRegistration() {
           <label>Email</label>
           <input type="email" value={formData.email} disabled />
 
+          <Allfields fieldtype="text" value="Aadhar Number" inputname="aadharNumber" req_flag={true} formData={formData} setFormData={setFormData} />
           <Allfields fieldtype="text" value="Mobile Number" inputname="mobileNumber" req_flag={true} formData={formData} setFormData={setFormData} />
+
 
           <div id="principal_form_submit_button">
             <Allbuttons value="submit" image={Nextwhite} />

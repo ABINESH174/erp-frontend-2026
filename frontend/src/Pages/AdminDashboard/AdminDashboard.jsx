@@ -17,9 +17,12 @@ const AdminDashboard = () => {
 
   // Map section to API endpoint
   const sectionEndpoints = {
+    students: "/student",
+    facultys: "/faculty/get-all",
     hods: "/hod/getAllHods",
     principals: "/principal/all",
     officeBearers: "/office-bearer/all"
+
   };
 
   const fetchUsers = async (section) => {
@@ -107,6 +110,16 @@ const AdminDashboard = () => {
               <p>Profile</p>
             </div>
 
+            <div className="faculty-profile-bar" onClick={() => setActiveSection("students")}>
+              <FaUserTie />
+              <p>STUDENTS</p>
+            </div>
+
+            <div className="faculty-profile-bar" onClick={() => setActiveSection("facultys")}>
+              <FaChalkboardTeacher />
+              <p>FACULTYS</p>
+            </div>
+
             <div className="faculty-profile-bar" onClick={() => setActiveSection("hods")}>
               <FaChalkboardTeacher />
               <p>HODs</p>
@@ -138,6 +151,8 @@ const AdminDashboard = () => {
             <button onClick={() => handleAddClick("HOD")}>Add HOD</button>
             <button onClick={() => handleAddClick("PRINCIPAL")}>Add Principal</button>
             <button onClick={() => handleAddClick("OB")}>Add OB</button>
+            <button onClick={() => handleAddClick("STUDENT")}>Add Student</button>
+            <button onClick={() => handleAddClick("FACULTY")}>Add Faculty</button>
           </div>
 
           {showForm && (

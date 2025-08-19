@@ -46,6 +46,7 @@ const PersonalForm = () => {
     income: null,
     maritalStatus: null,
     communityCertificate: null,
+    aadharCardFile: null,
     profilePhoto: null,
     mobileNumber: null,
     emailid: null,
@@ -554,6 +555,18 @@ const PersonalForm = () => {
                   {fileNames['communityCertificate'] && <p className="uploaded_file_name">{fileNames['communityCertificate']} Uploaded</p>}
                 </div>
               )}
+
+              <div className='aadhar-file'>
+                <input type='file' id='aadharCardFile' name='aadharCardFile' style={ {display: 'none'}} onChange={handleFileChange('aadharCardFile')}/>
+                <p className='marksheet_label'>Aadhar CardFile</p>
+                 <label htmlFor="aadharCardFile" className="File-upload-button" style={{ justifyContent: 'center' }} >
+                    <img className='icon' src={Upload} alt='' />
+                    <p>Upload</p>
+                  </label>
+                  {fileNames['aadharCardFile'] && <p className="uploaded_file_name">{fileNames['aadharCardFile']} Uploaded</p>}
+              </div>
+
+
               <div className="profile-photo">
 
                 <label htmlFor="file-input" id="profile_photo_label">Profile Photo</label>
