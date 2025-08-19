@@ -225,3 +225,96 @@ background-color: #d6ecf3;
   margin-left: 27rem;
   font-weight: 500;
 }
+
+/* Tablet and below (<=768px) */
+@media (max-width: 768px) {
+  .hod-student-batch-box {
+    height: auto;
+    padding: 15px;
+    margin: 20px;
+  }
+
+  .assign-selected-faculty-btn {
+    margin-left: auto;
+    margin-top: 10px;
+    align-self: flex-end;
+  }
+
+  .faculty-details,
+  .faculty-prop,
+  .unassigned-faculty {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    gap: 15px;
+  }
+
+  .faculty-details p {
+    margin: 6px 0;
+    width: 100%;
+  }
+
+  .dismiss-faculty-btn {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .assign-faculty-btn {
+    margin-left: 0;
+  }
+
+  .not-found-message {
+    margin-left: 0;
+    text-align: center;
+  }
+}
+
+/* Mobile Devices (<=425px) */
+@media (max-width: 425px) {
+  .hod-student-batch-box {
+    padding: 10px;
+    margin: 10px;
+    height: auto;
+  }
+
+  .hod-student-tables {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .assign {
+    padding: 10px 5px;
+  }
+
+  .assign-selected-faculty-btn,
+  .dismiss-faculty-btn,
+  .assign-faculty-btn {
+    width: 100%;
+    font-size: 14px;
+    margin: 10px 0;
+    text-align: center;
+  }
+
+  .faculty-details {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .faculty-details p {
+    font-size: 14px;
+    padding: 8px;
+    margin: 5px 0;
+  }
+
+  .faculty-details h3 {
+    font-size: 16px;
+  }
+
+  .not-found-message {
+    margin-left: 0;
+    font-size: 14px;
+    text-align: center;
+  }
+}

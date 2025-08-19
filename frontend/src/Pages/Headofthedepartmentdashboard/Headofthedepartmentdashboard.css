@@ -296,3 +296,205 @@
    background: linear-gradient(135deg, #0374ca,#5f9fff, #4bb4e8, #91bfd6,#c6ddeb);
    color: #ffffff;
 }
+
+/* Tablets (≤1024px) */
+@media (max-width: 1024px) {
+  .hod-nav-sidebar {
+    width: 25%;
+  }
+
+  .hod-navigation-bar .hod-nav-item,
+  .hod-navigation-bar .hod-bonafide-nav-item {
+    font-size: 18px;
+  }
+
+  .hod-inner-content,
+  .welcome-bar {
+    width: 75%;
+  }
+
+  .welcome-bar p {
+    font-size: 17px;
+  }
+
+  .student_and_faculty_profile {
+    flex-direction: column;
+    align-items: center;
+    margin-left: 0;
+  }
+
+  #view_student_profiles,
+  #view_faculty_profiles {
+    width: 80%;
+    padding: 30px;
+  }
+
+  .bonafide-list {
+    margin-left: 10px;
+  }
+
+  .faculty_profile_details {
+    top: 70px;
+    right: 15px;
+  }
+}
+
+
+/* Small Tablets / Large Phones (≤768px) */
+@media (max-width: 768px) {
+  .hod-outer-container {
+    height: auto;
+    padding: 10px;
+  }
+
+  .hod-whole {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .hod-nav-sidebar {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 10px;
+    justify-content: flex-start;
+  }
+
+  .hod-nav-sidebar h2 {
+    font-size: 20px;
+    margin-left: 20px;
+    padding-right: 10px;
+  }
+
+  .hod-navigation-bar {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-top: 10px;
+    margin-top: 0;
+    gap: 10px;
+  }
+
+  .hod-navigation-bar .hod-nav-item,
+  .hod-navigation-bar .hod-bonafide-nav-item {
+    font-size: 16px;
+    padding: 6px 12px;
+    width: auto;
+    white-space: nowrap;
+  }
+
+  .welcome-bar,
+  .hod-inner-content {
+    width: 100%;
+  }
+
+  .hod-content-space {
+    height: auto;
+    border-radius: 20px;
+  }
+
+  .student_and_faculty_profile {
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    margin-left: 0;
+  }
+
+  #view_student_profiles,
+  #view_faculty_profiles {
+    padding: 20px;
+    width: 90%;
+    font-size: 16px;
+    height: auto;
+    text-align: center;
+  }
+
+  .faculty_profile_icon {
+    margin-right: 10px;
+  }
+
+  .bonafide-list {
+    margin-left: 10px;
+  }
+
+  .hod-bonafide {
+    padding: 10px;
+    font-size: 16px;
+  }
+
+  .faculty_profile_details {
+    right: 10px;
+    width: 90%;
+  }
+}
+
+
+/* Phones (≤425px) */
+@media (max-width: 425px) {
+  .hod-nav-sidebar {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .hod-nav-sidebar h2 {
+    margin-left: 10px;
+    font-size: 18px;
+  }
+
+  .hod-navigation-bar {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .hod-navigation-bar .hod-nav-item,
+  .hod-navigation-bar .hod-bonafide-nav-item {
+    font-size: 15px;
+    padding: 8px;
+    width: 100%;
+  }
+
+  .welcome-bar p {
+    font-size: 15px;
+  }
+
+  .student_and_faculty_profile {
+    margin-left: 0;
+  }
+
+  #view_student_profiles,
+  #view_faculty_profiles {
+    padding: 18px;
+    font-size: 15px;
+  }
+
+  .hod-bonafide {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hod-bonafide-count {
+    margin-right: 0;
+    margin-top: 5px;
+  }
+
+  .faculty_profile_details {
+    width: 95%;
+    right: 5px;
+  }
+
+  .faculty-profile {
+    padding: 15px;
+  }
+
+  .field_background {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  #profile_icon {
+    width: 40px;
+    height: 40px;
+  }
+}

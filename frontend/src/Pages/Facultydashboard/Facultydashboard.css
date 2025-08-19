@@ -333,3 +333,189 @@ body {
   color: white;
   font-size: 19px;
 }
+
+/* Tablet devices (≤1024px) */
+@media (max-width: 1024px) {
+  .student-search-bar {
+    margin-left: 10rem;
+    flex-wrap: wrap;
+  }
+
+  .faculty-side {
+    font-size: 20px;
+  }
+
+  .faculty-heading-tag {
+    font-size: 20px;
+  }
+
+  .top-sidebox {
+    margin-left: 12rem;
+    width: 82vw;
+  }
+}
+
+/* Small tablets & mobile (≤768px) */
+@media (max-width: 768px) {
+  .parent {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .full-container {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .faculty-side {
+    position: relative;
+    margin-left: 0;
+    align-items: center;
+    font-size: 18px;
+  }
+
+  .top-sidebox {
+    margin-left: 0;
+    margin-top: 10px;
+    width: 95vw;
+    position: relative;
+    height: auto;
+  }
+
+  .student-search-bar {
+    flex-direction: column;
+    margin-left: 0;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .student-search-bar input {
+    width: 100%;
+  }
+
+  .faculty_profile_icon img {
+    width: 40px;
+  }
+
+  .card-container {
+    justify-content: center;
+  }
+
+  .card {
+    width: 90%;
+  }
+
+  .bonafide-view, .fa-bonafide-view-item {
+    width: 100%;
+    font-size: 18px;
+    padding: 10px;
+  }
+
+  .fa-bonafide-list {
+    margin-left: 0;
+    align-items: center;
+  }
+
+  .counter-bonafide {
+    margin-left: auto;
+    margin-top: 0.5rem;
+    font-size: 13px;
+    padding: 2px 6px;
+  }
+
+  .fa-logout {
+    margin-left: 0;
+    margin-top: 2rem;
+  }
+
+  .faculty-heading-tag {
+    font-size: 20px;
+    margin-left: 0;
+    text-align: center;
+  }
+
+  .student_table {
+    overflow-x: auto;
+    display: block;
+  }
+
+  .student_table th,
+  .student_table td {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .student-count {
+    font-size: 16px;
+    flex-direction: column;
+    padding: 8px;
+  }
+
+  .student-number {
+    font-size: 16px;
+    margin-left: 0;
+    margin-top: 5px;
+  }
+}
+
+/* Mobile devices (≤425px) */
+@media (max-width: 425px) {
+  .faculty-side {
+    font-size: 16px;
+    align-items: center;
+  }
+
+  .faculty-profile-bar,
+  .bonafide-view,
+  .fa-bonafide-view-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 4px;
+    padding: 8px;
+    font-size: 16px;
+    width: 100%;
+  }
+
+  .top-sidebox {
+    width: 100vw;
+    padding: 10px;
+    border-radius: 0;
+  }
+
+  .faculty-heading-tag {
+    font-size: 18px;
+    padding: 8px;
+    width: auto;
+  }
+
+  .student-search-bar input {
+    font-size: 13px;
+  }
+
+  .student_table {
+    font-size: 12px;
+  }
+
+  .card {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  .export_option_popup {
+    width: 90%;
+    font-size: 14px;
+  }
+
+  #export_cancel {
+    width: 100%;
+  }
+
+  .student-count {
+    font-size: 14px;
+    padding: 6px;
+  }
+
+  .student-number {
+    font-size: 14px;
+  }
+}
