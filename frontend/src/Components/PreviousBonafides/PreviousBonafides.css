@@ -1,0 +1,35 @@
+
+.prev-bonafide-student {
+  font-family: Arial, sans-serif;
+  color: #333;
+  width: 100%;
+  height: 100%;
+  background-color: whitesmoke;
+}
+.prev-topstud-container{
+    width: 100%;
+    height: 100%;
+    padding: 12px;
+}
+
+.prev-bonafide-table-container {
+  margin-top: 20px;
+  width: 100%;
+  height: 30%;
+}
+
+.prev-bonafide-table-container h2 {
+  font-size: 20px;
+  color: #2a4d7a;
+}
+
+.prev-bonafide-table {
+  width: 100%;
+  overflow-y: scroll;
+  border-collapse: collapse;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+

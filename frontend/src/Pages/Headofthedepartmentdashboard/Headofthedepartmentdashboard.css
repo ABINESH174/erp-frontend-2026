@@ -35,7 +35,7 @@
 /* break */
 .hod-outer-container{
     width: 99vw;
-    height: 100vh;
+    height:100vh;
     padding: 14px;
     background:linear-gradient(45deg, #3f1f55, #0f4492,#422165);
 }
@@ -203,7 +203,8 @@
 }
 .faculty_profile_icon{
     margin-top: 10px;
-    margin-right: 30px;
+    margin-right: 10px;
+    margin-left: 20px;
 }
 .faculty_profile_icon {
   cursor: pointer;
@@ -219,7 +220,7 @@
   height: 50px;
   border-radius: 50%;
   border: 2px solid #ffffff;
-  box-shadow: 0 2px 10px rgba(9, 214, 251, 0.423);
+  /* box-shadow: 0 2px 10px rgba(9, 214, 251, 0.423); */
 }
 
 .faculty_profile_details {
@@ -262,5 +263,54 @@
 }
 
 
+.bonafide-list{
+    width: 100%;
+    height: max-content;
+    display: flex;
+    flex-direction: column;
+    margin-left: 40px;
+    gap: 28px;
+    
 
+}
+.hod-bonafide{
+    /* background-color: rebeccapurple; */
+    padding: 8px 20px;
+    font-size: 18px;
+    margin-top: -18px;
+    width: 100%;
+    color: #0e1d5f;
+    font-weight: 400;
+    font-family: "Droid Sans", sans-serif;
+    cursor: pointer;
+    /* background-color: rgba(220, 220, 220, 0.552); */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+}
+.hod-bonafide img {
+    width: 20px;
+    height: 20px;
+    color: #004B79;
+}
+.hod-bonafide:hover{
+   background: linear-gradient(135deg, #0374ca,#5487d4, #4bb4e8, #5997b5,#7a0f9a);
+   color: #ffffff;
+   border-radius: 20px;
+       width: 75%;
 
+}
+
+.hod-bonafide.active{
+    background: linear-gradient(135deg, #0374ca,#5f9fff, #459dca, #167cae,#9b2bdd);
+    color: #ffffff;
+    width: 75%;
+    border-radius: 20px;
+}
+.hod-nav-item.active{
+    background: linear-gradient(135deg, #0374ca,#5f9fff, #459dca, #167cae,#9b2bdd);
+    color: #ffffff;
+    border-radius: 20px;
+    width: 75%;
+}

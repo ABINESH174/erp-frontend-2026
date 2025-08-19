@@ -8,6 +8,7 @@ import Allbutton from '../../Components/Allbuttons/Allbuttons';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AxiosInstance from '../../Api/AxiosInstance';
+import notFound from '../../Assets/nostudnet.png';
 
 const yearEnumMap = {
   'I YEAR': 'FIRST',
@@ -122,8 +123,6 @@ const BatchesPage = () => {
         `/student/${encodeURIComponent(student.registerNo)}`
       );
       setSelectedStudent(response.data);
-            console.log("Fetched student data:", response.data);
-
       setOpenModal(true);
     } catch (err) {
       setError('Failed to get student details.');
@@ -143,7 +142,7 @@ const BatchesPage = () => {
       ) : (await AxiosInstance.get(`/faculty/unassigned-faculties/${discipline}`));
 
       const facultyList =
-        Array.isArray(response.data) ? response.data : response.data.data || [];
+      Array.isArray(response.data) ? response.data : response.data.data || [];
       setUnassignedFaculty(facultyList);
       setShowFacultyList(true);
     } catch (error) {
@@ -342,9 +341,15 @@ const BatchesPage = () => {
         </div>
 
         {loading && <p>Loading students...</p>}
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && (
+            <div className="not-found-message">
+              <p>No Students Available for this Batch </p>
+              <img src={notFound} alt="" />
+            </div>
+        )}
         {!loading && !error && students.length === 0 && <p>No students found.</p>}
         {!loading && !error && students.length > 0 && (
+          <div className="hodstud-table-box">
           <table className="hod-student-tables">
             <thead>
               <tr>
@@ -371,6 +376,7 @@ const BatchesPage = () => {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
 
