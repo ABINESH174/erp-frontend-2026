@@ -50,13 +50,18 @@ function ObRegistration() {
 
           <div className="ob_purpose_field">
             <label htmlFor="handlingPurpose">Handling Purpose</label>
-            <input
+            {/* <input
               type="text"
               name="handlingPurpose"
               value={formData.handlingPurpose}
               onChange={handleChange}
               required
             />
+          </div> */}
+            <select name="handlingPurpose" className='dropdown' value={formData.handlingPurpose || ''} onChange={handleChange} required>
+              <option value=''>Select</option>
+              <option value="Bonafide">Bonafide</option>
+            </select>
           </div>
 
           <div id="ob_form_submit_button">

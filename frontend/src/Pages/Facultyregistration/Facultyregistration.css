@@ -11,3 +11,30 @@
     margin: auto;
     margin-top: 20px;
 }
+
+
+@media (max-width: 768px) {
+    .faculty_registration_container {
+        width: 90%;
+        padding: 0 20px;
+    }
+
+    #faculty_form_submit_button {
+        width: 100%;
+    }
+}
+
+/* Mobile Devices (width ≤ 425px) */
+@media (max-width: 425px) {
+    .faculty_registration_container {
+        width: 100%;
+        padding: 0 15px;
+        gap: 15px;
+    }
+
+/* #faculty_form_submit_button {
+        margin-top: 15px;
+        padding: 10px;
+        font-size: 14px;
+    } */
+}

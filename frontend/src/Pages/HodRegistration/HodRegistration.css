@@ -30,3 +30,49 @@
   margin: auto;
   margin-top: 20px;
 }
+
+
+
+/* Tablet Devices (width ≤ 768px) */
+@media (max-width: 768px) {
+  .hod_registration_container {
+    width: 90%;
+    padding: 0 20px;
+  }
+
+  .hod_registration_form input[type="email"],
+  .dropdown {
+    font-size: 15px;
+    padding: 12px;
+    width: 100%;
+  }
+
+  #hod_form_submit_button {
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+  }
+}
+
+/* Mobile Devices (width ≤ 425px) */
+@media (max-width: 425px) {
+  .hod_registration_container {
+    width: 100%;
+    padding: 0 15px;
+    gap: 15px;
+  }
+
+  .hod_registration_form input[type="email"],
+  .dropdown {
+    font-size: 14px;
+    padding: 10px;
+    width: 100%;
+  }
+
+  #hod_form_submit_button {
+    margin-top: 15px;
+    padding: 10px;
+    font-size: 14px;
+  }
+
+}

@@ -418,3 +418,136 @@
     font-size: 16px;
 }
 
+
+
+@media (max-width: 1024px) {
+  .bonafide-cards-container {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 50px;
+  }
+
+  .bonafide-eligibility-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .bonafide-eligibility-container .eligibility-box,
+  .bonafide-eligibility-container .events-list-box {
+    width: 100%;
+  }
+
+  .events-head {
+    width: 100%;
+    height: auto;
+    font-size: 18px;
+  }
+
+  .bonafide-card {
+    width: 260px;
+    height: 180px;
+  }
+}
+
+
+/* Small Screens: Mobile Devices (max-width: 768px) */
+@media (max-width: 768px) {
+  .bonafide-cards-container {
+    grid-template-columns: repeat(1, 1fr);
+    gap: 40px;
+  }
+
+  .bonafide-content h1,
+  .bonafide-display-container h2 {
+    font-size: 1.5rem;
+    padding: 15px;
+  }
+
+  .bonafide-card-description {
+    font-size: 15px;
+    height: auto;
+    padding-bottom: 40px; /* Space for button */
+  }
+
+  .bonafide-card {
+    width: 90%;
+    height: auto;
+  }
+
+  .bonafide-cards {
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    gap: 15px;
+  }
+
+  .modal-content {
+    padding: 20px;
+    width: 95%;
+  }
+
+  .modal-content ul li {
+    font-size: 16px;
+  }
+
+  .file-upload-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .confirmation-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .apply-here-btn {
+    font-size: 13px;
+    padding: 6px 12px;
+    bottom: -15px;
+  }
+}
+
+/* Extra Small Screens: (max-width: 425px) */
+@media (max-width: 425px) {
+  .bonafide-content h1,
+  .bonafide-display-container h2 {
+    font-size: 1.2rem;
+  }
+
+  .bonafide-card h3 {
+    font-size: 14px;
+    padding: 5px;
+  }
+
+  .bonafide-card-description {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .eligibility-box ul {
+    font-size: 0.9rem;
+  }
+
+  .events-head {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .apply-here-btn {
+    width: 80px;
+    font-size: 12px;
+  }
+
+  .modal-content button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+   /* .file-upload input[type="file"],
+  .academic-year input[type="text"],
+  .company-name-input input {
+    font-size: 14px;
+    padding: 8px;
+  }  */
+}
+
+
