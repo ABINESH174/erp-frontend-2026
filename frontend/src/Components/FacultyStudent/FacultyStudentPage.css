@@ -1,29 +1,4 @@
-/* Facultydashboard.css */
 
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f5f6fa;
-    margin: 0;
-    padding: 0;
-  }
-  
-  .parent {
-    /* padding: 20px; */
-    display: flex;
-    flex-direction: row;
-  }
-  .full-container{
-background: linear-gradient(to right, #0a2361,#061845,#325fa1,#25477d, #3b79d5, #18416e, #064f84);
-/* background: linear-gradient(to right, #1e3a8a, #2563eb, #38bdf8); */
-/* background-color: 	#0f172a; */
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: row;
-    padding: 7px;
-    text-transform: capitalize;
-  }
-  
   .faculty-side{
     position: absolute;
     width: 13.9vw;
@@ -287,6 +262,7 @@ background: linear-gradient(to right, #0a2361,#061845,#325fa1,#25477d, #3b79d5, 
     align-items: center;
     justify-content: center;
     border-radius: 5px;
+    padding: 3px;
   }
     
 

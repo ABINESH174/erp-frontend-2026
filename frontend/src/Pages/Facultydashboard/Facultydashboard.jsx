@@ -1,10 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
-import "./Facultydashboard.css";
 import { FaFileAlt } from "react-icons/fa";
 import { BsPeople, BsPerson } from "react-icons/bs";
-import "react-toastify/dist/ReactToastify.css";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import * as XLSX from "xlsx";
 import Header from "../../Components/Header/Header.jsx";
 import Logoutbtn from "../../Components/logoutbutton/Logoutbtn.jsx";
 import BonafideCount from "../../Components/BonafideCounter/BonafideCount.jsx";
@@ -13,6 +10,11 @@ import { AuthService } from "../../Api/AuthService.js";
 import { toast } from "react-toastify";
 import previousBonafide from "../../Assets/previousbonafide.png";
 import pendingbonafide from "../../Assets/pendingbonafide.png";
+import "./Facultydashboard.css";
+import "react-toastify/dist/ReactToastify.css";
+import { Allbuttons } from "../../Components/index.js";
+import Logout from '../../Assets/logout.svg';
+
 
 function Facultydashboard() {
   const [faculty, setFaculty] = useState(null);
@@ -23,11 +25,10 @@ function Facultydashboard() {
   const [openExcelUploadModal, setOpenExcelUploadModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isBonafideOpen, setIsBonafideOpen] = useState(false);
+  const [active, setActive] = useState(null);
 
   const location = useLocation();
   const navigate = useNavigate();
-
-  // ✅ Always get facultyEmail (from state or localStorage)
   const facultyEmail = location.state?.userId || localStorage.getItem("facultyEmail");
 
   useEffect(() => {
@@ -99,35 +100,36 @@ function Facultydashboard() {
               <BsPerson />
               <p>Profile</p>
             </div>
+             {/* {openProfile && (
+            <div className="faculty_profile_details" onClick={(e) => e.stopPropagation()}>
+              <div className="faculty-profile">
+                <p className="field_background">{faculty.firstName} {faculty.lastName}</p>
+                <p className="field_background">{faculty.discipline}</p>
+                <p className="field_background">{faculty.email}</p>
+                <p className="field_background">{faculty.mobileNumber}</p>
+                <Allbuttons value="Logout" image={Logout} target={handleLogoutClick} />
+              </div>
+            </div>
+          )} */}
 
             <div
-              className="faculty-profile-bar"
-              onClick={() =>
-                navigate("/faculty-dashboard", { state: { userId: facultyEmail } })
-              }
-            >
-              <BsPeople /> Students
+            className={`faculty-profile-bar ${active === "student" ? "active" : ""}`}
+      onClick={() => {
+        setActive("student");
+        navigate("/faculty-dashboard", { state: { userId: facultyEmail } });
+      }}>
+           <BsPeople /> Students
             </div>
 
             <div
-              className="bonafide-view"
-              onClick={() =>  {setIsBonafideOpen(!isBonafideOpen);navigate('faculty-bonafide', { state: { facultyEmail } })}}
+            className={`bonafide-view ${active === "bonafide-fa" ? "active" : ""}`}
+              onClick={() =>  {
+                setActive("bonafide-fa");
+                setIsBonafideOpen(!isBonafideOpen);
+                navigate('faculty-bonafide', { state: { facultyEmail } })}}
             >
-              <FaFileAlt /> Bonafide
-            </div>
-
-            {isBonafideOpen && (
-              <div className="fa-bonafide-list">
-                <div
-                  className="fa-bonafide-view-item"
-                  onClick={() =>
-                    navigate("faculty-bonafide", { state: { facultyEmail } })
-                  }
-                >
-                  <img src={pendingbonafide} alt="" />
-                  <p>
-                    Pending
-                    {facultyEmail && (
+              <FaFileAlt /> <p>Bonafide
+               {facultyEmail && (
                       <BonafideCount
                         getIdApi={`/faculty`}
                         getBonafideApi={`/faculty/get-pending-bonafides`}
@@ -139,18 +141,44 @@ function Facultydashboard() {
                         }
                       />
                     )}
-                  </p>
+                    </p>
+            </div>
+
+            {isBonafideOpen && (
+              <div className="fa-bonafide-list">
+                <div className={`fa-bonafide-view-item ${active === "pending" ? "active" : ""}`}
+      onClick={() => {
+        setActive("pending");
+        navigate("faculty-bonafide", { state: { facultyEmail } });
+      }}>
+                  <img className="img-pending" src={pendingbonafide} alt="" />
+                  <p>
+                    Pending
+                    {/* {facultyEmail && (
+                      <BonafideCount
+                        getIdApi={`/faculty`}
+                        getBonafideApi={`/faculty/get-pending-bonafides`}
+                        statusFilter="PENDING"
+                        render={(count) =>
+                          count > 0 && (
+                            <span className="counter-bonafide">{count}</span>
+                          )
+                        }
+                      />
+                    )} */}
+                  </p>  
                 </div>
 
                 <div
-                  className="fa-bonafide-view-item"
-                  onClick={() =>
-                    navigate("previous-bonafide", { state: { facultyEmail } })
-                  }
-                >
-                  <img src={previousBonafide} alt="" />
-                  Previous
-                </div>
+      className={`fa-bonafide-view-item ${active === "previous" ? "active" : ""}`}
+      onClick={() => {
+        setActive("previous");
+        navigate("previous-bonafide", { state: { facultyEmail } });
+      }}
+    >
+      <img className="img-previous" src={previousBonafide} alt="" />
+      Previous
+                 </div>
               </div>
             )}
 
@@ -159,7 +187,7 @@ function Facultydashboard() {
         </div>
 
         <div className="top-sidebox">
-]          <Outlet context={{ role: "FACULTY" }} />
+          <Outlet context={{ role: "FACULTY" }} />
         </div>
       </div>
     </div>

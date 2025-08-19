@@ -1,10 +1,11 @@
 .hod-bonafide-student{
-    width: 99vw;
+    width: 100%;
     height: 98vh;
-    background-color:white;
+    background-color:whitesmoke;
     display: flex;
     flex-direction: row;
     padding: 8px;
+    margin-top: 10px;
 
 }
 .hod-bonafide-navbar{
@@ -60,16 +61,18 @@
     padding-left: 30px;
 }
 
-.bonafide-table{
-    margin-top: 0;
-}
-
-
 .hod-bonafide-table{
-    width: 100%;
+    width: 110%;
     height: 100%;
+    margin-top: 30px;
+    overflow: hidden;
+    overflow-y: scroll;
+    border-radius: 20px;
+    border-collapse: collapse;
+    border: none;
+    overflow-x: scroll;
 }
-.hod-bonafide-table table{
+/* .hod-bonafide-table table{
     width: 100%;
     height: 100%;
     border-collapse: collapse;
@@ -77,16 +80,18 @@
     overflow: hidden;
     display: flex;
     align-items: center;
-    justify-content: center;
-}
-
+    justify-content:space-between;
+    overflow-y: scroll;
+} */
+    
 .hod-bonafide-table thead th{
-    background-color: #f2f2f2;
+    background-color: #089af5;
     padding: 10px;
     font-weight: bold;
     color: #333;
     font-size: 16px;
     border-bottom: 2px solid #ddd;
+;
 }
 .hod-bonafide-table tbody td{
     text-align: center;
@@ -97,7 +102,7 @@
     background-color: #f9f9f9;
 }
 .hod-bonafide-table tbody tr:hover{
-    background-color: rgb(202, 240, 255);
+    background-color: rgb(232, 232, 232);
 }
 .hod-bonafide-table thead th, .bonafide-table tbody td{
     border: 1px solid #ddd;

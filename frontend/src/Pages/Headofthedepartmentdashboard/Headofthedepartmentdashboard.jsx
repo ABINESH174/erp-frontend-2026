@@ -26,7 +26,7 @@ function Headofthedepartmentdashboard() {
   const [openAddFacultyModal, setOpenAddFacultyModal] = useState(false);
   const [error, setError] = useState(null);
   const[isBonafideOpen,setIsBonafideOpen]=useState(false);
-  const [isHovered, setIsHovered] = useState(false);
+  const [active, setActive] = useState(null);
 
 
   useEffect(() => {
@@ -81,17 +81,29 @@ function Headofthedepartmentdashboard() {
           <div className="hod-nav-sidebar">
             <h2>HOD Dashboard</h2>
             <div className="hod-navigation-bar">
-              <p className='hod-nav-item' onClick={(e) => { e.stopPropagation(); setOpen(!open); }}><BsPerson /> Profile</p>
-              <p className='hod-nav-item' onClick={()=> navigate('/hod-dashboard',{state:{userId}})}><BsPeople />Students</p>
-              <p className='hod-bonafide-nav-item'
-                onClick={()=> {setIsBonafideOpen(!isBonafideOpen);navigate('bonafide-page', { state: { userId } })}}>
-                 <FaFileAlt /> Bonafide{" "}
-              </p>
-              {isBonafideOpen &&(
-                <div className="bonafide-list">
-                  <div className="hod-bonafide"  onClick={() => navigate('bonafide-page', { state: { userId } })}>
-                    <img src={pendingbonafide} alt="" />Pending
-                     {userId && (
+              <p className={`hod-nav-item ${active === "hodProfile" ? "active" : ""}`}
+               onClick={(e) => { 
+                e.preventDefault();
+                e.stopPropagation();
+                setActive("hodProfile");
+                setOpen(!open); }}
+                >
+                <BsPerson /> Profile</p>
+              <p className={`hod-nav-item ${active === "hodstudent" ? "active" : ""}`}
+               onClick={()=> {
+                setActive("hodstudent");
+                navigate('/hod-dashboard',{state:{userId}});
+               }}>
+                <BsPeople />Students</p>
+              <p className={`hod-bonafide-nav-item ${active === "hod-pending" ? "active" : ""}`}
+                onClick={()=> {
+                  setActive("hod-pending");
+                  setIsBonafideOpen(!isBonafideOpen);
+                  navigate('bonafide-page', { state: { userId } })
+                }}
+                >
+                 <FaFileAlt /> Bonafide {"  "}
+                 {userId && (
                   <BonafideCount
                     getIdApi="/hod/getHodByEmail"
                     getBonafideApi="/hod/getFacultyApprovedBonafidesByHodId"
@@ -101,9 +113,33 @@ function Headofthedepartmentdashboard() {
                     )}
                   />
                 )}
+              </p>
+              {isBonafideOpen &&(
+                <div className="bonafide-list">
+                  <div className={`hod-bonafide ${active === "hod-pending" ? "active" : ""}`}
+                   onClick={() => {
+                    setActive("hod-pending");
+                    navigate('bonafide-page', { state: { userId } })
+                  }}>
+                    <img src={pendingbonafide} alt="" />Pending
+                     {/* {userId && (
+                  <BonafideCount
+                    getIdApi="/hod/getHodByEmail"
+                    getBonafideApi="/hod/getFacultyApprovedBonafidesByHodId"
+                    statusFilter="FACULTY_APPROVED"
+                    render={(count) => count > 0 && (
+                      <span className='hod-bonafide-count'>{count}</span>
+                    )}
+                  />
+                )} */}
                   </div>
-                 <div className="hod-bonafide"  onClick={() => navigate('previous-bonafide', { state: { userId, role: "HOD" } })}><img src={previousBonafide} alt="" />Previous</div>
-
+                 <div className={`hod-bonafide ${active === "hod-previous" ? "active" : ""}`}
+                  onClick={() => {
+                    setActive("hod-previous");
+                    navigate('previous-bonafide', { state: { userId, role: "HOD" } })
+                  }}>
+                  <img src={previousBonafide} alt="" />
+                  Previous</div>
                 </div>
               )}
 
