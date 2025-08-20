@@ -14,7 +14,23 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const PersonalForm = () => {
   const location = useLocation();
+  const semesterOptions =
+  formData.programme === "ME"
+    ? ["I", "II", "III", "IV"]
+    : ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
+  const handleOtherFields = (e) => {
+  const { name, value } = e.target;
 
+  if (name === "programme") {
+    setFormData((prev) => ({
+      ...prev,
+      programme: value,
+      semester: "" 
+    }));
+  } else {
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  }
+};
   const MAX_FILE_SIZE = 100 * 1024;
   const handleSectionClick = (section) => {
     setDisplaySection(section);
@@ -103,12 +119,37 @@ const PersonalForm = () => {
 
   const isValidAlphabets = (value) => /^[A-Za-z\s]+$/.test(value);
   const isValidNumbers = (value) => /^[0-9]+$/.test(value);
+  const isValidEmisNumber = (value) => /^[0-9]{11}$/.test(value);
   const isValidDecimal = (value) => /^(10(\.0+)?|[0-9](\.\d+)?)$/.test(value);
   const isValidMark = (value) => /^(100|[3-9][0-9]{1})(\.[0-9]{1,4})?$/.test(value);
   const isValidAadharNumber = (value) => /^\d{12}$/.test(value);
   const isValidMobileNumber = (value) => /^[6-9]\d{9}$/.test(value);
   const isValidEmail = (value) => /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(value);
   const isValidAlphaNumeric = (value) => /^[A-Za-z0-9]+$/.test(value);
+const isValidDOB = (dob) => {
+  const regex = /^\d{2}\/\d{2}\/\d{4}$/;
+  if (!regex.test(dob)) return false;
+  const [day, month, year] = dob.split("/").map(Number);
+  const date = new Date(year, month - 1, day);
+  if (
+    date.getFullYear() !== year ||
+    date.getMonth() !== month - 1 ||
+    date.getDate() !== day
+  ) {
+    return false;
+  }
+  const today = new Date();
+  if (date > today) return false; 
+  let age = today.getFullYear() - year;
+  if (
+    today.getMonth() < month - 1 ||
+    (today.getMonth() === month - 1 && today.getDate() < day)
+  ) {
+    age--;
+  }
+  return age >= 16;
+};
+
 
   const validateFields = (fields) => {
     for (let { field, name, validate, errorMessage } of fields) {
@@ -129,7 +170,7 @@ const PersonalForm = () => {
     const requiredFields = [
       { field: formData.firstName, name: "First Name", validate: isValidAlphabets, errorMessage: "should contain only alphabets" },
       { field: formData.lastName, name: "Last Name", validate: isValidAlphabets, errorMessage: "should contain only alphabets" },
-      { field: formData.dateOfBirth, name: "Date of Birth" },
+      { field: formData.dateOfBirth, name: "Date of Birth", validate:isValidDOB, errorMessage:"Enter valid date" },
       { field: formData.gender, name: "Gender" },
       { field: formData.aadharNumber, name: "Aadhar Number", validate: isValidAadharNumber, errorMessage: "should contain 12 digits " },
       { field: formData.bloodGroup, name: "Blood Group" },
@@ -237,7 +278,7 @@ const PersonalForm = () => {
       { field: formData.flowofstudy, name: "Flow of Study" },
       { field: formData.sslc, name: "SSLC", validate: isValidMark, errorMessage: "mark must be at least 35. Please enter a valid score" },
       { field: formData.sslcFile, name: "SSLC File" },
-      { field: formData.emisNumber, name: "EMIS Number", validate: isValidNumbers, errorMessage: "should contain only digits" },
+      { field: formData.emisNumber, name: "EMIS Number", validate: isValidEmisNumber, errorMessage: "should contain only 11 digits" },
       { field: formData.firstGraduate, name: "First Graduate" },
       { field: formData.isGovtSchool, name: "Studied in Government School" },
       { field: formData.specialCategory, name: "Special Category" }
@@ -841,19 +882,20 @@ const PersonalForm = () => {
                   <option value="ME">ME</option>
                 </select>
               </div>
-
               <div className="semester">
                 <label htmlFor="semester">Semester</label>
-                <select className="dropdown" name="semester" value={formData.semester || ''} onChange={handleOtherField}>
-                  <option value=''>Select</option>
-                  <option value="I" >I</option>
-                  <option value="II" >II</option>
-                  <option value="III" >III</option>
-                  <option value="IV" >IV</option>
-                  <option value="V" >V</option>
-                  <option value="VI" >VI</option>
-                  <option value="VII" >VII</option>
-                  <option value="VIII" >VIII</option>
+                <select
+                  className="dropdown"
+                  name="semester"
+                  value={formData.semester || ""}
+                  onChange={handleOtherFields}
+                >
+                  <option value="">Select</option>
+                  {semesterOptions.map((sem) => (
+                    <option key={sem} value={sem}>
+                      {sem}
+                    </option>
+                  ))}
                 </select>
               </div>
 
