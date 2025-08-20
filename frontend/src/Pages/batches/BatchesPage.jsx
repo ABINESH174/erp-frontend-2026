@@ -231,7 +231,7 @@ const BatchesPage = () => {
     }
   };
 
-  // ⬇️ Add outside click handler
+  // Add outside click handler
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (facultyListRef.current && !facultyListRef.current.contains(event.target)) {
@@ -259,11 +259,11 @@ const BatchesPage = () => {
             {defaultStudent?.facultyId !== null && assignedFaculty && (
               <div className="faculty-details">
                 <p>
-                  <strong>Faculty Name:</strong> {assignedFaculty.firstName}{' '}
+                  <strong>Faculty : </strong> {assignedFaculty.firstName}{' '}
                   {assignedFaculty.lastName}
                 </p>
                 <p>
-                  <strong>Email:</strong> {assignedFaculty.email}
+                  <strong>Email : </strong> {assignedFaculty.email}
                 </p> 
               </div>
             )}

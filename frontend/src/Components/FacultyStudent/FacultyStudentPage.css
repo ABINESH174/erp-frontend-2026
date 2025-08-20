@@ -75,7 +75,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-left: 26rem;
+    margin-left: 22rem;
   }
   .student-search-bar input{
     width: 300px;
@@ -152,7 +152,6 @@
   }
   
   .student_table_options {
-    margin-top: 20px;
     display: flex;
     justify-content: flex-end;
   }
@@ -165,7 +164,7 @@
   
  .student_table {
     width: 100%;
-    height: 100%;
+    height: 10%;
     background-color: #ffffff;
     border-radius: 10px;
     border: 1px solid #ccc;
@@ -173,6 +172,7 @@
     display: table;
     border-collapse: collapse;
     margin-top: 20px;
+    overflow-y: scroll;
   }
 
   .student_table th {

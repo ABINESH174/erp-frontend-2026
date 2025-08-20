@@ -1,0 +1,77 @@
+.hod_registration_container {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  margin: auto;
+  gap: 20px;
+}
+
+.hod_registration_form input[type="email"] {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  background-color: #f0f0f0;
+}
+
+.hod_discipline label {
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.dropdown {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+#hod_form_submit_button {
+  margin: auto;
+  margin-top: 20px;
+}
+
+/* Responsive HOD Registration Form */
+@media (max-width: 768px) {
+  .hod_registration_container {
+    width: 90%;
+    padding: 10px;
+  }
+
+  .hod_registration_form input[type="email"],
+  .dropdown {
+    width: 100%;
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  .hod_discipline label {
+    font-size: 14px;
+  }
+
+  #hod_form_submit_button {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hod_registration_container {
+    width: 95%;
+    padding: 8px;
+    gap: 15px;
+  }
+
+  .hod_registration_form input[type="email"],
+  .dropdown {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  #hod_form_submit_button {
+    font-size: 14px;
+    padding: 10px;
+  }
+}
+
