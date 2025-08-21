@@ -3,7 +3,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
 import './Bonafide.css';
 import Header from '../../Components/Header/Header';
-import axios from 'axios';
+import AxiosInstance from '../../Api/AxiosInstance';
+import { UtilityService } from '../../Utility/UtilityService';
+import BackButton from '../../Components/backbutton/BackButton'
 
 function Bonafide() {
     const location = useLocation();
@@ -57,7 +59,7 @@ function Bonafide() {
     useEffect(() => {
         const fetchApplicableBonafide = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/bonafide/getApplicableBonafide/${userId}`);
+                const response = await AxiosInstance.get(`/bonafide/getApplicableBonafide/${userId}`);
                 if (response.data?.data) {
                     setApplicableBonafide(response.data.data);
                     console.log("Received eligibility data:", response.data.data);
@@ -134,10 +136,10 @@ function Bonafide() {
         if (allWelfareTypes.includes(uploads.selectedScholarship)) {
             required.push("aadharCardFile", "smartCardFile", "labourWelfareFile");
         }
-        if (!uploads.academicYear) {
-            toast.error("Please enter Academic Year");
-            return false;
-        }
+        // if (!uploads.academicYear) {
+        //     toast.error("Please enter Academic Year");
+        //     return false;
+        // }
 
         if (uploads.selectedOption === "internship" && !uploads.companyName) {
             toast.error("Please enter Company Name");
@@ -152,13 +154,12 @@ function Bonafide() {
         return required.every(f => uploads.fileUploads[f]);
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+   const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        if (!validateFiles() || isSubmitting) return;
+    if (!validateFiles() || isSubmitting) return;
 
-        try {
-            setIsSubmitting(true);
+    setIsSubmitting(true);
 
             const formData = new FormData();
             formData.append('registerNo', userId);
@@ -166,37 +167,47 @@ function Bonafide() {
             console.log("Purpose being sent to backend:", uploads.selectedScholarship.toLowerCase().trim());
             formData.append('bonafideStatus', 'PENDING');
             formData.append('date', new Date().toISOString().split('T')[0]);
-            formData.append('academicYear', uploads.academicYear);
+            formData.append('academicYear', UtilityService.getAcademicYear().toString());   
 
-            if (uploads.companyName) {
-                formData.append('companyName', uploads.companyName);
-            }
-            if (uploads.bankNameForEducationalLoan) {
-                formData.append('bankNameForEducationalLoan', uploads.bankNameForEducationalLoan);
-            }
+            console.log("acadamic year:",formData.academicYear);
 
-            Object.entries(uploads.fileUploads).forEach(([key, value]) => {
-                formData.append(key, value);
-            });
+    if (uploads.companyName) {
+        formData.append('companyName', uploads.companyName);
+    }
 
-            await axios.post('/api/bonafide/create', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            });
+    if (uploads.bankNameForEducationalLoan) {
+        formData.append('bankNameForEducationalLoan', uploads.bankNameForEducationalLoan);
+    }
 
-            toast.success("Bonafide submitted successfully!");
+    Object.entries(uploads.fileUploads).forEach(([key, value]) => {
+        formData.append(key, value);
+    });
 
-            setUploads(prev => ({ ...prev, selectedScholarship: "" }));
+    try {
+        await AxiosInstance.post('/bonafide/create', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
 
-            await axios.post(`/api/email/notify-faculty/${userId}`);
+        toast.success('Bonafide submitted successfully!');
+        console.log("Bonafide submitted successfully!");
+        setUploads(prev => ({ ...prev, selectedScholarship: "" }));
+        setTimeout(() => {
+        navigate('/profile-page', { state: { userId } });
+        }, 3000); 
 
-             navigate('/profile-page', { state: { userId } });
+    } catch (err) {
+        toast.error("Failed to submit Bonafide request.");
+        console.error(err);
+    }
 
-        } catch (error) {
-            toast.error(error.response?.data?.message || "Submission failed.");
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
+    try {
+        await AxiosInstance.post(`/email/notify-faculty/${userId}`);
+    } catch (notifyErr) {
+        toast.info("Failed to notify Faculty");
+    }
+    setIsSubmitting(false);
+};
+
 
     const instructions = [
         "You must be a student of this institution to apply for a bonafide certificate.",
@@ -217,10 +228,8 @@ function Bonafide() {
         <div className="bonafide-container">
             <Header />
             <div className="bonafide-content">
-                <div className="bonafide-heading-bar">
-                    <p>Bonafide Certificate Request</p>
-                </div>
-                <div className="bonafide-eligibility-container">
+                    <h1>Bonafide Certificate Request</h1>
+                {/* <div className="bonafide-eligibility-container">
 
                    <div className="eligibility-box">
   <ul className="scrolling-list">
@@ -232,9 +241,10 @@ function Bonafide() {
                    <div className="events-list-box">
                     <h1 className='events-head'>Ongoing Events</h1>
                    </div>
-                </div>
+                </div> */}
 
                 <div className="bonafide-display-container">
+                    <BackButton />
                     <h2>Select The Bonafide</h2>
                     <div className="bonafide-cards-container">
                         {options.map(option => (
@@ -273,7 +283,7 @@ function Bonafide() {
               setUploads(prev => ({
                 ...prev,
                 showCentralScholarshipCheck: false,
-                selectedOption: "", // reset only for state
+                selectedOption: "", 
               }));
             } else {
               setUploads(prev => ({
@@ -334,10 +344,7 @@ function Bonafide() {
       <button onClick={() => setUploads(prev => ({ ...prev, showModal: false }))}>Close</button>
     </div>
   </div>
-)}
-
-
-
+)} 
                 {/* Upload Modal */}
                 {uploads.selectedScholarship && (
                     <div className="file-modal-overlay" onClick={() => setUploads(prev => ({ ...prev, selectedScholarship: "" }))}>
@@ -379,11 +386,11 @@ function Bonafide() {
                                     <input type="text" value={uploads.bankNameForEducationalLoan} onChange={e => setUploads(prev => ({ ...prev, bankNameForEducationalLoan: e.target.value }))} />
                                 </div>
                             )}
-
+{/* 
                             <div className="file-upload">
                                 <label>Academic Year</label>
                                 <input type="text" placeholder="e.g. 2024-2025" value={uploads.academicYear} onChange={e => setUploads(prev => ({ ...prev, academicYear: e.target.value }))} />
-                            </div>
+                            </div> */}
 
                             <div className="file-upload-buttons">
                                 <button className="submit-button" onClick={handleSubmit} disabled={isSubmitting}>
@@ -395,8 +402,9 @@ function Bonafide() {
                     </div>
                 )}
 
-                <ToastContainer />
+                
             </div>
+            <ToastContainer />
         </div>
     );
 }

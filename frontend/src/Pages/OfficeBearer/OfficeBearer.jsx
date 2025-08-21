@@ -9,6 +9,8 @@ import BackButton from '../../Components/backbutton/BackButton';
 import BonafideViewModal from '../../Components/BonafideViewModal/BonafideViewModal';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import AxiosInstance from '../../Api/AxiosInstance';
+import Logoutbtn from '../../Components/logoutbutton/Logoutbtn';
 
 const OfficeBearer = () => {
   const [activeTab, setActiveTab] = useState('bonafides');
@@ -21,6 +23,8 @@ const OfficeBearer = () => {
   const [rejectionModalOpen, setRejectionModalOpen] = useState(false);
   const [rejectionItem, setRejectionItem] = useState(null);
   const [rejectionMessage, setRejectionMessage] = useState("");
+  const [downloadedBonafides, setDownloadedBonafides] = useState([]);
+  const[active,setActive]=useState([]);
 
 /*   // Map NOTIFIED enum to friendly message
   const statusMessages = {
@@ -29,12 +33,13 @@ const OfficeBearer = () => {
 
   useEffect(() => {
     fetchHodApprovedBonafides();
+    fetchNotifiedBonafides();
   }, []);
 
   const fetchHodApprovedBonafides = async () => {
   setLoading(true);
   try {
-    const res = await axios.get('http://localhost:8080/api/bonafide/getHodApproved');
+    const res = await AxiosInstance.get('/bonafide/getHodApproved');
 
     const bonafides = res.data?.data || [];
 
@@ -43,6 +48,7 @@ const OfficeBearer = () => {
       setError('No bonafide requests found.');
     } else {
       setData(bonafides);
+      setActiveTab("bonafides");
       setError(null);
     }
 
@@ -65,12 +71,26 @@ const OfficeBearer = () => {
   const fetchPrincipalApproved = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:8080/api/bonafide/getPrincipalApproved');
+      const res = await AxiosInstance.get('/bonafide/getPrincipalApproved');
       console.log('Principal Approved response:', res.data);
       setPrincipalApprovedData(res.data.data || []);
       setActiveTab('principalApproved');
+    } catch { 
+      toast.info("No approved bonafides.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchNotifiedBonafides = async () => {
+    setLoading(true);
+    try{
+      const res = await AxiosInstance.get('/bonafide/getNotifiedBonafides');
+      console.log('Notified Bonafides response:', res.data);
+      setPrincipalApprovedData(res.data.data || []);
+      setActiveTab('notifiedBonafides');
     } catch {
-      toast.info("No principal approved bonafides.");
+      toast.info("No notified bonafides.");
     } finally {
       setLoading(false);
     }
@@ -78,16 +98,11 @@ const OfficeBearer = () => {
 
   const approveBonafide = async (bonafideId, registerNo) => {
     try {
-      const res = await axios.put('http://localhost:8080/api/bonafide/updateBonafideWithBonafideStatus', null, {
+      const res = await AxiosInstance.put('/bonafide/updateBonafideWithBonafideStatus', null, {
         params: { bonafideId, registerNo, status: 'PRINCIPAL_APPROVED' },
       });
-       try {
-      await axios.post('http://localhost:8080/api/email/notify-approver', {bonafideId, status: 'PRINCIPAL_APPROVED', registerNo});
-    } catch (emailErr) {
-      console.error('Email sending failed:', emailErr);
-    }
 
-      toast.success(res.data.message || 'Bonafide approved successfully!');
+      toast.success('Bonafide approved successfully!');
       fetchHodApprovedBonafides();
     } catch {
       toast.error('Failed to approve bonafide.');
@@ -96,8 +111,8 @@ const OfficeBearer = () => {
 
   const rejectBonafide = async (bonafideId, registerNo, rejectionMessage) => {
     try {
-      const res = await axios.put('http://localhost:8080/api/bonafide/updateObRejectedBonafide', null, {
-        params: { bonafideId, registerNo,status: 'PRINCIPAL_APPROVED',rejectionMessage },
+      const res = await AxiosInstance.put('/bonafide/updateObRejectedBonafide', null, {
+        params: { bonafideId, registerNo,status: 'OB_REJECTED',rejectionMessage },
       });
       toast.success(res.data.message || 'Bonafide rejected successfully!');
       fetchHodApprovedBonafides();
@@ -109,11 +124,11 @@ const OfficeBearer = () => {
   const handleNotifyStudent = async (bonafideId, registerNo) => {
     try {
       const statusMessage = "NOTIFIED";  // enum status string
-      await axios.put('http://localhost:8080/api/bonafide/updateBonafideWithBonafideStatus', null, {
+      await AxiosInstance.put('/bonafide/updateBonafideWithBonafideStatus', null, {
         params: { bonafideId, registerNo, status: statusMessage },
       });
     try {
-      await axios.post('http://localhost:8080/api/email/notify-approver', {bonafideId, status: 'NOTIFIED', registerNo
+      await AxiosInstance.post('/email/notify-approver', {bonafideId, status: 'NOTIFIED', registerNo
       });
     } catch (emailErr) {
       console.error('Email sending failed:', emailErr);
@@ -163,8 +178,8 @@ const handleDownload = async (bonafideId, registerNo) => {
   console.log('Downloading bonafide ID:', bonafideId, 'Register No:', registerNo);
 
   try {
-    const response = await axios.get(
-      `http://localhost:8080/api/bonafide/getCertificate/${bonafideId}`,
+    const response = await AxiosInstance.get(
+      `/bonafide/getCertificate/${bonafideId}`,
       {
         params: { registerNo }, 
         responseType: 'blob',
@@ -192,6 +207,7 @@ const handleDownload = async (bonafideId, registerNo) => {
     }
     toast.error('Failed to download certificate.');
   }
+  setDownloadedBonafides(prev => [...prev, bonafideId]);
 };
 
 
@@ -200,10 +216,32 @@ const handleDownload = async (bonafideId, registerNo) => {
       <Header />
       <div className="ob-bonafide-student">
         <div className="ob-bonafide-sidebar-container">
+          <h2>Office Bearer DashBoard</h2>
           <ul className="ob-bonafide-sidebar-list">
-            <li className="ob-bonafide-sidebar-item" onClick={() => setActiveTab('bonafides')}>Bonafides</li>
-            <li className="ob-bonafide-sidebar-item" onClick={fetchPrincipalApproved}>Principal Approved Bonafides</li>
+            <li  className={`ob-bonafide-sidebar-item ${active === "ob-bonafide" ? "active" : ""}`}
+             onClick={(e) => { 
+                setActive("ob-bonafide");
+                setActiveTab('bonafides');
+                }} >
+               Pending Bonafides</li>
+            <li  className={`ob-bonafide-sidebar-item ${active === "principalapproved" ? "active" : ""}`} 
+            onClick={(e) => { 
+                setActive("principalapproved")
+                fetchPrincipalApproved();
+                }}>
+              Approved Bonafides</li>
+            <li  className={`ob-bonafide-sidebar-item ${active === "notifiedbonafide" ? "active" : ""}`} 
+            onClick={(e) => { 
+                setActive("notifiedbonafide")
+                fetchNotifiedBonafides();
+                }}
+            >
+              Notified Bonafides</li>
           </ul>
+          <div className="ob-logout">
+            <Logoutbtn/>
+          </div>
+          
         </div>
 
         <div className="ob-topstud-container">
@@ -212,15 +250,15 @@ const handleDownload = async (bonafideId, registerNo) => {
           </div>
 
           {activeTab === 'bonafides' && (
-            <>
-              <div className="bonafide-backbtn"><BackButton /></div>
+            <div className='ob-bonafide-fullbox '
+           >
               {loading ? <p>Loading...</p> : error ? <p className="error-message">{error}</p> : (
                 <div className="ob-bonafide-table-container">
-                  <table className="ob-bonafide-table">
+                  <table className="ob-bonafide-table" >
                     <thead>
                       <tr>
                         <th>S.No</th>
-                        <th>Register Number</th>
+                        <th>Register No.</th>
                         <th>Purpose</th>
                         <th>Semester</th>
                         <th>Department</th>
@@ -251,19 +289,21 @@ const handleDownload = async (bonafideId, registerNo) => {
                   </table>
                 </div>
               )}
-            </>
+            </div>
           )}
 
           {activeTab === 'principalApproved' && (
             <div className="ob-bonafide-table-container">
-              <div className="bonafide-backbtn">
-                <BackButton onClick={() => setActiveTab('bonafides')} />
-              </div>
               <table className="ob-bonafide-table">
                 <thead>
                   <tr>
-                    <th>S.No</th><th>Register Number</th><th>Name</th><th>Purpose</th><th>Semester</th>
-                    <th>Department</th><th>Date of Apply</th>
+                    <th>S.No</th>
+                    <th>Register No</th>
+                    <th>Name</th>
+                    <th>Purpose</th>
+                    <th>Semester</th>
+                    <th>Department</th>
+                    <th>Date of Apply</th>
                     <th>Download</th>
                     <th>Notify</th>
                   </tr>
@@ -294,19 +334,21 @@ const handleDownload = async (bonafideId, registerNo) => {
                         </button>
                       </td>
                       <td>
-                        <button
-                          onClick={() => handleNotifyStudent(item.bonafideId, item.registerNo)}
-                          style={{
-                            backgroundColor: '#87cefa',
-                            color: '#000',
-                            padding: '6px 12px',
-                            borderRadius: '6px',
-                            border: 'none',
-                            cursor: 'pointer',
-                          }}
-                        >
-                          Notify
-                        </button>
+                      <button
+                        onClick={() => handleNotifyStudent(item.bonafideId, item.registerNo)}
+                        disabled={!downloadedBonafides.includes(item.bonafideId)}
+                        style={{
+                          backgroundColor: downloadedBonafides.includes(item.bonafideId) ? '#87cefa' : '#d3d3d3',
+                          color: '#000',
+                          padding: '6px 12px',
+                          borderRadius: '6px',
+                          border: 'none',
+                          cursor: downloadedBonafides.includes(item.bonafideId) ? 'pointer' : 'not-allowed',
+                        }}
+                      >
+                        Notify
+                      </button>
+
                       </td>
                     </tr>
                   ))}
@@ -314,6 +356,38 @@ const handleDownload = async (bonafideId, registerNo) => {
               </table>
             </div>
           )}
+          {activeTab === 'notifiedBonafides' && (
+          <div className="principal-table-container">
+            <table className="ob-bonafide-table">
+              <thead>
+                <tr>
+                  <th>S.No</th>
+                  <th>Register No</th>
+                  <th>Name</th>
+                  <th>Purpose</th>
+                  <th>Semester</th>
+                  <th>Discipline</th>
+                  <th>Date</th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+                {principalApprovedData.map((item, index) => (
+                  <tr key={item.bonafideId}>
+                    <td>{index + 1}</td>
+                    <td>{item.registerNo}</td>
+                    <td>{item.name}</td>
+                    <td>{item.purpose}</td>
+                    <td>{item.semester}</td>
+                    <td>{item.discipline}</td>
+                    <td>{item.date}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
         </div>
       </div>
 

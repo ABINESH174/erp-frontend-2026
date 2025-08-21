@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './StudentDetailModal.css';
 
-function StudentDetailModal({ student, onClose, viewerRole = 'hod' }) {
+function StudentDetailModal({ student, onClose }) {
   const [activeSection, setActiveSection] = useState('personal');
 
   if (!student) return null;
@@ -34,6 +34,7 @@ function StudentDetailModal({ student, onClose, viewerRole = 'hod' }) {
                   <tr><td>Last Name:</td><td>{student.lastName}</td></tr>
                   <tr><td>Gender:</td><td>{student.gender}</td></tr>
                   <tr><td>Date of Birth:</td><td>{student.dateOfBirth}</td></tr>
+                  <tr><td>Email:</td><td>{student.emailid}</td></tr>
                   <tr><td>Aadhar Number:</td><td>{student.aadharNumber}</td></tr>
                   <tr><td>Blood Group:</td><td>{student.bloodGroup}</td></tr>
                   <tr><td>Nationality:</td><td>{student.nationality}</td></tr>

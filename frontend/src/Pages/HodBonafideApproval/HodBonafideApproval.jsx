@@ -1,21 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-
-import Header from '../../Components/Header/Header';
 import './HodBonafideApproval.css';
-import BackButton from '../../Components/backbutton/BackButton';
 import { Allbuttons } from '../../Components';
 import View from '../../Assets/eyewhite.svg';
 import BonafideViewModal from '../../Components/BonafideViewModal/BonafideViewModal';
+import AxiosInstance from '../../Api/AxiosInstance';
+import notFound from '../../Assets/not found.png';
 
 const HodBonafideApproval = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
   const [hodId, setHodId] = useState(null);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -24,7 +19,6 @@ const HodBonafideApproval = () => {
   const [selectedBonafide, setSelectedBonafide] = useState(null);
   const [processingId, setProcessingId] = useState(null);
 
-  // Rejection modal states
   const [rejectionModalOpen, setRejectionModalOpen] = useState(false);
   const [rejectionItem, setRejectionItem] = useState(null);
   const [rejectionMessage, setRejectionMessage] = useState('');
@@ -32,8 +26,8 @@ const HodBonafideApproval = () => {
  useEffect(() => {
   const handleFetchBonafides = async () => {
     try {
-      const bonafideRes = await axios.get(
-        `http://localhost:8080/api/hod/getFacultyApprovedBonafidesByHodId/${hodId}`,
+      const bonafideRes = await AxiosInstance.get(
+        `/hod/getFacultyApprovedBonafidesByHodId/${hodId}`,
         { headers: { Accept: 'application/json' } }
       );
 
@@ -48,14 +42,11 @@ const HodBonafideApproval = () => {
       }
 
     } catch (error) {
-      console.error('Error fetching bonafides:', error);
 
       if (error.response?.status === 404) {
-        // Backend returned 404 with no data
         setData([]);
         setError('No bonafide requests found.');
       } else {
-        // Other errors like 500 or network
         setError('Error fetching bonafides');
       }
     }
@@ -78,15 +69,14 @@ const HodBonafideApproval = () => {
           return;
         }
 
-        const hodRes = await axios.get(
-          `http://localhost:8080/api/hod/getHodByEmail/${email}`,
+        const hodRes = await AxiosInstance.get(
+          `/hod/getHodByEmail/${email}`,
           { headers: { Accept: 'application/json' } }
         );
 
         const fetchedHodId = hodRes.data.data.hodId;
         setHodId(fetchedHodId);
       } catch (err) {
-        console.error('Error fetching data:', err);
         setError('Failed to fetch data from server.');
       } finally {
         setLoading(false);
@@ -106,7 +96,7 @@ const handleApprove = (bonafideId, registerNo) => {
           try {
             await Promise.all([
               handleStatusUpdate(bonafideId, registerNo, 'HOD_APPROVED'),
-              axios.post(`/api/email/notify-approver`, {
+              AxiosInstance.post(`/email/notify-approver`, {
                 bonafideId,
                 registerNo,
                 status: 'HOD_APPROVED',
@@ -114,7 +104,6 @@ const handleApprove = (bonafideId, registerNo) => {
             ]);
             toast.success('Bonafide approved successfully.');
           } catch (err) {
-            console.error('Approval failed:', err.response?.data || err.message || err);
             toast.error('Something went wrong.');
           }
         },
@@ -129,8 +118,8 @@ const handleApprove = (bonafideId, registerNo) => {
   try {
     setProcessingId(bonafideId);
 
-    const res = await axios.put(
-      'http://localhost:8080/api/bonafide/updateBonafideWithBonafideStatus',
+    const res = await AxiosInstance.put(
+      '/bonafide/updateBonafideWithBonafideStatus',
       null,
       {
         params: { bonafideId, registerNo, status },
@@ -188,8 +177,8 @@ const handleApprove = (bonafideId, registerNo) => {
   const rejectBonafide = async (bonafideId, registerNo, message) => {
     try {
       setProcessingId(bonafideId);
-      const res = await axios.put(
-        'http://localhost:8080/api/bonafide/updateObRejectedBonafide',
+      const res = await AxiosInstance.put(
+        '/bonafide/updateObRejectedBonafide',
         null,
         {
           params: {
@@ -216,28 +205,16 @@ const handleApprove = (bonafideId, registerNo) => {
 
   return (
     <div>
-      <Header />
       <div className="hod-bonafide-student">
-        <div className="hod-bonafide-navbar">
-          <ul className="hod-navlist" style={{ listStyleType: 'none' }}>
-            <li className="hodbonafide-navitem">Bonafides</li>
-            <li className="hodbonafide-navitem">Previous</li>
-            <li className="hodbonafide-navitem">Approved</li>
-            <li className="hodbonafide-navitem">Rejected</li>
-          </ul>
-        </div>
         <div className="hod-topstud-container">
-          <div className="bonafide-header-bar">
-            <h3 className="name-bar-title">HOD Bonafide Approval Page</h3>
-          </div>
-          <div className="bonafide-backbtn">
-            <BackButton />
-          </div>
-
+      
           {loading ? (
             <p>Loading...</p>
           ) : error ? (
-            <p className="error-message">{error}</p>
+            <div className="not-found-message">
+              <p>No Bonafides have Applied yet❕  </p>
+              <img src={notFound} alt="" />
+            </div>
           ) : (
             <div className="hod-bonafide-table-container">
               <table className="hod-bonafide-table">

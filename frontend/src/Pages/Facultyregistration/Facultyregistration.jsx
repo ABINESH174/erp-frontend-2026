@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import './Facultyregistration.css';
 import { Allfields, Allbuttons } from '../../Components';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Formtitle from '../../Components/Formtitle/Formtitle'; 
 import { toast } from 'react-toastify';
-import axios from 'axios';
 import Nextwhite from '../../Assets/Nextwhite.svg';
+import AxiosInstance from '../../Api/AxiosInstance';
 
 function Facultyregistration() {
   const navigate = useNavigate();
@@ -15,6 +15,7 @@ function Facultyregistration() {
     lastName: '',
     email: location.state.userId,
     mobileNumber: '',
+    aadharNumber: '',
     discipline: '',
     faculty:'',
     handlingBatch:''
@@ -32,13 +33,13 @@ function Facultyregistration() {
     e.preventDefault();
 
     try {
-      const response = await axios.post('/api/faculty/post', formData, {
+      const response = await AxiosInstance.post('/faculty/post', formData, {
         headers: { 'Content-Type': 'application/json' }
       }); 
       console.log('Form submitted successfully:', response.data);
-      localStorage.clear();
+      // localStorage.clear();
       toast("Registration Successful");
-      localStorage.clear();
+      // localStorage.clear();
       await new Promise((resolve) => setTimeout(resolve, 1000));
       navigate('/login-page');
     } catch (error) {
@@ -81,6 +82,11 @@ function Facultyregistration() {
           <input type='email' value={formData.email} disabled/>
           
           </div>
+
+          <div className='faculty_aadharnumber'>
+            <Allfields fieldtype="text" value="Aadhar Number" inputname="aadharNumber" formData={formData} setFormData={setFormData} />
+          </div>
+
           <div className='faculty_mobilenumber'>
           <Allfields fieldtype="text" value="Mobile Number" inputname="mobileNumber" req_flag={true} formData={formData} setFormData={setFormData} />
           </div>

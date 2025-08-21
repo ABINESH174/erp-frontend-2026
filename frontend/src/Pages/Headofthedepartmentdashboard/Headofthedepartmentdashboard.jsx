@@ -2,15 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import './Headofthedepartmentdashboard.css';
 import Header from '../../Components/Header/Header.jsx';
-import Footer from '../../Components/Footer/Footer.jsx';
 import Profileicon from '../../Assets/profile.svg';
-import axios from 'axios';
 import Logoutbtn from '../../Components/logoutbutton/Logoutbtn.jsx';
-import { BsPerson } from "react-icons/bs";
+import { BsBook, BsBookHalf, BsPeople, BsPerson } from "react-icons/bs";
 import { FaFileAlt } from "react-icons/fa";
 import Logout from '../../Assets/logout.svg';
 import Allbuttons from '../../Components/Allbuttons/Allbuttons.jsx';
 import BonafideCount from '../../Components/BonafideCounter/BonafideCount.jsx';
+import AxiosInstance from '../../Api/AxiosInstance.js';
+import { Facultyfields } from '../../Components/index.js';
+import Add from '../../Assets/add.svg';
+import { UtilityService } from '../../Utility/UtilityService.js';
+import previousBonafide from '../../Assets/previousbonafide.png';
+import pendingbonafide from '../../Assets/pendingbonafide.png';
 
 function Headofthedepartmentdashboard() {
   const location = useLocation();
@@ -19,9 +23,12 @@ function Headofthedepartmentdashboard() {
   const [userId, setUserId] = useState('');
   const [open, setOpen] = useState(false);
   const [hodData, setHodData] = useState(null);
+  const [openAddFacultyModal, setOpenAddFacultyModal] = useState(false);
   const [error, setError] = useState(null);
+  const[isBonafideOpen,setIsBonafideOpen]=useState(false);
+  const [active, setActive] = useState(null);
 
-  // Step 1: Set userId from location.state or localStorage
+
   useEffect(() => {
     const idFromState = location.state?.userId;
     const storedId = localStorage.getItem('hodEmail');
@@ -36,13 +43,12 @@ function Headofthedepartmentdashboard() {
     }
   }, [location.state]);
 
-  // Step 2: Fetch HOD data once userId is available
   useEffect(() => {
     if (!userId) return;
 
     const fetchHod = async () => {
       try {
-        const res = await axios.get(`http://localhost:8080/api/hod/getHodByEmail/${encodeURIComponent(userId)}`);
+        const res = await AxiosInstance.get(`/hod/getHodByEmail/${encodeURIComponent(userId)}`);
         setHodData(res.data.data);
       } catch (err) {
         console.error('Error fetching HOD data:', err);
@@ -58,14 +64,14 @@ function Headofthedepartmentdashboard() {
     navigate('/login-page');
   };
 
-  const getAcademicYear = () => {
-    const now = new Date();
-    const year = now.getFullYear();
-    return now.getMonth() >= 7 ? `${year}-${year + 1}` : `${year - 1}-${year}`;
-  };
+  // const getAcademicYear = () => {
+  //   const now = new Date();
+  //   const year = now.getFullYear();
+  //   return now.getMonth() >= 7 ? `${year}-${year + 1}` : `${year - 1}-${year}`;
+  // };
 
-  const goToFacultyInfo = () => navigate('/facultyinfohod-page', { state: { userId } });
-  const goToStudentInfo = () => navigate('/studentinfohod-page', { state: { userId } });
+  // const goToFacultyInfo = () => navigate('/facultyinfohod-page', { state: { userId } });
+  // const goToStudentInfo = () => navigate('/studentinfohod-page', { state: { userId } });
 
   return (
     <div>
@@ -75,14 +81,32 @@ function Headofthedepartmentdashboard() {
           <div className="hod-nav-sidebar">
             <h2>HOD Dashboard</h2>
             <div className="hod-navigation-bar">
-              <p className='hod-nav-item' onClick={() => setOpen(!open)}><BsPerson /> Profile</p>
-              <p className='hod-bonafide-nav-item' onClick={() => navigate('/hod-bonafide-approval', { state: { userId } })}>
-                <FaFileAlt /> Bonafide
-                {userId && (
+              <p className={`hod-nav-item ${active === "hodProfile" ? "active" : ""}`}
+               onClick={(e) => { 
+                e.preventDefault();
+                e.stopPropagation();
+                setActive("hodProfile");
+                setOpen(!open); }}
+                >
+                <BsPerson /> Profile</p>
+              <p className={`hod-nav-item ${active === "hodstudent" ? "active" : ""}`}
+               onClick={()=> {
+                setActive("hodstudent");
+                navigate('/hod-dashboard',{state:{userId}});
+               }}>
+                <BsPeople />Students</p>
+              <p className={`hod-bonafide-nav-item ${active === "hod-pending" ? "active" : ""}`}
+                onClick={()=> {
+                  setActive("hod-pending");
+                  setIsBonafideOpen(!isBonafideOpen);
+                  navigate('bonafide-page', { state: { userId } })
+                }}
+                >
+                 <FaFileAlt /> Bonafide {"  "}
+                 {userId && (
                   <BonafideCount
-                    emailKey="hodEmail"
-                    getIdApi="http://localhost:8080/api/hod/getHodByEmail"
-                    getBonafideApi="http://localhost:8080/api/hod/getFacultyApprovedBonafidesByHodId"
+                    getIdApi="/hod/getHodByEmail"
+                    getBonafideApi="/hod/getFacultyApprovedBonafidesByHodId"
                     statusFilter="FACULTY_APPROVED"
                     render={(count) => count > 0 && (
                       <span className='hod-bonafide-count'>{count}</span>
@@ -90,6 +114,36 @@ function Headofthedepartmentdashboard() {
                   />
                 )}
               </p>
+              {isBonafideOpen &&(
+                <div className="bonafide-list">
+                  <div className={`hod-bonafide ${active === "hod-pending" ? "active" : ""}`}
+                   onClick={() => {
+                    setActive("hod-pending");
+                    navigate('bonafide-page', { state: { userId } })
+                  }}>
+                    <img src={pendingbonafide} alt="" />Pending
+                     {/* {userId && (
+                  <BonafideCount
+                    getIdApi="/hod/getHodByEmail"
+                    getBonafideApi="/hod/getFacultyApprovedBonafidesByHodId"
+                    statusFilter="FACULTY_APPROVED"
+                    render={(count) => count > 0 && (
+                      <span className='hod-bonafide-count'>{count}</span>
+                    )}
+                  />
+                )} */}
+                  </div>
+                 <div className={`hod-bonafide ${active === "hod-previous" ? "active" : ""}`}
+                  onClick={() => {
+                    setActive("hod-previous");
+                    navigate('previous-bonafide', { state: { userId, role: "HOD" } })
+                  }}>
+                  <img src={previousBonafide} alt="" />
+                  Previous</div>
+                </div>
+              )}
+
+
             </div>
             <Logoutbtn className='hod-logout' />
           </div>
@@ -98,15 +152,18 @@ function Headofthedepartmentdashboard() {
             <div className="headbar">
               <div className="welcome-bar">
                 <p>Welcome! Head of the {hodData?.discipline || '...'} Department</p>
-                <p className="acadamic-year">Academic Year: {getAcademicYear()}</p>
+                <p className="acadamic-year">Academic Year: {UtilityService.getAcademicYear()}</p>
               </div>
-              <div className="nav">
-                <div className="faculty_profile_icon" onClick={() => setOpen(!open)}>
+              <div className='create-faculty-button'>
+                <Allbuttons image={Add} value="Add Faculty" target={() => setOpenAddFacultyModal(true)} />
+              </div>
+              
+                <div className="faculty_profile_icon" onClick={(e) => { e.stopPropagation(); setOpen(!open); }}>
                   <img id="profile_icon" src={Profileicon} alt="Profile Icon" />
-                </div>
-              </div>
+                
+              
               {open && (
-                <div className="faculty_profile_details">
+                <div className="faculty_profile_details" onClick={(e) => e.stopPropagation()}>
                   <div className="faculty-profile">
                     <p className="field_background">{hodData?.firstName} {hodData?.lastName}</p>
                     <p className="field_background">{hodData?.discipline}</p>
@@ -117,20 +174,34 @@ function Headofthedepartmentdashboard() {
                 </div>
               )}
             </div>
+             {open && (document.onclick = () => setOpen(false))}
 
+              {openAddFacultyModal && (
+            <Facultyfields
+              onClose={()=>{setOpenAddFacultyModal(false)}}
+              role="FACULTY"
+              fields={[
+                { label: 'Name', inputname: 'Name', fieldtype: 'text' },
+                // { label: 'Register Number', inputname: 'RegisterNumber', fieldtype: 'text' },
+                { label: 'Mobile Number', inputname: 'MobileNumber', fieldtype: 'text' },
+                { label: 'Mail Id', inputname: 'MailId', fieldtype: 'text' },
+                { label: 'Aadhar Number', inputname: 'AadharNumber', fieldtype: 'text' }
+              ]}
+            />
+          )}
+          </div>
             <div className="hod-content-space">
-              <Outlet context={{ discipline: hodData?.discipline }} />
+              <Outlet context={{ discipline: hodData?.discipline, role: "HOD" }} />
             </div>
           </div>
         </div>
       </div>
-
       {/* Uncomment if you want footer */}
       {/* <div className="Headofthedepartmentdashboard_footer">
         <Footer />
       </div> */}
     </div>
   );
-}
+};
 
 export default Headofthedepartmentdashboard;
