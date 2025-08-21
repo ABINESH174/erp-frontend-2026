@@ -1,5 +1,5 @@
 
-input[type="text"],input[type="email"]{
+input[type="text"]{
     background-color:rgba(199, 238, 255, 0.5);
     height: 40px;
     width: 100%;
@@ -7,4 +7,18 @@ input[type="text"],input[type="email"]{
     border-radius: 8px;
     border:none;
     box-shadow: 4px 7px 14px -11px rgba(0,33,51,1);
+    text-transform: uppercase;
+}
+input[type="email"]{
+    background-color:rgba(199, 238, 255, 0.5);
+    height: 40px;
+    width: 100%;
+    padding: 20px;
+    border-radius: 8px;
+    border:none;
+    box-shadow: 4px 7px 14px -11px rgba(0,33,51,1);
+}
+input[type="text"]::placeholder,
+input[type="email"]::placeholder {
+  text-transform: none;
 }

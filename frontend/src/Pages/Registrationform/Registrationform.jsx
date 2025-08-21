@@ -14,31 +14,11 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const PersonalForm = () => {
   const location = useLocation();
-  const semesterOptions =
-  formData.programme === "ME"
-    ? ["I", "II", "III", "IV"]
-    : ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
-  const handleOtherFields = (e) => {
-  const { name, value } = e.target;
-
-  if (name === "programme") {
-    setFormData((prev) => ({
-      ...prev,
-      programme: value,
-      semester: "" 
-    }));
-  } else {
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  }
-};
-  const MAX_FILE_SIZE = 100 * 1024;
-  const handleSectionClick = (section) => {
-    setDisplaySection(section);
-  };
   const [displaySection, setDisplaySection] = useState("personal");
   const [showModal, setShowModal] = useState(false);
   const [fileNames, setFileNames] = useState({});
-  const [formData, setFormData] = useState({
+ 
+   const [formData, setFormData] = useState({
     firstName: null,
     lastName: null,
     dateOfBirth: null,
@@ -99,6 +79,28 @@ const PersonalForm = () => {
     studentStatus: null,
     firstGraduateFile: null
   });
+  const semesterOptions =
+  formData.programme === "ME"
+    ? ["I", "II", "III", "IV"]
+    : ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
+  const handleOtherFields = (e) => {
+  const { name, value } = e.target;
+
+  if (name === "programme") {
+    setFormData((prev) => ({
+      ...prev,
+      programme: value,
+      semester: "" 
+    }));
+  } else {
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  }
+};
+  const MAX_FILE_SIZE = 100 * 1024; //100KB
+  const handleSectionClick = (section) => {
+    setDisplaySection(section);
+  };
+  
 
   useEffect(() => {
     const storedFormData = localStorage.getItem('formData');
@@ -106,7 +108,7 @@ const PersonalForm = () => {
       setFormData(JSON.parse(storedFormData));
     }
 
-    const filesToLoad = ['profilePhoto', 'passbook', 'communityCertificate', 'sslcFile', 'hsc1YearFile', 'hsc2YearFile', 'diploma', 'specialCategoryFile', 'firstGraduateFile'];
+    const filesToLoad = ['profilePhoto', 'passbook', 'communityCertificate', 'aadharCardFile','sslcFile', 'hsc1YearFile', 'hsc2YearFile', 'diploma', 'specialCategoryFile', 'firstGraduateFile'];
     filesToLoad.forEach(fileKey => {
       const fileName = localStorage.getItem(`${fileKey}FileName`);
       const fileBase64 = localStorage.getItem(fileKey);
@@ -126,11 +128,17 @@ const PersonalForm = () => {
   const isValidMobileNumber = (value) => /^[6-9]\d{9}$/.test(value);
   const isValidEmail = (value) => /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(value);
   const isValidAlphaNumeric = (value) => /^[A-Za-z0-9]+$/.test(value);
-const isValidDOB = (dob) => {
-  const regex = /^\d{2}\/\d{2}\/\d{4}$/;
+  console.log(formData.dateOfBirth);
+
+ const isValidDOB = (dob) => {
+  // match YYYY-MM-DD
+  const regex = /^\d{4}-\d{2}-\d{2}$/;
   if (!regex.test(dob)) return false;
-  const [day, month, year] = dob.split("/").map(Number);
+
+  const [year, month, day] = dob.split("-").map(Number);
   const date = new Date(year, month - 1, day);
+
+  // Check if valid date
   if (
     date.getFullYear() !== year ||
     date.getMonth() !== month - 1 ||
@@ -138,8 +146,11 @@ const isValidDOB = (dob) => {
   ) {
     return false;
   }
+
   const today = new Date();
-  if (date > today) return false; 
+  if (date > today) return false; // future DOB not allowed
+
+  // Calculate age
   let age = today.getFullYear() - year;
   if (
     today.getMonth() < month - 1 ||
@@ -147,8 +158,10 @@ const isValidDOB = (dob) => {
   ) {
     age--;
   }
-  return age >= 16;
+
+  return age >= 16; // must be at least 16 years old
 };
+
 
 
   const validateFields = (fields) => {
@@ -202,13 +215,13 @@ const isValidDOB = (dob) => {
 
     const father = [
       { field: formData.fathersOccupation, name: "Father's Occupation", validate: isValidAlphabets, errorMessage: "should contain only alphabets or be null" },
-      { field: formData.fathersMobileNumber, name: "Father's Mobile Number", validate: isValidMobileNumber, errorMessage: "should contain only 10 digits or be null" }
+      { field: formData.fathersMobileNumber, name: "Father's Mobile Number", validate: isValidMobileNumber, errorMessage: "should contain only 10 digits or be null and should be valid" }
     ];
 
     const mother = [
 
       { field: formData.mothersOccupation, name: "Mother's Occupation", validate: isValidAlphabets, errorMessage: "should contain only alphabets or be null" },
-      { field: formData.mothersMobileNumber, name: "Mother's Mobile Number", validate: isValidMobileNumber, errorMessage: "should contain only 10 digits or be null" }
+      { field: formData.mothersMobileNumber, name: "Mother's Mobile Number", validate: isValidMobileNumber, errorMessage: "should contain only 10 digits or be null and should be valid" }
     ];
 
     const guardian = [
@@ -249,7 +262,7 @@ const isValidDOB = (dob) => {
 
   const validateCommunicationBankInfo = () => {
     const requiredFields = [
-      { field: formData.mobileNumber, name: "Mobile Number", validate: isValidMobileNumber, errorMessage: "should contain only 10 digits" },
+      { field: formData.mobileNumber, name: "Mobile Number", validate: isValidMobileNumber, errorMessage: "should contain only 10 digits and should be valid" },
       { field: formData.emailid, name: "Email ID", validate: isValidEmail, errorMessage: "should be a valid email address" },
       { field: formData.residentialAddress, name: "Residential Address" },
       { field: formData.communicationAddress, name: "Communication Address" },
