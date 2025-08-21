@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const AxiosInstance = axios.create({
-    baseURL: "http://192.168.137.1:8080/api",
+    baseURL: process.env.REACT_APP_API_URL,
 });
 
 AxiosInstance.interceptors.request.use(
