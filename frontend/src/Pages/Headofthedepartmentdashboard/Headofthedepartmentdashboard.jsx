@@ -15,6 +15,7 @@ import Add from '../../Assets/add.svg';
 import { UtilityService } from '../../Utility/UtilityService.js';
 import previousBonafide from '../../Assets/previousbonafide.png';
 import pendingbonafide from '../../Assets/pendingbonafide.png';
+import { ToastContainer } from 'react-toastify';
 
 function Headofthedepartmentdashboard() {
   const location = useLocation();
@@ -200,6 +201,7 @@ function Headofthedepartmentdashboard() {
       {/* <div className="Headofthedepartmentdashboard_footer">
         <Footer />
       </div> */}
+      <ToastContainer/>
     </div>
   );
 };
