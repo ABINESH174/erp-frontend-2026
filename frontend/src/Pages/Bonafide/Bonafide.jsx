@@ -5,6 +5,7 @@ import './Bonafide.css';
 import Header from '../../Components/Header/Header';
 import AxiosInstance from '../../Api/AxiosInstance';
 import { UtilityService } from '../../Utility/UtilityService';
+import BackButton from '../../Components/backbutton/BackButton'
 
 function Bonafide() {
     const location = useLocation();
@@ -243,6 +244,7 @@ function Bonafide() {
                 </div> */}
 
                 <div className="bonafide-display-container">
+                    <BackButton />
                     <h2>Select The Bonafide</h2>
                     <div className="bonafide-cards-container">
                         {options.map(option => (
