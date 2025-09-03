@@ -83,9 +83,13 @@ const PersonalForm = () => {
   formData.programme === "ME"
     ? ["I", "II", "III", "IV"]
     : ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
+
+  const disciplineOptions = formData.programme === "ME" ?
+     ["Microwave and Optical Communication" ,"Power Electronics and Drives","Computer Aided Design","Manufacturing Engineering" ,"Environmental Engineering","Structural Engineering"] 
+    : ["Civil Engineering","Mechanical Engineering" ,"Electrical and Electronics Engineering" ,"Computer Science and Engineering", "Electronics and communication Engineering","Information Technology" ];
+
   const handleOtherFields = (e) => {
   const { name, value } = e.target;
-
   if (name === "programme") {
     setFormData((prev) => ({
       ...prev,
@@ -123,7 +127,8 @@ const PersonalForm = () => {
   const isValidNumbers = (value) => /^[0-9]+$/.test(value);
   const isValidEmisNumber = (value) => /^[0-9]{11}$/.test(value);
   const isValidDecimal = (value) => /^(10(\.0+)?|[0-9](\.\d+)?)$/.test(value);
-  const isValidMark = (value) => /^(100|[3-9][0-9]{1})(\.[0-9]{1,4})?$/.test(value);
+  const isValidMark = (value) => /^(100(\.0{1,4})?|([3-9][5-9]|[4-9][0-9])(\.[0-9]{1,4})?)$/.test(value);
+  const isValidDiplomaMark = (value) => /^(100(\.0{1,4})?|([4-9][0-9])(\.[0-9]{1,4})?)$/.test(value);
   const isValidAadharNumber = (value) => /^\d{12}$/.test(value);
   const isValidMobileNumber = (value) => /^[6-9]\d{9}$/.test(value);
   const isValidEmail = (value) => /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(value);
@@ -161,6 +166,40 @@ const PersonalForm = () => {
 
   return age >= 16; // must be at least 16 years old
 };
+
+const isValidAdmissionAndJoinDate = (admissionDateStr, joinDateStr) => {
+  if (!admissionDateStr || !joinDateStr) return false;
+
+  const today = new Date();
+  const admissionDate = new Date(admissionDateStr);
+  const joinDate = new Date(joinDateStr);
+
+  // Basic date checks
+  if (admissionDate > today) {
+    toast.error("Date of Admission cannot be in the future.");
+    return false;
+  }
+
+  if (joinDate > today) {
+    toast.error("Course Joined Date cannot be in the future.");
+    return false;
+  }
+
+  // Admission must be before join
+  if (admissionDate >= joinDate) {
+    toast.error("Date of Admission must be before Course Joined Date.");
+    return false;
+  }
+
+  // Same year check
+  if (admissionDate.getFullYear() !== joinDate.getFullYear()) {
+    toast.error("Date of Admission and Course Joined Date must be in the same year.");
+    return false;
+  }
+
+  return true;
+};
+
 
 
 
@@ -212,6 +251,11 @@ const PersonalForm = () => {
         return false;
       }
     }
+
+    if (!formData.aadharCardFile) {
+        toast.error("Aadhar Card File is required");
+        return false;
+      }
 
     const father = [
       { field: formData.fathersOccupation, name: "Father's Occupation", validate: isValidAlphabets, errorMessage: "should contain only alphabets or be null" },
@@ -289,7 +333,7 @@ const PersonalForm = () => {
   const validateEducationalInfo = () => {
     const requiredFields = [
       { field: formData.flowofstudy, name: "Flow of Study" },
-      { field: formData.sslc, name: "SSLC", validate: isValidMark, errorMessage: "mark must be at least 35. Please enter a valid score" },
+      { field: formData.sslc, name: "SSLC", validate: isValidMark, errorMessage: "Please enter a valid mark" },
       { field: formData.sslcFile, name: "SSLC File" },
       { field: formData.emisNumber, name: "EMIS Number", validate: isValidEmisNumber, errorMessage: "should contain only 11 digits" },
       { field: formData.firstGraduate, name: "First Graduate" },
@@ -303,9 +347,9 @@ const PersonalForm = () => {
 
     if (formData.flowofstudy.includes("hsc")) {
       const hscFields = [
-        { field: formData.hsc1Year, name: "HSC First Year", validate: isValidMark, errorMessage: "mark must be at least 35. Please enter a valid score" },
+        { field: formData.hsc1Year, name: "HSC First Year", validate: isValidMark, errorMessage: "Please enter a valid mark" },
         { field: formData.hsc1YearFile, name: "HSC First Year File" },
-        { field: formData.hsc2Year, name: "HSC Second Year", validate: isValidMark, errorMessage: "mark must be at least 35. Please enter a valid score" },
+        { field: formData.hsc2Year, name: "HSC Second Year", validate: isValidMark, errorMessage: "Please enter a valid mark" },
         { field: formData.hsc2YearFile, name: "HSC Second Year File" }
       ];
 
@@ -316,7 +360,7 @@ const PersonalForm = () => {
 
     if (formData.flowofstudy.includes("diploma")) {
       const diplomaFields = [
-        { field: formData.diploma, name: "Diploma", validate: isValidMark, errorMessage: "mark must be at least 35. Please enter a valid score" },
+        { field: formData.diploma, name: "Diploma", validate: isValidDiplomaMark, errorMessage: "Please enter a valid mark" },
         { field: formData.diplomaFile, name: "Diploma File" }
       ];
 
@@ -368,6 +412,10 @@ const PersonalForm = () => {
     // }
 
     if (!validateFields(requiredFields)) {
+      return false;
+    }
+
+    if (!isValidAdmissionAndJoinDate(formData.dateOfAdmission, formData.courseJoinedDate)) {
       return false;
     }
 
@@ -457,12 +505,12 @@ const PersonalForm = () => {
           <div>
             <div className="personal-data personal-container">
               <div className="first_name">
-                <Allfields fieldtype="text" value="First Name" inputname="firstName" formData={formData} setFormData={setFormData} />
+                <Allfields fieldtype="text" value="First Name" inputname="firstName" formData={formData} setFormData={setFormData} onlyUpperCase = {true} />
               </div>
 
 
               <div className="last_name">
-                <Allfields fieldtype="text" value="Last Name" inputname="lastName" formData={formData} setFormData={setFormData} />
+                <Allfields fieldtype="text" value="Last Name" inputname="lastName" formData={formData} setFormData={setFormData} onlyUpperCase = {true} />
               </div>
 
               <div className="date_Of_Birth">
@@ -500,11 +548,11 @@ const PersonalForm = () => {
               </div>
 
               <div className="nationality">
-                <Allfields fieldtype="text" value="Nationality" inputname="nationality" formData={formData} setFormData={setFormData} />
+                <Allfields fieldtype="text" value="Nationality" inputname="nationality" formData={formData} setFormData={setFormData} onlyUpperCase={true}/>
               </div>
 
               <div className="religion">
-                <Allfields fieldtype="text" value="Religion" inputname="religion" formData={formData} setFormData={setFormData} />
+                <Allfields fieldtype="text" value="Religion" inputname="religion" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
               </div>
 
               <div className="community" >
@@ -522,7 +570,7 @@ const PersonalForm = () => {
               </div>
               {formData.community !== "OC" && (
                 <div className="caste">
-                  <Allfields fieldtype="text" value="Caste" inputname="caste" formData={formData} setFormData={setFormData} />
+                  <Allfields fieldtype="text" value="Caste" inputname="caste" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
                 </div>
               )}
 
@@ -547,13 +595,13 @@ const PersonalForm = () => {
               </div>
 
               <div className="fathers_name">
-                <Allfields fieldtype="text" value="Father's Name" inputname="fathersName" formData={formData} setFormData={setFormData} />
+                <Allfields fieldtype="text" value="Father's Name" inputname="fathersName" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
               </div>
 
               {(formData.parentsStatus === "Both are alive" || formData.parentsStatus === "Father alive") && (
                 <>
                   <div className="fathers_occupation">
-                    <Allfields fieldtype="text" value="Father's Occupation" inputname="fathersOccupation" formData={formData} setFormData={setFormData} />
+                    <Allfields fieldtype="text" value="Father's Occupation" inputname="fathersOccupation" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
                   </div>
 
                   <div className="fathers_mobile_number">
@@ -563,13 +611,13 @@ const PersonalForm = () => {
               )}
 
               <div className="mothers_name">
-                <Allfields fieldtype="text" value="Mother's Name" inputname="mothersName" formData={formData} setFormData={setFormData} />
+                <Allfields fieldtype="text" value="Mother's Name" inputname="mothersName" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
               </div>
 
               {(formData.parentsStatus === "Both are alive" || formData.parentsStatus === "Mother alive") && (
                 <>
                   <div className="mothers_occupation">
-                    <Allfields fieldtype="text" value="Mother's Occupation" inputname="mothersOccupation" formData={formData} setFormData={setFormData} />
+                    <Allfields fieldtype="text" value="Mother's Occupation" inputname="mothersOccupation" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
                   </div>
 
                   <div className="mothers_mobile_number">
@@ -581,11 +629,11 @@ const PersonalForm = () => {
               {formData.parentsStatus === "Both are not alive" && (
                 <>
                   <div className="guardians_name">
-                    <Allfields fieldtype="text" value="Guardian Name" inputname="guardiansName" formData={formData} setFormData={setFormData} />
+                    <Allfields fieldtype="text" value="Guardian Name" inputname="guardiansName" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
                   </div>
 
                   <div className="guardians_occupation">
-                    <Allfields fieldtype="text" value="Guardian Occupation" inputname="guardiansOccupation" formData={formData} setFormData={setFormData} />
+                    <Allfields fieldtype="text" value="Guardian Occupation" inputname="guardiansOccupation" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
                   </div>
 
                   <div className="guardians_mobile_number">
@@ -683,11 +731,11 @@ const PersonalForm = () => {
               )}
 
               <div className="bank_name">
-                <Allfields fieldtype="text" value="Bank Name" inputname="bankName" formData={formData} setFormData={setFormData} />
+                <Allfields fieldtype="text" value="Bank Name" inputname="bankName" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
               </div>
 
               <div className="branch_Name">
-                <Allfields fieldtype="text" value="Branch Name" inputname="branchName" formData={formData} setFormData={setFormData} />
+                <Allfields fieldtype="text" value="Branch Name" inputname="branchName" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
               </div>
 
               <div className="account_Number">
@@ -752,7 +800,7 @@ const PersonalForm = () => {
 
 
               <div className="is_GovtSchool">
-                <label htmlFor="Is Studied Government School">Is Studied Government School (6th - 12th)</label>
+                <label htmlFor="Is Studied Government School">Has Studied Government School (6th - 12th)</label>
                 <div className="radio" >
                   <div className="radio-spacing"><input type="radio" name="isGovtSchool" value="Yes" onChange={handleOtherField} checked={formData.isGovtSchool === 'Yes'} /> Yes</div>
                   <div className="radio-spacing"><input type="radio" name="isGovtSchool" value="No" onChange={handleOtherField} checked={formData.isGovtSchool === 'No'} /> No</div>
@@ -914,19 +962,31 @@ const PersonalForm = () => {
 
               <div className="discipline">
                 <label htmlFor="discipline">Discipline</label>
-                <select className="dropdown" name="discipline" value={formData.discipline || ''} onChange={handleOtherField}>
-                  <option value=''>Select</option>
+                <select
+                  className="dropdown"
+                  name="discipline"
+                  value={formData.discipline || ""}
+                  onChange={handleOtherFields}
+                >
+                  <option value="">Select</option>
+                  {disciplineOptions.map((displ) => (
+                    <option key={displ} value={displ}>
+                      {displ}
+                    </option>
+                  ))}
+                  {/* <option value=''>Select</option>
                   <option value="Civil Engineering">Civil Engineering</option>
                   <option value="Mechanical Engineering" >Mechanical Engineering</option>
                   <option value="Electrical and Electronics Engineering" >Electrical and Electronics Engineering</option>
                   <option value="Electronics and communication Engineering" >Electronics and communication Engineering</option>
                   <option value="Computer Science and Engineering" >Computer Science and Engineering</option>
+                  <option value="Information Technology" >Information Technology</option>
                   <option value="Structural Engineering" >Structural Engineering</option>
                   <option value="Environmental Engineering" >Environmental Engineering</option>
                   <option value="Manufacturing Engineering" >Manufacturing Engineering</option>
                   <option value="Computer Aided Design" >Computer Aided Design</option>
                   <option value="Power Electronics and Drives" >Power Electronics and Drives</option>
-                  <option value="Microwave and Optical Communication" >Microwave and Optical Communication</option>
+                  <option value="Microwave and Optical Communication" >Microwave and Optical Communication</option> */}
                 </select>
               </div>
 
@@ -941,7 +1001,7 @@ const PersonalForm = () => {
                     value={formData.classSection || ' '}
                     onChange={handleOtherField}
                   >
-                    <option value="">Select section</option>
+                    <option value="">Select</option>
                     <option value="A">A</option>
                     <option value="B">B</option>
                   </select>

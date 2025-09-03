@@ -35,7 +35,34 @@
     padding: 6px;
    border-radius: 8px;
 }
-.close {
+
+.modal_header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.modal_header h3 {
+  margin: 0;
+}
+
+.close-button {
+  background-color: #cc4c4c; /* muted red */
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.close-button:hover {
+  background-color: #b33a3a;
+}
+/* .close {
     color: #aaa;
     float: right;
     font-size: 28px;
@@ -44,7 +71,7 @@
 
 .close:hover,
 .close:focus {
-    color: black;
+    color: #ffffff;
     text-decoration: none;
     cursor: pointer;
-}
+} */

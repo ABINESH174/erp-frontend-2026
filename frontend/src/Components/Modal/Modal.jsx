@@ -71,24 +71,28 @@ const Modal = ({ student, onClose , userId}) => {
     return (
       <div className="modal">
         <div className="modal_content">
+          <div className="modal_header">
+      <h3>{student.firstName} Details</h3>
+      <button className="close-button" onClick={onClose}>Close</button>
+    </div>
+          {/* <h3>{student.firstName} Details</h3>
           <span className="close" onClick={onClose}>
             &times;
-          </span>
-          <h3>{student.firstName} Details</h3>
+          </span> */}
           <div className="modal_sections">
             <div className="modal_sidebar">
               <ul className="model_sidebar_items">
                 <li
                   className="profile_links"
                   style={getLinkStyle("personal")}
-                  //onClick={() => handleSectionClick("personal")}
+                  onClick={() => handleSectionClick("personal")}
                 >
                   Personal Details
                 </li>
                 <li
                   className="profile_links"
                   style={getLinkStyle("communication_bank")}
-                  //onClick={() => handleSectionClick("communication")}
+                  onClick={() => handleSectionClick("communication_bank")}
                 >
                   Communication & Bank Details
                 </li>
@@ -96,14 +100,14 @@ const Modal = ({ student, onClose , userId}) => {
                 <li
                   className="profile_links"
                   style={getLinkStyle("education")}
-                  //onClick={() => handleSectionClick("education")}
+                  onClick={() => handleSectionClick("education")}
                 >
                   Educational Details
                 </li>
                 <li
                   className="profile_links"
                   style={getLinkStyle("academic")}
-                  //onClick={() => handleSectionClick("academic")}
+                  onClick={() => handleSectionClick("academic")}
                 >
                   Academic Details
                 </li>

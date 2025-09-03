@@ -158,7 +158,7 @@ input[type="radio"]{
 .cgpa{
     grid-column: span 1;
 }
-.community,.caste,.marital_status,.parents_status,.mobile_no,.mail_id,.communication_address,.residential_address,.hosteller,.hostel_type,.bank_name,.branch_Name,.account_Number,.ifsc_Code,.passbook,.sslc,.hsc_1_Year,.hsc_2_Year,.diploma,.first_graduate,.special_category,.emis_Number,.first_graduate_file,.specialCategory_file,.regulation,.batch,.date_of_admission,.join_date,.admission_no,.abc_id,.umis_id{
+.community,.caste,.marital_status,.parents_status,.mobile_no,.mail_id,.communication_address,.residential_address,.hosteller,.hostel_type,.bank_name,.branch_Name,.account_Number,.ifsc_Code,.passbook,.sslc,.hsc_1_Year,.hsc_2_Year,.diploma,.first_graduate,.special_category,.emis_Number,.first_graduate_file,.specialCategory_file,.regulation,.batch,.date_of_admission,.join_date,.admission_no,.abc_id,.umis_id,.is_GovtSchool{
  
     grid-column: span 3;
 }
