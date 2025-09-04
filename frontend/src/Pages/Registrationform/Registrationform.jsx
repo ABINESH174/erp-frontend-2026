@@ -17,8 +17,8 @@ const PersonalForm = () => {
   const [displaySection, setDisplaySection] = useState("personal");
   const [showModal, setShowModal] = useState(false);
   const [fileNames, setFileNames] = useState({});
- 
-   const [formData, setFormData] = useState({
+
+  const [formData, setFormData] = useState({
     firstName: null,
     lastName: null,
     dateOfBirth: null,
@@ -26,6 +26,7 @@ const PersonalForm = () => {
     aadharNumber: null,
     bloodGroup: null,
     nationality: null,
+    state: null,
     religion: null,
     community: null,
     caste: null,
@@ -80,31 +81,31 @@ const PersonalForm = () => {
     firstGraduateFile: null
   });
   const semesterOptions =
-  formData.programme === "ME"
-    ? ["I", "II", "III", "IV"]
-    : ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
+    formData.programme === "ME"
+      ? ["I", "II", "III", "IV"]
+      : ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
 
   const disciplineOptions = formData.programme === "ME" ?
-     ["Microwave and Optical Communication" ,"Power Electronics and Drives","Computer Aided Design","Manufacturing Engineering" ,"Environmental Engineering","Structural Engineering"] 
-    : ["Civil Engineering","Mechanical Engineering" ,"Electrical and Electronics Engineering" ,"Computer Science and Engineering", "Electronics and communication Engineering","Information Technology" ];
+    ["Microwave and Optical Communication", "Power Electronics and Drives", "Computer Aided Design", "Manufacturing Engineering", "Environmental Engineering", "Structural Engineering"]
+    : ["Civil Engineering", "Mechanical Engineering", "Electrical and Electronics Engineering", "Computer Science and Engineering", "Electronics and communication Engineering", "Information Technology"];
 
   const handleOtherFields = (e) => {
-  const { name, value } = e.target;
-  if (name === "programme") {
-    setFormData((prev) => ({
-      ...prev,
-      programme: value,
-      semester: "" 
-    }));
-  } else {
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  }
-};
+    const { name, value } = e.target;
+    if (name === "programme") {
+      setFormData((prev) => ({
+        ...prev,
+        programme: value,
+        semester: ""
+      }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
   const MAX_FILE_SIZE = 100 * 1024; //100KB
   const handleSectionClick = (section) => {
     setDisplaySection(section);
   };
-  
+
 
   useEffect(() => {
     const storedFormData = localStorage.getItem('formData');
@@ -112,7 +113,7 @@ const PersonalForm = () => {
       setFormData(JSON.parse(storedFormData));
     }
 
-    const filesToLoad = ['profilePhoto', 'passbook', 'communityCertificate', 'aadharCardFile','sslcFile', 'hsc1YearFile', 'hsc2YearFile', 'diploma', 'specialCategoryFile', 'firstGraduateFile'];
+    const filesToLoad = ['profilePhoto', 'passbook', 'communityCertificate', 'aadharCardFile', 'sslcFile', 'hsc1YearFile', 'hsc2YearFile', 'diploma', 'specialCategoryFile', 'firstGraduateFile'];
     filesToLoad.forEach(fileKey => {
       const fileName = localStorage.getItem(`${fileKey}FileName`);
       const fileBase64 = localStorage.getItem(fileKey);
@@ -135,70 +136,70 @@ const PersonalForm = () => {
   const isValidAlphaNumeric = (value) => /^[A-Za-z0-9]+$/.test(value);
   console.log(formData.dateOfBirth);
 
- const isValidDOB = (dob) => {
-  // match YYYY-MM-DD
-  const regex = /^\d{4}-\d{2}-\d{2}$/;
-  if (!regex.test(dob)) return false;
+  const isValidDOB = (dob) => {
+    // match YYYY-MM-DD
+    const regex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!regex.test(dob)) return false;
 
-  const [year, month, day] = dob.split("-").map(Number);
-  const date = new Date(year, month - 1, day);
+    const [year, month, day] = dob.split("-").map(Number);
+    const date = new Date(year, month - 1, day);
 
-  // Check if valid date
-  if (
-    date.getFullYear() !== year ||
-    date.getMonth() !== month - 1 ||
-    date.getDate() !== day
-  ) {
-    return false;
-  }
+    // Check if valid date
+    if (
+      date.getFullYear() !== year ||
+      date.getMonth() !== month - 1 ||
+      date.getDate() !== day
+    ) {
+      return false;
+    }
 
-  const today = new Date();
-  if (date > today) return false; // future DOB not allowed
+    const today = new Date();
+    if (date > today) return false; // future DOB not allowed
 
-  // Calculate age
-  let age = today.getFullYear() - year;
-  if (
-    today.getMonth() < month - 1 ||
-    (today.getMonth() === month - 1 && today.getDate() < day)
-  ) {
-    age--;
-  }
+    // Calculate age
+    let age = today.getFullYear() - year;
+    if (
+      today.getMonth() < month - 1 ||
+      (today.getMonth() === month - 1 && today.getDate() < day)
+    ) {
+      age--;
+    }
 
-  return age >= 16; // must be at least 16 years old
-};
+    return age >= 16; // must be at least 16 years old
+  };
 
-const isValidAdmissionAndJoinDate = (admissionDateStr, joinDateStr) => {
-  if (!admissionDateStr || !joinDateStr) return false;
+  const isValidAdmissionAndJoinDate = (admissionDateStr, joinDateStr) => {
+    if (!admissionDateStr || !joinDateStr) return false;
 
-  const today = new Date();
-  const admissionDate = new Date(admissionDateStr);
-  const joinDate = new Date(joinDateStr);
+    const today = new Date();
+    const admissionDate = new Date(admissionDateStr);
+    const joinDate = new Date(joinDateStr);
 
-  // Basic date checks
-  if (admissionDate > today) {
-    toast.error("Date of Admission cannot be in the future.");
-    return false;
-  }
+    // Basic date checks
+    if (admissionDate > today) {
+      toast.error("Date of Admission cannot be in the future.");
+      return false;
+    }
 
-  if (joinDate > today) {
-    toast.error("Course Joined Date cannot be in the future.");
-    return false;
-  }
+    if (joinDate > today) {
+      toast.error("Course Joined Date cannot be in the future.");
+      return false;
+    }
 
-  // Admission must be before join
-  if (admissionDate >= joinDate) {
-    toast.error("Date of Admission must be before Course Joined Date.");
-    return false;
-  }
+    // Admission must be before join
+    if (admissionDate >= joinDate) {
+      toast.error("Date of Admission must be before Course Joined Date.");
+      return false;
+    }
 
-  // Same year check
-  if (admissionDate.getFullYear() !== joinDate.getFullYear()) {
-    toast.error("Date of Admission and Course Joined Date must be in the same year.");
-    return false;
-  }
+    // Same year check
+    if (admissionDate.getFullYear() !== joinDate.getFullYear()) {
+      toast.error("Date of Admission and Course Joined Date must be in the same year.");
+      return false;
+    }
 
-  return true;
-};
+    return true;
+  };
 
 
 
@@ -222,7 +223,7 @@ const isValidAdmissionAndJoinDate = (admissionDateStr, joinDateStr) => {
     const requiredFields = [
       { field: formData.firstName, name: "First Name", validate: isValidAlphabets, errorMessage: "should contain only alphabets" },
       { field: formData.lastName, name: "Last Name", validate: isValidAlphabets, errorMessage: "should contain only alphabets" },
-      { field: formData.dateOfBirth, name: "Date of Birth", validate:isValidDOB, errorMessage:"Enter valid date" },
+      { field: formData.dateOfBirth, name: "Date of Birth", validate: isValidDOB, errorMessage: "Enter valid date" },
       { field: formData.gender, name: "Gender" },
       { field: formData.aadharNumber, name: "Aadhar Number", validate: isValidAadharNumber, errorMessage: "should contain 12 digits " },
       { field: formData.bloodGroup, name: "Blood Group" },
@@ -253,9 +254,9 @@ const isValidAdmissionAndJoinDate = (admissionDateStr, joinDateStr) => {
     }
 
     if (!formData.aadharCardFile) {
-        toast.error("Aadhar Card File is required");
-        return false;
-      }
+      toast.error("Aadhar Card File is required");
+      return false;
+    }
 
     const father = [
       { field: formData.fathersOccupation, name: "Father's Occupation", validate: isValidAlphabets, errorMessage: "should contain only alphabets or be null" },
@@ -455,7 +456,7 @@ const isValidAdmissionAndJoinDate = (admissionDateStr, joinDateStr) => {
 
     if (file) {
       if (file.size > MAX_FILE_SIZE) {
-        toast.error("File size exceeds 20 KB. Please upload a smaller file.");
+        toast.error("File size exceeds 100 KB. Please upload a smaller file.");
         return;
       }
 
@@ -505,12 +506,12 @@ const isValidAdmissionAndJoinDate = (admissionDateStr, joinDateStr) => {
           <div>
             <div className="personal-data personal-container">
               <div className="first_name">
-                <Allfields fieldtype="text" value="First Name" inputname="firstName" formData={formData} setFormData={setFormData} onlyUpperCase = {true} />
+                <Allfields fieldtype="text" value="First Name" inputname="firstName" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
               </div>
 
 
               <div className="last_name">
-                <Allfields fieldtype="text" value="Last Name" inputname="lastName" formData={formData} setFormData={setFormData} onlyUpperCase = {true} />
+                <Allfields fieldtype="text" value="Last Name" inputname="lastName" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
               </div>
 
               <div className="date_Of_Birth">
@@ -548,8 +549,63 @@ const isValidAdmissionAndJoinDate = (admissionDateStr, joinDateStr) => {
               </div>
 
               <div className="nationality">
-                <Allfields fieldtype="text" value="Nationality" inputname="nationality" formData={formData} setFormData={setFormData} onlyUpperCase={true}/>
+                <Allfields fieldtype="text" value="Nationality" inputname="nationality" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
               </div>
+
+              <div className="state">
+                <label htmlFor="State">State</label>
+                <select
+                  className="dropdown"
+                  name="state"
+                  value={formData.state || ''}
+                  onChange={handleOtherField}
+                >
+                  <option value="">Select</option>
+                  {/* Indian States */}
+                  <option value="ANDHRA PRADESH">Andhra Pradesh</option>
+                  <option value="ARUNACHAL PRADESH">Arunachal Pradesh</option>
+                  <option value="ASSAM">Assam</option>
+                  <option value="BIHAR">Bihar</option>
+                  <option value="CHHATTISGARH">Chhattisgarh</option>
+                  <option value="GOA">Goa</option>
+                  <option value="GUJARAT">Gujarat</option>
+                  <option value="HARYANA">Haryana</option>
+                  <option value="HIMACHAL PRADESH">Himachal Pradesh</option>
+                  <option value="JHARKHAND">Jharkhand</option>
+                  <option value="KARNATAKA">Karnataka</option>
+                  <option value="KERALA">Kerala</option>
+                  <option value="MADHYA PRADESH">Madhya Pradesh</option>
+                  <option value="MAHARASHTRA">Maharashtra</option>
+                  <option value="MANIPUR">Manipur</option>
+                  <option value="MEGHALAYA">Meghalaya</option>
+                  <option value="MIZORAM">Mizoram</option>
+                  <option value="NAGALAND">Nagaland</option>
+                  <option value="ODISHA">Odisha</option>
+                  <option value="PUNJAB">Punjab</option>
+                  <option value="RAJASTHAN">Rajasthan</option>
+                  <option value="SIKKIM">Sikkim</option>
+                  <option value="TAMIL NADU">Tamil Nadu</option>
+                  <option value="TELANGANA">Telangana</option>
+                  <option value="TRIPURA">Tripura</option>
+                  <option value="UTTAR PRADESH">Uttar Pradesh</option>
+                  <option value="UTTARAKHAND">Uttarakhand</option>
+                  <option value="WEST BENGAL">West Bengal</option>
+
+                  {/* Union Territories */}
+                  <option value="ANDAMAN AND NICOBAR ISLANDS">Andaman and Nicobar Islands</option>
+                  <option value="CHANDIGARH">Chandigarh</option>
+                  <option value="DADRA AND NAGAR HAVELI AND DAMAN AND DIU">
+                    Dadra and Nagar Haveli and Daman and Diu
+                  </option>
+                  <option value="DELHI">Delhi</option>
+                  <option value="JAMMU AND KASHMIR">Jammu and Kashmir</option>
+                  <option value="LADAKH">Ladakh</option>
+                  <option value="LAKSHADWEEP">Lakshadweep</option>
+                  <option value="PUDUCHERRY">Puducherry</option>
+                </select>
+              </div>
+
+
 
               <div className="religion">
                 <Allfields fieldtype="text" value="Religion" inputname="religion" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
@@ -659,13 +715,13 @@ const isValidAdmissionAndJoinDate = (admissionDateStr, joinDateStr) => {
               )}
 
               <div className='aadhar-file'>
-                <input type='file' id='aadharCardFile' name='aadharCardFile' style={ {display: 'none'}} onChange={handleFileChange('aadharCardFile')}/>
+                <input type='file' id='aadharCardFile' name='aadharCardFile' style={{ display: 'none' }} onChange={handleFileChange('aadharCardFile')} />
                 <p className='marksheet_label'>Aadhar CardFile</p>
-                 <label htmlFor="aadharCardFile" className="File-upload-button" style={{ justifyContent: 'center' }} >
-                    <img className='icon' src={Upload} alt='' />
-                    <p>Upload</p>
-                  </label>
-                  {fileNames['aadharCardFile'] && <p className="uploaded_file_name">{fileNames['aadharCardFile']} Uploaded</p>}
+                <label htmlFor="aadharCardFile" className="File-upload-button" style={{ justifyContent: 'center' }} >
+                  <img className='icon' src={Upload} alt='' />
+                  <p>Upload</p>
+                </label>
+                {fileNames['aadharCardFile'] && <p className="uploaded_file_name">{fileNames['aadharCardFile']} Uploaded</p>}
               </div>
 
 
