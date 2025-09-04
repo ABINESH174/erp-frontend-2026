@@ -20,7 +20,7 @@ function Fileupload({ input_name , onFileSelect, formData}) {
           <img className='icon' src={Upload} alt="Upload Icon" />
           <p> Upload Image</p>
         </label>
-        <p className="image_upload_insrtuction">File should be less than 20 KB</p>
+        <p className="image_upload_insrtuction">File should be less than 100 KB</p>
         <p className="image_upload_insrtuction">File may be png, jpeg, or jpg</p>
       </div>
     </div>

@@ -17,8 +17,8 @@ const PersonalForm = () => {
   const [displaySection, setDisplaySection] = useState("personal");
   const [showModal, setShowModal] = useState(false);
   const [fileNames, setFileNames] = useState({});
- 
-   const [formData, setFormData] = useState({
+
+  const [formData, setFormData] = useState({
     firstName: null,
     lastName: null,
     dateOfBirth: null,
@@ -26,6 +26,7 @@ const PersonalForm = () => {
     aadharNumber: null,
     bloodGroup: null,
     nationality: null,
+    state: null,
     religion: null,
     community: null,
     caste: null,
@@ -80,27 +81,31 @@ const PersonalForm = () => {
     firstGraduateFile: null
   });
   const semesterOptions =
-  formData.programme === "ME"
-    ? ["I", "II", "III", "IV"]
-    : ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
-  const handleOtherFields = (e) => {
-  const { name, value } = e.target;
+    formData.programme === "ME"
+      ? ["I", "II", "III", "IV"]
+      : ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
 
-  if (name === "programme") {
-    setFormData((prev) => ({
-      ...prev,
-      programme: value,
-      semester: "" 
-    }));
-  } else {
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  }
-};
+  const disciplineOptions = formData.programme === "ME" ?
+    ["Microwave and Optical Communication", "Power Electronics and Drives", "Computer Aided Design", "Manufacturing Engineering", "Environmental Engineering", "Structural Engineering"]
+    : ["Civil Engineering", "Mechanical Engineering", "Electrical and Electronics Engineering", "Computer Science and Engineering", "Electronics and communication Engineering", "Information Technology"];
+
+  const handleOtherFields = (e) => {
+    const { name, value } = e.target;
+    if (name === "programme") {
+      setFormData((prev) => ({
+        ...prev,
+        programme: value,
+        semester: ""
+      }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
+  };
   const MAX_FILE_SIZE = 100 * 1024; //100KB
   const handleSectionClick = (section) => {
     setDisplaySection(section);
   };
-  
+
 
   useEffect(() => {
     const storedFormData = localStorage.getItem('formData');
@@ -108,7 +113,7 @@ const PersonalForm = () => {
       setFormData(JSON.parse(storedFormData));
     }
 
-    const filesToLoad = ['profilePhoto', 'passbook', 'communityCertificate', 'aadharCardFile','sslcFile', 'hsc1YearFile', 'hsc2YearFile', 'diploma', 'specialCategoryFile', 'firstGraduateFile'];
+    const filesToLoad = ['profilePhoto', 'passbook', 'communityCertificate', 'aadharCardFile', 'sslcFile', 'hsc1YearFile', 'hsc2YearFile', 'diploma', 'specialCategoryFile', 'firstGraduateFile'];
     filesToLoad.forEach(fileKey => {
       const fileName = localStorage.getItem(`${fileKey}FileName`);
       const fileBase64 = localStorage.getItem(fileKey);
@@ -123,44 +128,79 @@ const PersonalForm = () => {
   const isValidNumbers = (value) => /^[0-9]+$/.test(value);
   const isValidEmisNumber = (value) => /^[0-9]{11}$/.test(value);
   const isValidDecimal = (value) => /^(10(\.0+)?|[0-9](\.\d+)?)$/.test(value);
-  const isValidMark = (value) => /^(100|[3-9][0-9]{1})(\.[0-9]{1,4})?$/.test(value);
+  const isValidMark = (value) => /^(100(\.0{1,4})?|([3-9][5-9]|[4-9][0-9])(\.[0-9]{1,4})?)$/.test(value);
+  const isValidDiplomaMark = (value) => /^(100(\.0{1,4})?|([4-9][0-9])(\.[0-9]{1,4})?)$/.test(value);
   const isValidAadharNumber = (value) => /^\d{12}$/.test(value);
   const isValidMobileNumber = (value) => /^[6-9]\d{9}$/.test(value);
   const isValidEmail = (value) => /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(value);
   const isValidAlphaNumeric = (value) => /^[A-Za-z0-9]+$/.test(value);
   console.log(formData.dateOfBirth);
 
- const isValidDOB = (dob) => {
-  // match YYYY-MM-DD
-  const regex = /^\d{4}-\d{2}-\d{2}$/;
-  if (!regex.test(dob)) return false;
+  const isValidDOB = (dob) => {
+    // match YYYY-MM-DD
+    const regex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!regex.test(dob)) return false;
 
-  const [year, month, day] = dob.split("-").map(Number);
-  const date = new Date(year, month - 1, day);
+    const [year, month, day] = dob.split("-").map(Number);
+    const date = new Date(year, month - 1, day);
 
-  // Check if valid date
-  if (
-    date.getFullYear() !== year ||
-    date.getMonth() !== month - 1 ||
-    date.getDate() !== day
-  ) {
-    return false;
-  }
+    // Check if valid date
+    if (
+      date.getFullYear() !== year ||
+      date.getMonth() !== month - 1 ||
+      date.getDate() !== day
+    ) {
+      return false;
+    }
 
-  const today = new Date();
-  if (date > today) return false; // future DOB not allowed
+    const today = new Date();
+    if (date > today) return false; // future DOB not allowed
 
-  // Calculate age
-  let age = today.getFullYear() - year;
-  if (
-    today.getMonth() < month - 1 ||
-    (today.getMonth() === month - 1 && today.getDate() < day)
-  ) {
-    age--;
-  }
+    // Calculate age
+    let age = today.getFullYear() - year;
+    if (
+      today.getMonth() < month - 1 ||
+      (today.getMonth() === month - 1 && today.getDate() < day)
+    ) {
+      age--;
+    }
 
-  return age >= 16; // must be at least 16 years old
-};
+    return age >= 16; // must be at least 16 years old
+  };
+
+  const isValidAdmissionAndJoinDate = (admissionDateStr, joinDateStr) => {
+    if (!admissionDateStr || !joinDateStr) return false;
+
+    const today = new Date();
+    const admissionDate = new Date(admissionDateStr);
+    const joinDate = new Date(joinDateStr);
+
+    // Basic date checks
+    if (admissionDate > today) {
+      toast.error("Date of Admission cannot be in the future.");
+      return false;
+    }
+
+    if (joinDate > today) {
+      toast.error("Course Joined Date cannot be in the future.");
+      return false;
+    }
+
+    // Admission must be before join
+    if (admissionDate >= joinDate) {
+      toast.error("Date of Admission must be before Course Joined Date.");
+      return false;
+    }
+
+    // Same year check
+    if (admissionDate.getFullYear() !== joinDate.getFullYear()) {
+      toast.error("Date of Admission and Course Joined Date must be in the same year.");
+      return false;
+    }
+
+    return true;
+  };
+
 
 
 
@@ -183,7 +223,7 @@ const PersonalForm = () => {
     const requiredFields = [
       { field: formData.firstName, name: "First Name", validate: isValidAlphabets, errorMessage: "should contain only alphabets" },
       { field: formData.lastName, name: "Last Name", validate: isValidAlphabets, errorMessage: "should contain only alphabets" },
-      { field: formData.dateOfBirth, name: "Date of Birth", validate:isValidDOB, errorMessage:"Enter valid date" },
+      { field: formData.dateOfBirth, name: "Date of Birth", validate: isValidDOB, errorMessage: "Enter valid date" },
       { field: formData.gender, name: "Gender" },
       { field: formData.aadharNumber, name: "Aadhar Number", validate: isValidAadharNumber, errorMessage: "should contain 12 digits " },
       { field: formData.bloodGroup, name: "Blood Group" },
@@ -211,6 +251,11 @@ const PersonalForm = () => {
         toast.error("Community Certificate File is required");
         return false;
       }
+    }
+
+    if (!formData.aadharCardFile) {
+      toast.error("Aadhar Card File is required");
+      return false;
     }
 
     const father = [
@@ -289,7 +334,7 @@ const PersonalForm = () => {
   const validateEducationalInfo = () => {
     const requiredFields = [
       { field: formData.flowofstudy, name: "Flow of Study" },
-      { field: formData.sslc, name: "SSLC", validate: isValidMark, errorMessage: "mark must be at least 35. Please enter a valid score" },
+      { field: formData.sslc, name: "SSLC", validate: isValidMark, errorMessage: "Please enter a valid mark" },
       { field: formData.sslcFile, name: "SSLC File" },
       { field: formData.emisNumber, name: "EMIS Number", validate: isValidEmisNumber, errorMessage: "should contain only 11 digits" },
       { field: formData.firstGraduate, name: "First Graduate" },
@@ -303,9 +348,9 @@ const PersonalForm = () => {
 
     if (formData.flowofstudy.includes("hsc")) {
       const hscFields = [
-        { field: formData.hsc1Year, name: "HSC First Year", validate: isValidMark, errorMessage: "mark must be at least 35. Please enter a valid score" },
+        { field: formData.hsc1Year, name: "HSC First Year", validate: isValidMark, errorMessage: "Please enter a valid mark" },
         { field: formData.hsc1YearFile, name: "HSC First Year File" },
-        { field: formData.hsc2Year, name: "HSC Second Year", validate: isValidMark, errorMessage: "mark must be at least 35. Please enter a valid score" },
+        { field: formData.hsc2Year, name: "HSC Second Year", validate: isValidMark, errorMessage: "Please enter a valid mark" },
         { field: formData.hsc2YearFile, name: "HSC Second Year File" }
       ];
 
@@ -316,7 +361,7 @@ const PersonalForm = () => {
 
     if (formData.flowofstudy.includes("diploma")) {
       const diplomaFields = [
-        { field: formData.diploma, name: "Diploma", validate: isValidMark, errorMessage: "mark must be at least 35. Please enter a valid score" },
+        { field: formData.diploma, name: "Diploma", validate: isValidDiplomaMark, errorMessage: "Please enter a valid mark" },
         { field: formData.diplomaFile, name: "Diploma File" }
       ];
 
@@ -371,6 +416,10 @@ const PersonalForm = () => {
       return false;
     }
 
+    if (!isValidAdmissionAndJoinDate(formData.dateOfAdmission, formData.courseJoinedDate)) {
+      return false;
+    }
+
     return true;
   };
 
@@ -407,7 +456,7 @@ const PersonalForm = () => {
 
     if (file) {
       if (file.size > MAX_FILE_SIZE) {
-        toast.error("File size exceeds 20 KB. Please upload a smaller file.");
+        toast.error("File size exceeds 100 KB. Please upload a smaller file.");
         return;
       }
 
@@ -457,12 +506,12 @@ const PersonalForm = () => {
           <div>
             <div className="personal-data personal-container">
               <div className="first_name">
-                <Allfields fieldtype="text" value="First Name" inputname="firstName" formData={formData} setFormData={setFormData} />
+                <Allfields fieldtype="text" value="First Name" inputname="firstName" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
               </div>
 
 
               <div className="last_name">
-                <Allfields fieldtype="text" value="Last Name" inputname="lastName" formData={formData} setFormData={setFormData} />
+                <Allfields fieldtype="text" value="Last Name" inputname="lastName" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
               </div>
 
               <div className="date_Of_Birth">
@@ -500,11 +549,66 @@ const PersonalForm = () => {
               </div>
 
               <div className="nationality">
-                <Allfields fieldtype="text" value="Nationality" inputname="nationality" formData={formData} setFormData={setFormData} />
+                <Allfields fieldtype="text" value="Nationality" inputname="nationality" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
               </div>
 
+              <div className="state">
+                <label htmlFor="State">State</label>
+                <select
+                  className="dropdown"
+                  name="state"
+                  value={formData.state || ''}
+                  onChange={handleOtherField}
+                >
+                  <option value="">Select</option>
+                  {/* Indian States */}
+                  <option value="ANDHRA PRADESH">Andhra Pradesh</option>
+                  <option value="ARUNACHAL PRADESH">Arunachal Pradesh</option>
+                  <option value="ASSAM">Assam</option>
+                  <option value="BIHAR">Bihar</option>
+                  <option value="CHHATTISGARH">Chhattisgarh</option>
+                  <option value="GOA">Goa</option>
+                  <option value="GUJARAT">Gujarat</option>
+                  <option value="HARYANA">Haryana</option>
+                  <option value="HIMACHAL PRADESH">Himachal Pradesh</option>
+                  <option value="JHARKHAND">Jharkhand</option>
+                  <option value="KARNATAKA">Karnataka</option>
+                  <option value="KERALA">Kerala</option>
+                  <option value="MADHYA PRADESH">Madhya Pradesh</option>
+                  <option value="MAHARASHTRA">Maharashtra</option>
+                  <option value="MANIPUR">Manipur</option>
+                  <option value="MEGHALAYA">Meghalaya</option>
+                  <option value="MIZORAM">Mizoram</option>
+                  <option value="NAGALAND">Nagaland</option>
+                  <option value="ODISHA">Odisha</option>
+                  <option value="PUNJAB">Punjab</option>
+                  <option value="RAJASTHAN">Rajasthan</option>
+                  <option value="SIKKIM">Sikkim</option>
+                  <option value="TAMIL NADU">Tamil Nadu</option>
+                  <option value="TELANGANA">Telangana</option>
+                  <option value="TRIPURA">Tripura</option>
+                  <option value="UTTAR PRADESH">Uttar Pradesh</option>
+                  <option value="UTTARAKHAND">Uttarakhand</option>
+                  <option value="WEST BENGAL">West Bengal</option>
+
+                  {/* Union Territories */}
+                  <option value="ANDAMAN AND NICOBAR ISLANDS">Andaman and Nicobar Islands</option>
+                  <option value="CHANDIGARH">Chandigarh</option>
+                  <option value="DADRA AND NAGAR HAVELI AND DAMAN AND DIU">
+                    Dadra and Nagar Haveli and Daman and Diu
+                  </option>
+                  <option value="DELHI">Delhi</option>
+                  <option value="JAMMU AND KASHMIR">Jammu and Kashmir</option>
+                  <option value="LADAKH">Ladakh</option>
+                  <option value="LAKSHADWEEP">Lakshadweep</option>
+                  <option value="PUDUCHERRY">Puducherry</option>
+                </select>
+              </div>
+
+
+
               <div className="religion">
-                <Allfields fieldtype="text" value="Religion" inputname="religion" formData={formData} setFormData={setFormData} />
+                <Allfields fieldtype="text" value="Religion" inputname="religion" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
               </div>
 
               <div className="community" >
@@ -522,7 +626,7 @@ const PersonalForm = () => {
               </div>
               {formData.community !== "OC" && (
                 <div className="caste">
-                  <Allfields fieldtype="text" value="Caste" inputname="caste" formData={formData} setFormData={setFormData} />
+                  <Allfields fieldtype="text" value="Caste" inputname="caste" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
                 </div>
               )}
 
@@ -547,13 +651,13 @@ const PersonalForm = () => {
               </div>
 
               <div className="fathers_name">
-                <Allfields fieldtype="text" value="Father's Name" inputname="fathersName" formData={formData} setFormData={setFormData} />
+                <Allfields fieldtype="text" value="Father's Name" inputname="fathersName" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
               </div>
 
               {(formData.parentsStatus === "Both are alive" || formData.parentsStatus === "Father alive") && (
                 <>
                   <div className="fathers_occupation">
-                    <Allfields fieldtype="text" value="Father's Occupation" inputname="fathersOccupation" formData={formData} setFormData={setFormData} />
+                    <Allfields fieldtype="text" value="Father's Occupation" inputname="fathersOccupation" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
                   </div>
 
                   <div className="fathers_mobile_number">
@@ -563,13 +667,13 @@ const PersonalForm = () => {
               )}
 
               <div className="mothers_name">
-                <Allfields fieldtype="text" value="Mother's Name" inputname="mothersName" formData={formData} setFormData={setFormData} />
+                <Allfields fieldtype="text" value="Mother's Name" inputname="mothersName" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
               </div>
 
               {(formData.parentsStatus === "Both are alive" || formData.parentsStatus === "Mother alive") && (
                 <>
                   <div className="mothers_occupation">
-                    <Allfields fieldtype="text" value="Mother's Occupation" inputname="mothersOccupation" formData={formData} setFormData={setFormData} />
+                    <Allfields fieldtype="text" value="Mother's Occupation" inputname="mothersOccupation" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
                   </div>
 
                   <div className="mothers_mobile_number">
@@ -581,11 +685,11 @@ const PersonalForm = () => {
               {formData.parentsStatus === "Both are not alive" && (
                 <>
                   <div className="guardians_name">
-                    <Allfields fieldtype="text" value="Guardian Name" inputname="guardiansName" formData={formData} setFormData={setFormData} />
+                    <Allfields fieldtype="text" value="Guardian Name" inputname="guardiansName" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
                   </div>
 
                   <div className="guardians_occupation">
-                    <Allfields fieldtype="text" value="Guardian Occupation" inputname="guardiansOccupation" formData={formData} setFormData={setFormData} />
+                    <Allfields fieldtype="text" value="Guardian Occupation" inputname="guardiansOccupation" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
                   </div>
 
                   <div className="guardians_mobile_number">
@@ -611,13 +715,13 @@ const PersonalForm = () => {
               )}
 
               <div className='aadhar-file'>
-                <input type='file' id='aadharCardFile' name='aadharCardFile' style={ {display: 'none'}} onChange={handleFileChange('aadharCardFile')}/>
+                <input type='file' id='aadharCardFile' name='aadharCardFile' style={{ display: 'none' }} onChange={handleFileChange('aadharCardFile')} />
                 <p className='marksheet_label'>Aadhar CardFile</p>
-                 <label htmlFor="aadharCardFile" className="File-upload-button" style={{ justifyContent: 'center' }} >
-                    <img className='icon' src={Upload} alt='' />
-                    <p>Upload</p>
-                  </label>
-                  {fileNames['aadharCardFile'] && <p className="uploaded_file_name">{fileNames['aadharCardFile']} Uploaded</p>}
+                <label htmlFor="aadharCardFile" className="File-upload-button" style={{ justifyContent: 'center' }} >
+                  <img className='icon' src={Upload} alt='' />
+                  <p>Upload</p>
+                </label>
+                {fileNames['aadharCardFile'] && <p className="uploaded_file_name">{fileNames['aadharCardFile']} Uploaded</p>}
               </div>
 
 
@@ -683,11 +787,11 @@ const PersonalForm = () => {
               )}
 
               <div className="bank_name">
-                <Allfields fieldtype="text" value="Bank Name" inputname="bankName" formData={formData} setFormData={setFormData} />
+                <Allfields fieldtype="text" value="Bank Name" inputname="bankName" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
               </div>
 
               <div className="branch_Name">
-                <Allfields fieldtype="text" value="Branch Name" inputname="branchName" formData={formData} setFormData={setFormData} />
+                <Allfields fieldtype="text" value="Branch Name" inputname="branchName" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
               </div>
 
               <div className="account_Number">
@@ -752,7 +856,7 @@ const PersonalForm = () => {
 
 
               <div className="is_GovtSchool">
-                <label htmlFor="Is Studied Government School">Is Studied Government School (6th - 12th)</label>
+                <label htmlFor="Is Studied Government School">Has Studied Government School (6th - 12th)</label>
                 <div className="radio" >
                   <div className="radio-spacing"><input type="radio" name="isGovtSchool" value="Yes" onChange={handleOtherField} checked={formData.isGovtSchool === 'Yes'} /> Yes</div>
                   <div className="radio-spacing"><input type="radio" name="isGovtSchool" value="No" onChange={handleOtherField} checked={formData.isGovtSchool === 'No'} /> No</div>
@@ -914,19 +1018,31 @@ const PersonalForm = () => {
 
               <div className="discipline">
                 <label htmlFor="discipline">Discipline</label>
-                <select className="dropdown" name="discipline" value={formData.discipline || ''} onChange={handleOtherField}>
-                  <option value=''>Select</option>
+                <select
+                  className="dropdown"
+                  name="discipline"
+                  value={formData.discipline || ""}
+                  onChange={handleOtherFields}
+                >
+                  <option value="">Select</option>
+                  {disciplineOptions.map((displ) => (
+                    <option key={displ} value={displ}>
+                      {displ}
+                    </option>
+                  ))}
+                  {/* <option value=''>Select</option>
                   <option value="Civil Engineering">Civil Engineering</option>
                   <option value="Mechanical Engineering" >Mechanical Engineering</option>
                   <option value="Electrical and Electronics Engineering" >Electrical and Electronics Engineering</option>
                   <option value="Electronics and communication Engineering" >Electronics and communication Engineering</option>
                   <option value="Computer Science and Engineering" >Computer Science and Engineering</option>
+                  <option value="Information Technology" >Information Technology</option>
                   <option value="Structural Engineering" >Structural Engineering</option>
                   <option value="Environmental Engineering" >Environmental Engineering</option>
                   <option value="Manufacturing Engineering" >Manufacturing Engineering</option>
                   <option value="Computer Aided Design" >Computer Aided Design</option>
                   <option value="Power Electronics and Drives" >Power Electronics and Drives</option>
-                  <option value="Microwave and Optical Communication" >Microwave and Optical Communication</option>
+                  <option value="Microwave and Optical Communication" >Microwave and Optical Communication</option> */}
                 </select>
               </div>
 
@@ -941,7 +1057,7 @@ const PersonalForm = () => {
                     value={formData.classSection || ' '}
                     onChange={handleOtherField}
                   >
-                    <option value="">Select section</option>
+                    <option value="">Select</option>
                     <option value="A">A</option>
                     <option value="B">B</option>
                   </select>

@@ -74,6 +74,27 @@ td button:disabled {
   background-color: #ddd;
   color: black;
 }
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 60px; /* Ensures enough space */
+}
+
+.back-button {
+  position: absolute;
+  left: 30px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1; /* ensures it's on top */
+}
+
+.title {
+  margin: 0;
+  font-size: 1.5rem;
+  text-align: center;
+}
 
 /* Tablet Devices (width ≤ 1024px) */
 @media (max-width: 1024px) {
