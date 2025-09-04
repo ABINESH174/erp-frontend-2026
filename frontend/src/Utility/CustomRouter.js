@@ -45,8 +45,7 @@ const CustomRouter = () => {
       <Route path="/principal-registration" element={<PrincipalRegistration />} />
       <Route path="/ob-registration" element={<ObRegistration />} />      
       <Route path="/hod-previous-bonafide" element={<PreviousBonafides />}/>
-      <Route path="/admin-dashboard" element={<AdminDashboard />}/>
-
+      
 
       {/*STUDENT ROUTES */}
       {/* <Route
@@ -157,10 +156,23 @@ const CustomRouter = () => {
         }
       />
 
+      {/*ADMIN ROUTE */}
+      <Route
+        path="/admin-dashboard"
+        element={
+          <ProtectedRoute allowedRoles={["ROLE_ADMIN"]}>
+            <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+
       {/*Optional Pages*/}
       <Route path="/facultyinfohod-page" element={<FacultyInfohod />} />
       <Route path="/studentinfohod-page" element={<StudentInfohod />} />
     </Routes>
+    
+    
+
   );
 };
 
