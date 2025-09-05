@@ -1,183 +1,99 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import Header from '../../Components/Header/Header';
-import './Principaldashboard.css';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { FaHome, FaUser } from 'react-icons/fa';
-import Allbuttons from '../../Components/Allbuttons/Allbuttons';
-import BonafideViewModal from '../../Components/BonafideViewModal/BonafideViewModal';
-import Logoutbtn from '../../Components/logoutbutton/Logoutbtn.jsx';
-import View from '../../Assets/eyewhite.svg';
-import { confirmAlert } from 'react-confirm-alert';
-import 'react-confirm-alert/src/react-confirm-alert.css';  
-import AxiosInstance from '../../Api/AxiosInstance.js';
+import { useEffect, useState, useRef, useCallback } from "react";
+import { BsPerson } from "react-icons/bs";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import Header from "../../Components/Header/Header.jsx";
+import AxiosInstance from "../../Api/AxiosInstance.js";
+import { AuthService } from "../../Api/AuthService.js";
+import { toast } from "react-toastify";
+import "./Principaldashboard.css";
+import Allbuttons from '../../Components/Allbuttons/Allbuttons.jsx';
+import Logout from '../../Assets/logout.svg';
 
-const Principaldashboard = () => {
-  const [bonafides, setBonafides] = useState([]);
+function PrincipalDashboard() {
+  const [principal, setPrincipal] = useState(null);
+  const [openProfile, setOpenProfile] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [selectedBonafide, setSelectedBonafide] = useState(null);
+
+  const location = useLocation();
+  const navigate = useNavigate();
+  const principalEmail = location.state?.userId || localStorage.getItem("principalEmail");
+
+  const profileRef = useRef(null);
 
   useEffect(() => {
-    fetchBonafides();
-  }, []);
+    if (location.state?.userId) {
+      localStorage.setItem("principalEmail", location.state.userId);
+    }
+  }, [location.state?.userId]);
 
-  const fetchBonafides = async () => {
+  const fetchPrincipal = useCallback(async () => {
+    if (!principalEmail) return;
     try {
-      setLoading(true);
-      const response = await AxiosInstance.get('/principal/officeBearersApprovedBonafides');
-      const data = response.data?.data || [];
-      setBonafides(data);
-      if (data.length === 0) {
-        setError('No bonafide requests found.');
-      } else {
-        setError(null);
-      }
-    } catch (err) {
-      console.error('Error fetching bonafides:', err);
-      setError('No Bonafide Requests');
-    } finally { 
+      const response = await AxiosInstance.get(`/principal/getPrincipalByEmail/${principalEmail}`);
+      setPrincipal(response.data?.data || response.data);
+    } catch (error) {
+      console.error("Error fetching principal:", error);
+    } finally {
       setLoading(false);
     }
-  };
+  }, [principalEmail]);
 
-  const handleUpdateStatus = async (bonafideId, registerNo, newStatus) => {
-    try {
-      await AxiosInstance.put('/bonafide/updateBonafideWithBonafideStatus', null, {
-        params: {
-          bonafideId,
-          registerNo,
-          status: newStatus
-        }
-      });
+  useEffect(() => {
+    fetchPrincipal();
+  }, [fetchPrincipal]);
 
-      toast.success(
-        newStatus === 'PRINCIPAL_APPROVED'
-          ? 'Bonafide approved successfully.'
-          : 'Bonafide rejected successfully.'
-      );
-
-      fetchBonafides();
-    } catch (err) {
-      console.error('Failed to update status:', err);
-      toast.error('Failed to update bonafide status.');
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (profileRef.current && !profileRef.current.contains(e.target)) {
+        setOpenProfile(false);
+      }
     }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleLogoutClick = () => {
+    AuthService.logout();
+    toast.success("Logged out successfully");
+    setTimeout(() => {
+      navigate("/login-page");
+    }, 1000);
   };
 
-  const confirmApprove = (item) => {
-    confirmAlert({
-      title: 'Confirm Approval',
-      message: `Are you sure you want to approve bonafide for ${item.registerNo}?`,
-      buttons: [
-        {
-          label: 'Yes',
-          onClick: () => handleUpdateStatus(item.bonafideId, item.registerNo, 'PRINCIPAL_APPROVED'),
-        },
-        {
-          label: 'Cancel'
-        }
-      ]
-    });
-  };
-
-  const confirmReject = (item) => {
-    confirmAlert({
-      title: 'Confirm Rejection',
-      message: `Are you sure you want to reject bonafide for ${item.registerNo}?`,
-      buttons: [
-        {
-          label: 'Yes',
-          onClick: () => handleUpdateStatus(item.bonafideId, item.registerNo, 'REJECTED'),
-        },
-        {
-          label: 'Cancel'
-        }
-      ]
-    });
-  };
-
-  const handleViewClick = (item) => {
-    setSelectedBonafide(item);
-    setShowModal(true);
-  };
+  if (loading) return <p>Loading principal data...</p>;
+  if (!principal) return <p>No principal data available.</p>;
 
   return (
     <div>
       <Header />
-      <ToastContainer />
 
-      <div className="principal-dashboard-container">
-        <div className="sidebar">
-          <h2> Principal Panel</h2>
-          <ul>
-            <li><FaUser /> Profile</li>
-            <li>Bonafides</li>
-            <li>Approved</li>
-            <li>Rejected</li>
-          </ul>
-          <div className="fa-logout">
-            <Logoutbtn />
+      {/* Profile Icon Section */}
+      <div className="principal-profile-container" ref={profileRef}>
+        <div className="principal-profile-bar" onClick={() => setOpenProfile(!openProfile)}>
+          <BsPerson size={30} className="profile-icon" />
+        </div>
+
+        {openProfile && (
+          <div className="principal-profile-dropdown">
+            <div className="principal-profile">
+              <p className="field_background">
+                {principal.firstName} {principal.lastName}
+              </p>
+              <p className="field_background">{principal.email}</p>
+              <p className="field_background">{principal.mobileNumber}</p>
+              <Allbuttons value="LogOut" image={Logout} target={() => handleLogoutClick()} />
+            </div>
           </div>
-        </div>
-
-        <div className="content">
-          <h1>Bonafide Requests</h1>
-
-          {loading ? (
-            <p>Loading...</p>
-          ) : error ? (
-            <p className="error-message">{error}</p>
-          ) : (
-            <table className="request-table">
-              <thead>
-                <tr>
-                  <th>S.No</th>
-                  <th>Register No</th>
-                  <th>Name</th>
-                  <th>Department</th>
-                  <th>Semester</th>
-                  <th>Date of Apply</th>
-                  <th>Action</th>
-                  <th>View Details</th>
-                </tr>
-              </thead>
-              <tbody>
-                {bonafides.map((item, index) => (
-                  <tr key={item.bonafideId}>
-                    <td>{index + 1}</td>
-                    <td>{item.registerNo}</td>
-                    <td>{item.name}</td>
-                    <td>{item.discipline}</td>
-                    <td>{item.semester}</td>
-                    <td>{item.date}</td>
-                    <td>
-                      <button className="approve-btn" onClick={() => confirmApprove(item)}>
-                        Approve
-                      </button>
-                      <button className="reject-btn" onClick={() => confirmReject(item)}>
-                        Reject
-                      </button>
-                    </td>
-                    <td>
-                      <Allbuttons value="View" image={View} target={() => handleViewClick(item)} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
+        )}
       </div>
 
-      <BonafideViewModal
-        showModal={showModal}
-        setShowModal={setShowModal}
-        selectedBonafide={selectedBonafide}
-      />
+      {/* Main Outlet Content */}
+      <div className="principal-dashboard-content">
+        <Outlet context={{ role: "PRINCIPAL" }} />
+      </div>
     </div>
   );
-};
+}
 
-export default Principaldashboard;
+export default PrincipalDashboard;
