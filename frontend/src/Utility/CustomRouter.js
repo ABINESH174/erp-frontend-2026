@@ -15,7 +15,6 @@ import {
 import BonafideStudent from "../Components/Bonafidestudent/BonafideStudent";
 import BonafideStatus from "../Pages/Bonafidestatuspage/Bonafidestatus";
 import HodBonafideApproval from "../Pages/HodBonafideApproval/HodBonafideApproval";
-import OfficeBearerDashboard from "../Pages/officeBearerDashboard/OfficeBearerDashboard";
 import BatchesPage from "../Pages/batches/BatchesPage";
 import BatchCards from "../Components/batchcomponent/BatchCards";
 import GetOtp from "../Pages/ForgotPassword/GetOtp";
@@ -29,6 +28,7 @@ import AdminDashboard from "../Pages/AdminDashboard/AdminDashboard";
 import HodRegistration from "../Pages/HodRegistration/HodRegistration";
 import ObRegistration from "../Pages/ObRegisterPage/ObRegistration";
 import PrincipalRegistration from "../Pages/PrincipalRegistration/PrincipalRegistration";
+import OfficeBearerDashboard from "../Pages/officeBearerDashboard/OfficeBearerDashboard";
 
 const CustomRouter = () => {
   return (
@@ -120,7 +120,6 @@ const CustomRouter = () => {
           </ProtectedRoute>
         }
       >
-        {/* <Route index element={<BatchCards />} /> */}
         <Route index element={<BatchCards />} />
         <Route path="batch-one" element={<BatchesPage />} />
         <Route path="bonafide-page" element={<HodBonafideApproval />}/>
@@ -139,6 +138,15 @@ const CustomRouter = () => {
       {/*OFFICE BEARER ROUTE */}
       <Route
         path="/office-bearer-dashboard"
+        element={
+          <ProtectedRoute allowedRoles={["ROLE_OB"]}>
+            <OfficeBearerDashboard/>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/office-bearer-dashboard/ob-bonafide"
         element={
           <ProtectedRoute allowedRoles={["ROLE_OB"]}>
             <OfficeBearer/>
