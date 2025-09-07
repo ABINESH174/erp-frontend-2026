@@ -12,6 +12,8 @@ import { useLocation } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import { isValidAlphabets, isValidNumbers, isValidEmisNumber, isValidDecimal, isValidMark, isValidDiplomaMark, isValidAadharNumber, isValidMobileNumber, isValidEmail, isValidAlphaNumeric} from '../../Utility/Validator.js';
+
 const PersonalForm = () => {
   const location = useLocation();
   const [displaySection, setDisplaySection] = useState("personal");
@@ -124,16 +126,16 @@ const PersonalForm = () => {
     });
   }, []);
 
-  const isValidAlphabets = (value) => /^[A-Za-z\s]+$/.test(value);
-  const isValidNumbers = (value) => /^[0-9]+$/.test(value);
-  const isValidEmisNumber = (value) => /^[0-9]{11}$/.test(value);
-  const isValidDecimal = (value) => /^(10(\.0+)?|[0-9](\.\d+)?)$/.test(value);
-  const isValidMark = (value) => /^(100(\.0{1,4})?|([3-9][5-9]|[4-9][0-9])(\.[0-9]{1,4})?)$/.test(value);
-  const isValidDiplomaMark = (value) => /^(100(\.0{1,4})?|([4-9][0-9])(\.[0-9]{1,4})?)$/.test(value);
-  const isValidAadharNumber = (value) => /^\d{12}$/.test(value);
-  const isValidMobileNumber = (value) => /^[6-9]\d{9}$/.test(value);
-  const isValidEmail = (value) => /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(value);
-  const isValidAlphaNumeric = (value) => /^[A-Za-z0-9]+$/.test(value);
+  // const isValidAlphabets = (value) => /^[A-Za-z\s]+$/.test(value);
+  // const isValidNumbers = (value) => /^[0-9]+$/.test(value);
+  // const isValidEmisNumber = (value) => /^[0-9]{11}$/.test(value);
+  // const isValidDecimal = (value) => /^(10(\.0+)?|[0-9](\.\d+)?)$/.test(value);
+  // const isValidMark = (value) => /^(100(\.0{1,4})?|([3-9][5-9]|[4-9][0-9])(\.[0-9]{1,4})?)$/.test(value);
+  // const isValidDiplomaMark = (value) => /^(100(\.0{1,4})?|([4-9][0-9])(\.[0-9]{1,4})?)$/.test(value);
+  // const isValidAadharNumber = (value) => /^\d{12}$/.test(value);
+  // const isValidMobileNumber = (value) => /^[6-9]\d{9}$/.test(value);
+  // const isValidEmail = (value) => /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(value);
+  // const isValidAlphaNumeric = (value) => /^[A-Za-z0-9]+$/.test(value);
   console.log(formData.dateOfBirth);
 
   const isValidDOB = (dob) => {

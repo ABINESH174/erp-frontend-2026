@@ -3,9 +3,10 @@ import './Facultyregistration.css';
 import { Allfields, Allbuttons } from '../../Components';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Formtitle from '../../Components/Formtitle/Formtitle'; 
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import Nextwhite from '../../Assets/Nextwhite.svg';
 import AxiosInstance from '../../Api/AxiosInstance';
+import { isValidAadharNumber, isValidAlphabets, isValidEmail, isValidMobileNumber } from '../../Utility/Validator';
 
 function Facultyregistration() {
   const navigate = useNavigate();
@@ -29,9 +30,47 @@ function Facultyregistration() {
   "Department of Tamil",
 ];
 
+const validateFacultyRegistration = () => {
+    const requiredFields = [
+      { field: formData.firstName, name: "First Name", validate: isValidAlphabets, errorMessage: "should contain only alphabets" },
+      { field: formData.lastName, name: "Last Name", validate: isValidAlphabets, errorMessage: "should contain only alphabets" },
+      { field: formData.email, name: "Email ID", validate: isValidEmail, errorMessage: "should be a valid email address" },
+      { field: formData.aadharNumber, name: "Aadhar Number", validate: isValidAadharNumber, errorMessage: "should contain 12 digits " },
+      { field: formData.mobileNumber, name: "Mobile Number", validate: isValidMobileNumber, errorMessage: "should contain only 10 digits and should be valid" },
+      { field: formData.discipline, name: "Discipline"}
+    ];
+    if (!validateFields(requiredFields)) {
+      return false;
+    }
+    return true;
+  };
+
+  const validateFields = (fields) => {
+    for (let { field, name, validate, errorMessage } of fields) {
+      if (!field) {
+        toast.error(`${name} is required.`);
+        return false;
+      }
+
+      if (validate && !validate(field)) {
+        toast.error(`${name} ${errorMessage}.`);
+        return false;
+      }
+
+      if (!formData.discipline) {
+        toast.error("Discipline is required.");
+        return false;
+      }
+
+    }
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    if (!validateFacultyRegistration()) {
+      return;
+    }
     try {
       const response = await AxiosInstance.post('/faculty/post', formData, {
         headers: { 'Content-Type': 'application/json' }
@@ -72,10 +111,10 @@ function Facultyregistration() {
       <Formtitle/>
         <div className="faculty_registration_container">
           <div className='faculty_firstname'>
-          <Allfields fieldtype="text" value="First Name" inputname="firstName" req_flag={true} formData={formData} setFormData={setFormData} />
+          <Allfields fieldtype="text" value="First Name" inputname="firstName" req_flag={true} formData={formData} setFormData={setFormData} onlyUpperCase={true} />
           </div>
           <div className='faculty_lastname'>
-          <Allfields fieldtype="text" value="Last Name" inputname="lastName" formData={formData} setFormData={setFormData} />
+          <Allfields fieldtype="text" value="Last Name" inputname="lastName" formData={formData} setFormData={setFormData} onlyUpperCase={true} />
           </div>
           <div className='faculty_mobilenumber'>
           <label htmlFor="email">Email</label>
@@ -139,6 +178,7 @@ function Facultyregistration() {
         </div>
 
       </form>
+      <ToastContainer/>
     </div>
   );
 }

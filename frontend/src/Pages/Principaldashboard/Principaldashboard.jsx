@@ -22,116 +22,163 @@ function Principaldashboard() {
   const [active, setActive] = useState(null);
 
   useEffect(() => {
-    const idFromState = location.state?.userId;
-    const storedId = localStorage.getItem('principalEmail');
+    fetchBonafides();
+  }, []);
 
-    if (idFromState) {
-      setUserId(idFromState);
-      localStorage.setItem('principalEmail', idFromState);
-    } else if (storedId) {
-      setUserId(storedId);
-    } else {
-      setError('No user ID found.');
-    }
-  }, [location.state]);
-
-  useEffect(() => {
-    if (!userId) return;
-
-    const fetchPrincipal = async () => {
-      try {
-        const res = await AxiosInstance.get(`/principal/getPrincipalByEmail/${encodeURIComponent(userId)}`);
-        setPrincipalData(res.data.data);
-        console.log("Principal:", res.data.data);
-      } catch (err) {
-        console.error('Error fetching Principal data:', err);
-        setError('Failed to fetch Principal data.');
+  const fetchBonafides = async () => {
+    try {
+      setLoading(true);
+      const response = await AxiosInstance.get('/principal/officeBearersApprovedBonafides');
+      const data = response.data?.data || [];
+      setBonafides(data);
+      if (data.length === 0) {
+        setError('No bonafide requests found.');
+      } else {
+        setError(null);
       }
-    };
-
-    fetchPrincipal();
-  }, [userId]);
-
-  useEffect(() => {
-    if (location.pathname === '/principal-dashboard') {
-      navigate('/principal-dashboard/Department', { state: { userId } });
+    } catch (err) {
+      console.error('Error fetching bonafides:', err);
+      setError('No Bonafide Requests');
+    } finally { 
+      setLoading(false);
     }
-  }, [location.pathname, navigate, userId]);
+  };
 
-  const handleLogoutClick = () => {
-    localStorage.removeItem('principalEmail');
-    navigate('/login-page');
+  const handleUpdateStatus = async (bonafideId, registerNo, newStatus) => {
+    try {
+      await AxiosInstance.put('/bonafide/updateBonafideWithBonafideStatus', null, {
+        params: {
+          bonafideId,
+          registerNo,
+          status: newStatus
+        }
+      });
+
+      toast.success(
+        newStatus === 'PRINCIPAL_APPROVED'
+          ? 'Bonafide approved successfully.'
+          : 'Bonafide rejected successfully.'
+      );
+
+      fetchBonafides();
+    } catch (err) {
+      console.error('Failed to update status:', err);
+      toast.error('Failed to update bonafide status.');
+    }
+  };
+
+  const confirmApprove = (item) => {
+    confirmAlert({
+      title: 'Confirm Approval',
+      message: `Are you sure you want to approve bonafide for ${item.registerNo}?`,
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => handleUpdateStatus(item.bonafideId, item.registerNo, 'PRINCIPAL_APPROVED'),
+        },
+        {
+          label: 'Cancel'
+        }
+      ]
+    });
+  };
+
+  const confirmReject = (item) => {
+    confirmAlert({
+      title: 'Confirm Rejection',
+      message: `Are you sure you want to reject bonafide for ${item.registerNo}?`,
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => handleUpdateStatus(item.bonafideId, item.registerNo, 'REJECTED'),
+        },
+        {
+          label: 'Cancel'
+        }
+      ]
+    });
+  };
+
+  const handleViewClick = (item) => {
+    setSelectedBonafide(item);
+    setShowModal(true);
   };
 
   return (
     <div>
       <Header />
-      <div className="principal-outer-container">
-        <div className="principal-whole">
-          <div className="principal-nav-sidebar">
-            <h2>Principal Dashboard</h2>
+      <ToastContainer />
 
-            <div className="principal-navigation-bar">
-              <p
-                className={`principal-nav-item ${active === "PrincipalProfile" ? "active" : ""}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setActive("PrincipalProfile");
-                  setOpen(!open);
-                }}
-              >
-                <BsPerson /> Profile
-              </p>
-
-              <p
-                className={`principal-nav-item ${active === "Students" ? "active" : ""}`}
-                onClick={() => {
-                  setActive("Students");
-                  navigate('/principal-dashboard/Department', { state: { userId } });
-                }}
-              >
-                <BsPeople /> Students
-              </p>
-            </div>
-
-            <Logoutbtn className='principal-logout' />
-          </div>
-
-          <div className="principal-inner-content">
-            <div className="headbar">
-              <div className="welcome-bar">
-                <p>Welcome!</p>
-                <p className="acadamic-year">Academic Year: {UtilityService.getAcademicYear()}</p>
-              </div>
-
-              <div className="principal_profile_icon" onClick={(e) => {
-                e.stopPropagation();
-                setOpen(!open);
-              }}>
-                <img id="profile_icon" src={Profileicon} alt="Profile Icon" />
-                {open && (
-                  <div className="principal_profile_details" onClick={(e) => e.stopPropagation()}>
-                    <div className="principal-profile">
-                      <p className="field_background">{PrincipalData?.firstName} {PrincipalData?.lastName}</p>
-                      <p className="field_background">{PrincipalData?.email}</p>
-                      <p className="field_background">{PrincipalData?.mobileNumber}</p>
-                      <Allbuttons value="Logout" image={Logout} target={handleLogoutClick} />
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="principal-content-space">
-              <Outlet context={{ PrincipalData }} />
-            </div>
+      <div className="principal-dashboard-container">
+        <div className="sidebar">
+          <h2> Principal Panel</h2>
+          <ul>
+            <li><FaUser /> Profile</li>
+            <li>Bonafides</li>
+            <li>Approved</li>
+            <li>Rejected</li>
+          </ul>
+          <div className="fa-logout">
+            <Logoutbtn />
           </div>
         </div>
+
+        <div className="content">
+          <h1>Bonafide Requests</h1>
+
+          {loading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p className="error-message">{error}</p>
+          ) : (
+            <table className="request-table">
+              <thead>
+                <tr>
+                  <th>S.No</th>
+                  <th>Register No</th>
+                  <th>Name</th>
+                  <th>Department</th>
+                  <th>Semester</th>
+                  <th>Date of Apply</th>
+                  <th>Action</th>
+                  <th>View Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                {bonafides.map((item, index) => (
+                  <tr key={item.bonafideId}>
+                    <td>{index + 1}</td>
+                    <td>{item.registerNo}</td>
+                    <td>{item.name}</td>
+                    <td>{item.discipline}</td>
+                    <td>{item.semester}</td>
+                    <td>{item.date}</td>
+                    <td>
+                      <button className="approve-btn" onClick={() => confirmApprove(item)}>
+                        Approve
+                      </button>
+                      <button className="reject-btn" onClick={() => confirmReject(item)}>
+                        Reject
+                      </button>
+                    </td>
+                    <td>
+                      <Allbuttons value="View" image={View} target={() => handleViewClick(item)} />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
       </div>
-      <ToastContainer />
+
+      <BonafideViewModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        selectedBonafide={selectedBonafide}
+      />
     </div>
   );
 }
 
-export default Principaldashboard;
+export default PrincipalDashboard;
