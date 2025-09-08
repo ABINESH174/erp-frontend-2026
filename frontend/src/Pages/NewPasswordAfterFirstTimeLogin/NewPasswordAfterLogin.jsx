@@ -29,7 +29,7 @@ const NewPasswordAfterLogin = () => {
     // Validate strong password
     if (!validateStrongPassword(newPassword)) {
       toast.error(
-        'Password must be at least 8 characters and include uppercase, lowercase, number, and special character.'
+        'Password must be at least 8 characters and include uppercase, lowercase and digits.'
       );
       return;
     }

@@ -10,7 +10,7 @@ const ResetPassword = () => {
   const [otp, setOtp] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes = 600 seconds
+  const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
   const navigate = useNavigate();
   const location = useLocation();
   const email = location.state.email;
@@ -36,13 +36,13 @@ const ResetPassword = () => {
     setShowPassword(!showPassword);
   };
 
-   const validateStrongPassword = (password) => {
-    // At least 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special character
+  const validateStrongPassword = (password) => {
+    // At least 8 chars, 1 uppercase, 1 lowercase, 1 number
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
     return regex.test(password);
   };
 
-   const generateNewPassword = async (e) => {
+  const generateNewPassword = async (e) => {
     e.preventDefault();
 
     if (timeLeft <= 0) {
@@ -50,48 +50,44 @@ const ResetPassword = () => {
       return;
     }
 
-    try {
-
-    // Validate strong password
     if (!validateStrongPassword(newPassword)) {
       toast.error(
-        'Password must be at least 8 characters and include uppercase, lowercase, number, and special character.'
+        'Password must be at least 8 characters and include uppercase, lowercase, and a number.'
       );
       return;
     }
 
- try {
+    try {
       await AxiosInstance.put('/authentication/set-password', { email, otp, newPassword });
       toast.success("Password Changed Successfully");
+
       setTimeout(() => {
-        navigate('/login-page')
+        navigate('/login-page');
       }, 1500);
     } catch (error) {
       if (error.response) {
-      const status = error.response.status;
-      if (status === 412) {
-        toast.error("OTP has expired. Please request a new one.");
-      setTimeout(() => {
-        navigate('/login-page')
-      }, 1500);
-      } else if (status === 406) {
-        toast.error("Invalid OTP. Please check and try again.");
+        const status = error.response.status;
+        if (status === 412) {
+          toast.error("OTP has expired. Please request a new one.");
+          setTimeout(() => {
+            navigate('/login-page');
+          }, 1500);
+        } else if (status === 406) {
+          toast.error("Invalid OTP. Please check and try again.");
+        } else {
+          toast.error("Failed to send OTP. Please try again.");
+          setTimeout(() => {
+            navigate('/login-page');
+          }, 1500);
+        }
       } else {
-        toast.error("Failed to send OTP. Please try again.");
-      setTimeout(() => {
-        navigate('/login-page')
-      }, 1500);
+        toast.error("Network error or server is unreachable.");
+        setTimeout(() => {
+          navigate('/login-page');
+        }, 1500);
       }
-    } else {
-      toast.error("Network error or server is unreachable.");
-      setTimeout(() => {
-        navigate('/login-page')
-      }, 1500);
     }
-    }
-  }
-
- 
+  };
 
   return (
     <div className="forgot-container">
