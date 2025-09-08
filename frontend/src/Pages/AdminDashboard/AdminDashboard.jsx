@@ -32,7 +32,7 @@ const AdminDashboard = () => {
       setUserList(response.data.data || []);
     } catch (err) {
       console.error(err);
-      toast.error("Failed to load users");
+      toast.error("No users found");
     } finally {
       setLoading(false);
     }

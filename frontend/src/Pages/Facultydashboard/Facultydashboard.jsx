@@ -12,8 +12,6 @@ import previousBonafide from "../../Assets/previousbonafide.png";
 import pendingbonafide from "../../Assets/pendingbonafide.png";
 import "./Facultydashboard.css";
 import "react-toastify/dist/ReactToastify.css";
-import { Allbuttons } from "../../Components/index.js";
-import Logout from '../../Assets/logout.svg';
 
 function Facultydashboard() {
   const [faculty, setFaculty] = useState(null);
@@ -29,7 +27,6 @@ function Facultydashboard() {
   const location = useLocation();
   const navigate = useNavigate();
   const facultyEmail = location.state?.userId || localStorage.getItem("facultyEmail");
-
   const profileRef = useRef(null);
   const bonafideRef = useRef(null);
 

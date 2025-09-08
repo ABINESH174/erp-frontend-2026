@@ -1,10 +1,14 @@
 import React from 'react';
 import './Allfields.css';
 
-const Allfields = ({ fieldtype, value, inputname, formData, setFormData }) => {
+const Allfields = ({ fieldtype, value, inputname, formData, setFormData , onlyUpperCase = false }) => {
   const handleChange = (e) => {
+    
     const { name, value } = e.target;
-    const updatedValue = value.replace(/^\s+/, '');
+    let updatedValue = value.replace(/^\s+/, '');
+    if(onlyUpperCase){
+      updatedValue = updatedValue.toUpperCase();
+    }
     const updatedFormData = { ...formData, [name]: updatedValue };
     setFormData(updatedFormData);
     localStorage.setItem('formData', JSON.stringify(updatedFormData));

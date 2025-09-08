@@ -1,0 +1,13 @@
+.year-selection-container {
+  padding: 40px;
+  text-align: center;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 280px); 
+  gap: 30px;
+  justify-content: center; 
+  margin-top: 70px;
+}
+

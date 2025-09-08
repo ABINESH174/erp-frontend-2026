@@ -6,6 +6,7 @@ import axios from 'axios';
 import AxiosInstance from '../../Api/AxiosInstance';
 import Header from '../../Components/Header/Header';
 import './Bonafidestatus.css';
+import BackButton from '../../Components/backbutton/BackButton';
 
 const BonafideStatus = () => {
   const location = useLocation();
@@ -94,6 +95,7 @@ const BonafideStatus = () => {
       formData.append("purpose", selectedBonafide.purpose);
       formData.append("date", selectedBonafide.date);
       formData.append("bonafideStatus", statusToSend);
+      formData.append("bonafideType", selectedBonafide.bonafideType);
 
       Object.entries(filesToUpload).forEach(([key, file]) => {
         formData.append(key, file);
@@ -120,8 +122,13 @@ const BonafideStatus = () => {
 
   return (
     <div className="bonafide-status">
+      
       <Header />
-      <h1>Bonafide Status</h1>
+      <div className="header-container">
+        <BackButton />
+        <h1>Bonafide Status</h1>
+      </div>
+
       <ToastContainer />
 
       {error && <div className="error-message">{error}</div>}

@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
@@ -7,23 +6,24 @@ import AxiosInstance from '../../Api/AxiosInstance';
 
 const GetOtp = () => {
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const getOtp = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await AxiosInstance.get('/authentication/get-otp', {
         params: { userEmail: email }
       });
       toast.success("OTP Sent to Email Successfully");
-      setTimeout(()=>{
-        navigate('/reset-password',{state: {email}});
-      },1500)
+      setTimeout(() => {
+        navigate('/reset-password', { state: { email } });
+      }, 1500);
     } catch {
-      toast.error("Failed to Send OTP");
-      setTimeout(()=>{
-        navigate('/login-page')
-      },1500)
+      setTimeout(() => {
+        navigate('/login-page');
+      }, 1500);
     }
   };
 
@@ -33,8 +33,17 @@ const GetOtp = () => {
         <form onSubmit={getOtp}>
           <h2>Forgot Password</h2>
           <label>Email:</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-          <button type="submit">Get OTP</button>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            disabled={loading} // disable input while loading
+          />
+          <button type="submit" disabled={loading}>
+  {loading ? <span className="spinner"></span> : "Get OTP"}
+</button>
+
         </form>
       </div>
       <ToastContainer />

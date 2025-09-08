@@ -1,74 +1,116 @@
-/* break */
+/* Inherits from your original style */
+/* @import url('../../Assets/YourGlobalStyles.css'); */
 
+/* Container for whole page */
 .ob-whole {
-    background-color: rgb(255, 255, 255);
-    width: 99vw;
-    height: 100vh;
+  background-color: #d6ecf3;
+  width: 99vw;
+  min-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+  margin: 40px auto;
+}
+
+/* Welcome bar */
+.ob-welcome-bar {
+  /* background-color: #005f99; */
+  color: #ffffff;
+  padding: 20px;
+  text-align: center;
+  border-radius: 10px;
+  margin-bottom: 30px;
+}
+
+/* Floating cards */
+.ob-purpose-cards {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.ob-purpose-card {
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 24px;
+  width: 300px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.batchbox {
+    width:75vw;
+    height: 33vh;
+    border-radius: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-left:2.5rem;
+    padding: 10px;
+    animation:fromBottom 0.8s ease-in-out;
+}
+@keyframes fromBottom {
+    from {
+        transform: translateY(80px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(10px);
+        opacity: 1;
+    }
+}
+
+.batch-card {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    padding-left: 40px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
     display: flex;
     flex-direction: row;
-    padding: 10px;
-}
-.ob-navbar-content{
-    width: 15%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+    gap: 30px;
     align-items: center;
-    gap: 20px;
-    border-radius: 15px;
-    background-color:steelblue;
-    padding: 20px;
+    width: 100%;
+    height: 80%;
+    margin-top: 25px;
 }
-
-.ob-navbar-content p{
-    cursor: pointer;
-    width: 80%;
-    padding: 8px ;
-    text-align: center;
+.batch-carry-btn{
+     background: linear-gradient(235deg, #1f35b3, #2c6fd2 ,#11c5f2);
     color: white;
-    font-size: 19px;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
 }
-.ob-navbar-content p:hover{
-    background-color: rgba(255, 255, 255, 0.174);
-    color:white;
-    border-radius: 20px;
-}
-.ob-top-dashboard{
-    width: 85%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
+.batch-carry-btn:hover {
+    background: linear-gradient(235deg,#11c5f2, #4857ab, #427ed8);
+    color: white;
 }
 
-.ob-welcome-bar{
-    width: 85%;
-    height: 10%;
-    background-color: rgb(249, 249, 249);
-    color: #2f251d;
-    border-bottom-left-radius: 10px;
-    padding: 20px 30px ;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.batch-card h3{
+    color: #16488f;
 }
-.ob-welcome-bar p{
-    font-size: 19px;
-    text-transform: capitalize;
-   }
-.acadamic-year{
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 10px;
+ .batchbox .batch-card:hover{
+    transform: scale(0.98);
 }
-.acadamic-year p{
-    font-weight: 600;
-    color:rgb(0, 166, 255)  ;
+.group-icon {
+    border-radius: 50px;
+    width: 35px;
+    height: 35px;
+    fill: black;
 }
-
-
-.ob-bonafide-count{
-
+.batch-card:hover{
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    transform: translateY(-5px);
+    background-color: rgb(251, 251, 251);
 }
-

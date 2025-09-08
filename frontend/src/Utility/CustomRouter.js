@@ -15,9 +15,11 @@ import {
 import BonafideStudent from "../Components/Bonafidestudent/BonafideStudent";
 import BonafideStatus from "../Pages/Bonafidestatuspage/Bonafidestatus";
 import HodBonafideApproval from "../Pages/HodBonafideApproval/HodBonafideApproval";
-import OfficeBearerDashboard from "../Pages/officeBearerDashboard/OfficeBearerDashboard";
 import BatchesPage from "../Pages/batches/BatchesPage";
 import BatchCards from "../Components/batchcomponent/BatchCards";
+import PrincipalStudentsPage from "../Pages/PrincipalStudentsPage/PrincipalStudentsPage";
+import YearSelectionPage from "../Pages/YearSelectionPage/YearSelectionPage";
+import StudentsListPage from "../Pages/StudentsListPage/StudentsListPage";
 import GetOtp from "../Pages/ForgotPassword/GetOtp";
 import ResetPassword from "../Pages/ForgotPassword/ResetPassword";
 import ProtectedRoute from "./ProtectedRoute";
@@ -29,6 +31,7 @@ import AdminDashboard from "../Pages/AdminDashboard/AdminDashboard";
 import HodRegistration from "../Pages/HodRegistration/HodRegistration";
 import ObRegistration from "../Pages/ObRegisterPage/ObRegistration";
 import PrincipalRegistration from "../Pages/PrincipalRegistration/PrincipalRegistration";
+import OfficeBearerDashboard from "../Pages/officeBearerDashboard/OfficeBearerDashboard";
 
 const CustomRouter = () => {
   return (
@@ -45,8 +48,7 @@ const CustomRouter = () => {
       <Route path="/principal-registration" element={<PrincipalRegistration />} />
       <Route path="/ob-registration" element={<ObRegistration />} />      
       <Route path="/hod-previous-bonafide" element={<PreviousBonafides />}/>
-      <Route path="/admin-dashboard" element={<AdminDashboard />}/>
-
+      
 
       {/*STUDENT ROUTES */}
       {/* <Route
@@ -121,7 +123,6 @@ const CustomRouter = () => {
           </ProtectedRoute>
         }
       >
-        {/* <Route index element={<BatchCards />} /> */}
         <Route index element={<BatchCards />} />
         <Route path="batch-one" element={<BatchesPage />} />
         <Route path="bonafide-page" element={<HodBonafideApproval />}/>
@@ -142,17 +143,44 @@ const CustomRouter = () => {
         path="/office-bearer-dashboard"
         element={
           <ProtectedRoute allowedRoles={["ROLE_OB"]}>
-            <OfficeBearer/>
+            <OfficeBearerDashboard/>
           </ProtectedRoute>
         }
       />
 
-      {/*PRINCIPAL ROUTE */}
+      <Route
+        path="/office-bearer-dashboard/ob-bonafide"
+        element={
+          <ProtectedRoute allowedRoles={["ROLE_OB"]}>
+            <OfficeBearer/>
+          </ProtectedRoute>
+        }
+      />
+      {/* PRINCIPAL ROUTE */}
       <Route
         path="/principal-dashboard"
         element={
           <ProtectedRoute allowedRoles={["ROLE_PRINCIPAL"]}>
             <Principaldashboard />
+          </ProtectedRoute>
+        }
+      >
+        {/* Department selection page */}
+        <Route path="Department" element={<PrincipalStudentsPage />} />
+
+        {/* Year selection page */}
+        <Route path="Department/:department" element={<YearSelectionPage />} />
+
+        {/* Student list page */}
+        <Route path="Department/:department/year/:year/students" element={<StudentsListPage />} />
+      </Route>
+
+      {/*ADMIN ROUTE */}
+      <Route
+        path="/admin-dashboard"
+        element={
+          <ProtectedRoute allowedRoles={["ROLE_ADMIN"]}>
+            <AdminDashboard />
           </ProtectedRoute>
         }
       />
@@ -161,6 +189,9 @@ const CustomRouter = () => {
       <Route path="/facultyinfohod-page" element={<FacultyInfohod />} />
       <Route path="/studentinfohod-page" element={<StudentInfohod />} />
     </Routes>
+    
+    
+
   );
 };
 
