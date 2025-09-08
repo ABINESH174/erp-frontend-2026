@@ -10,7 +10,7 @@ const Header=() =>{
    const isLanding=location.pathname ==='/';
   return (
     <div>
-      <header className={isLanding?"headers":'non-fixed'}>
+      <header>
         <div><img class="clglogo" src={clglogo} alt="collegelogo"/></div>
         <div class="clg-name">
         <h2 id="college_name">Alagappa Chettiar Government College of Engineering and Technology,Karaikudi-630003</h2>

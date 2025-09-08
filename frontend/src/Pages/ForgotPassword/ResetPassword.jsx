@@ -20,9 +20,24 @@ const ResetPassword = () => {
     setShowPassword(!showPassword);
   };
 
-  const generateNewPassword = async (e) => {
+   const validateStrongPassword = (password) => {
+    // At least 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special character
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    return regex.test(password);
+  };
+
+   const generateNewPassword = async (e) => {
     e.preventDefault();
-    try {
+
+    // Validate strong password
+    if (!validateStrongPassword(newPassword)) {
+      toast.error(
+        'Password must be at least 8 characters and include uppercase, lowercase, number, and special character.'
+      );
+      return;
+    }
+
+ try {
       await AxiosInstance.put('/authentication/set-password', { email, otp, newPassword });
       toast.success("Password Changed Successfully");
     } catch (error) {
@@ -32,7 +47,9 @@ const ResetPassword = () => {
         navigate('/login-page')
       }, 1500)
     }
-  };
+  }
+
+ 
 
   return (
     <div className="forgot-container">

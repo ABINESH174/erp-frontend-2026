@@ -1,4 +1,4 @@
-.headers{
+.header{
 display: flex;
 align-items: center;
 justify-content: space-around;
@@ -23,7 +23,7 @@ height: 120px;
 
 }
 
-.headers:hover{
+.header:hover{
     cursor: default;
 }
 /* #header-line{

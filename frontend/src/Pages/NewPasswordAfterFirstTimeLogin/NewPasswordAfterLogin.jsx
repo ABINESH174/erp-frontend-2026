@@ -19,11 +19,11 @@ const NewPasswordAfterLogin = () => {
 
   const validateStrongPassword = (password) => {
     // At least 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special character
-    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
     return regex.test(password);
   };
 
-  async function generateNewPassword(e) {
+  const generateNewPassword = async (e) => {
     e.preventDefault();
 
     // Validate strong password
