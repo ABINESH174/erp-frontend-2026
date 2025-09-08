@@ -381,20 +381,21 @@ const PersonalForm = () => {
     if (name === "semester") {
       updatedFormData.semester = value;
 
-      if (value === "I" || value === "II") {
-        updatedFormData.department = "Science and humanities";
-      } else if (formData.discipline) {
+      // if (value === "I" || value === "II") {
+      //   updatedFormData.department = "Science and humanities";
+      // } else if (formData.discipline) {
         updatedFormData.department = formData.discipline;
-      }
+      // }
 
-    } else if (name === "discipline") {
+    } 
+    else if (name === "discipline") {
       updatedFormData.discipline = value;
 
-      if (formData.semester === "I" || formData.semester === "II") {
-        updatedFormData.department = "Science and humanities";
-      } else {
+      // if (formData.semester === "I" || formData.semester === "II") {
+      //   updatedFormData.department = "Science and humanities";
+      // } else {
         updatedFormData.department = value;
-      }
+      // }
     }
     setFormData(updatedFormData);
     localStorage.setItem('formData', JSON.stringify(updatedFormData));
@@ -895,6 +896,7 @@ const PersonalForm = () => {
                   <option value="ME">ME</option>
                 </select>
               </div>
+
               <div className="semester">
                 <label htmlFor="semester">Semester</label>
                 <select

@@ -163,7 +163,8 @@
     overflow: hidden;
 }
 .hod-content-space{
-    background: linear-gradient(235deg, #0374ca,#5f9fff, #4bb4e8, #71b3d4,#9adaff);
+    /* background: linear-gradient(235deg, #0374ca,#5f9fff, #4bb4e8, #71b3d4,#9adaff); */
+    background:linear-gradient(133deg ,rgb(197, 197, 197),rgba(207, 207, 207, 0.625),rgba(226, 225, 225, 0.811),rgba(205, 205, 205, 0.83));
     width: 100%;
     height: 90%;
     border-top-left-radius: 35px;

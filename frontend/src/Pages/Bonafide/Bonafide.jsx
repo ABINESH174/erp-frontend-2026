@@ -229,21 +229,7 @@ function Bonafide() {
             <Header />
             <div className="bonafide-content">
                     <h1>Bonafide Certificate Request</h1>
-                {/* <div className="bonafide-eligibility-container">
-
-                   <div className="eligibility-box">
-  <ul className="scrolling-list">
-    {[...instructions, ...instructions].map((instruction, index) => (
-      <li key={index}>{instruction}</li>
-    ))}
-  </ul>
-</div>
-                   <div className="events-list-box">
-                    <h1 className='events-head'>Ongoing Events</h1>
-                   </div>
-                </div> */}
-
-                <div className="bonafide-display-container">
+                    <div className="bonafide-display-container">
                     <BackButton />
                     <h2>Select The Bonafide</h2>
                     <div className="bonafide-cards-container">

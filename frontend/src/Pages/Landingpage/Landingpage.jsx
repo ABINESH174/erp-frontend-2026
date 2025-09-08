@@ -1,73 +1,60 @@
 import './Landingpage.css';
 import loginicon from '../../Assets/login1.svg';
 import Footer from '../../Components/Footer/Footer';
-import Allbuttons from '../../Components/Allbuttons/Allbuttons';
 import Header from '../../Components/Header/Header';
 import { useNavigate } from 'react-router-dom';
-import { FaFacebookF, FaLinkedinIn, FaEnvelope, FaPhoneAlt } from 'react-icons/fa';
+import collegeimage from '../../Assets/landingclgimg.jpg'
 
 function Landingpage() {
   const navigate = useNavigate();
   const goToLoginpage = () => navigate('/login-page');
+  const features =[
+    {title:'Student Registration',icon:'registration.png',image:'scholarshiphands.jpg',description:'Comprehensive student profiles with academic records, attendance,performance insights.'},
+    {title:'Bonafide Request',icon:'online-profile.png',image:'scholarshiphands.jpg',description:'Bonafide request modulde helps students to apply for bonafide fully automated by submitting required documents.'},
+  ]
 
   return (
     <div>
-      <Header />
-
-      <div className="landingpage-container">
-        <div className="nav">
-          <Allbuttons className="login-button" target={goToLoginpage} value="Login" image={loginicon} />
+      <Header className='header-landingpage'/>
+     
+      <div className="landing-section">
+         <nav className='landing-navbar'>
+        <ul>
+          <li><a href="#home">Home</a></li>
+          <li><a href='#features'>features</a></li>
+        </ul>
+      </nav>
+        <section id='home'>
+        <div className="clgimg-container">
+          <img  src={collegeimage} alt="" />
+            <h1 className="text-overimg">Smart ERP for Smarter Campus Management</h1>
+            <p className="subhead-overimg">Streamline acadamics,administration, and comminication with one unified ERP software solution.</p>
+            <div className="loginbnt"><button  onClick={goToLoginpage} image={loginicon}>Login</button></div> 
+            <div className="card-overimg">
+            </div>
         </div>
-      </div>
-
-      <div className="hero-section">
-        <h1>Empowering Education with Smart ERP</h1>
-        <p className="subheading">
-          Revolutionizing campus administration and academics with a centralized, efficient ERP system.
-        </p>
-      </div>
-
-      <div className="sections-grid">
-        <div className="section-block">
-          <h2>About Us</h2>
-          <p>
-            Our ERP solution simplifies and automates daily institutional operations, enabling educators to teach and students to learn efficiently.
-          </p>
-        </div>
-
-        <div className="section-block">
-          <h2>Features to be Added</h2>
-          <ul>
-            <li>Student Attendance Management</li>
-            <li>Fee Payment Tracking</li>
-            <li>Assignment Uploads & Tracking</li>
-            <li>Leave Applications</li>
-            <li>Library Management</li>
-            <li>Timetable Scheduling</li>
-          </ul>
-        </div>
-
-        <div className="section-block">
-          <h2>Contact Us</h2>
-          <p><FaEnvelope /> erp@gmail.com</p>
-          <p><FaPhoneAlt /> +91 8989787844 | 044 6874988</p>
-          <div className="social-icons-in-block">
-            <a href="https://facebook.com" target="_blank" rel="noreferrer"><FaFacebookF /> Facebook</a> 
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer"><FaLinkedinIn /> LinkedIn</a>
+        </section>
+        <section id='features'>
+        <div className="landing-features">
+          <h1>Powerful Features of ERP Software System</h1>
+          <p className='features-description-para'>Our ERP system simplifies and automates daily institutional operations, enabling faculties, staffs, and students to make their work automate and easier.</p>
+          <div className="erp-features-grid">
+            {features.map(feature=>(
+              <div className="outer-feature-box">
+              <div className="erp-features-box" key={feature.id}>
+                <img src={require(`../../Assets/${feature.icon}`)} alt="" className="icon-img" />
+                <h3>{feature.title}</h3>
+                <p className="module-description">{feature.description}</p>
+                <img className='module-img' src={require(`../../Assets/${feature.image}`)}alt="image of registration module" />
+              </div>
+              </div>  
+            ))}
           </div>
         </div>
+        </section>
 
-        <div className="section-block">
-          <h2>Our Vision</h2>
-          <p>
-            To digitally transform educational institutions through innovation, making administrative tasks seamless and transparent.
-          </p>
-        </div>
+        
       </div>
-
-      <div className="empty"></div>
-
-      <Footer />
     </div>
   );
 }
