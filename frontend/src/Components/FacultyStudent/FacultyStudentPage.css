@@ -253,16 +253,16 @@
   }
   .student-number {
     color: #0a223b;
-    font-weight: bold;
-    font-size: 22px;
+    font-weight: 600;
+    font-size: 20px;
     margin-left: 8px;
-    background-color: rgb(161, 211, 255);
-    width: 25px;
+    background-color: rgba(161, 211, 255, 0.84);
+    width: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 5px;
-    padding: 3px;
+    padding: 5px;
   }
     
 

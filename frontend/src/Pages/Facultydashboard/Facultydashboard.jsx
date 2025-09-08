@@ -118,7 +118,7 @@ function Facultydashboard() {
                   <div className="faculty-profile">
                     <p className="field_background">{faculty.firstName} {faculty.lastName}</p>
                     <p className="field_background">{faculty.discipline}</p>
-                    <p className="field_background">{faculty.email}</p>
+                    <p className="field_background" style={{'text-transform': 'lowercase'}} >{faculty.email}</p>
                     <p className="field_background">{faculty.mobileNumber}</p>
                   </div>
                 </div>
