@@ -17,6 +17,9 @@ import BonafideStatus from "../Pages/Bonafidestatuspage/Bonafidestatus";
 import HodBonafideApproval from "../Pages/HodBonafideApproval/HodBonafideApproval";
 import BatchesPage from "../Pages/batches/BatchesPage";
 import BatchCards from "../Components/batchcomponent/BatchCards";
+import PrincipalStudentsPage from "../Pages/PrincipalStudentsPage/PrincipalStudentsPage";
+import YearSelectionPage from "../Pages/YearSelectionPage/YearSelectionPage";
+import StudentsListPage from "../Pages/StudentsListPage/StudentsListPage";
 import GetOtp from "../Pages/ForgotPassword/GetOtp";
 import ResetPassword from "../Pages/ForgotPassword/ResetPassword";
 import ProtectedRoute from "./ProtectedRoute";
@@ -153,8 +156,7 @@ const CustomRouter = () => {
           </ProtectedRoute>
         }
       />
-
-      {/*PRINCIPAL ROUTE */}
+      {/* PRINCIPAL ROUTE */}
       <Route
         path="/principal-dashboard"
         element={
@@ -162,7 +164,16 @@ const CustomRouter = () => {
             <Principaldashboard />
           </ProtectedRoute>
         }
-      />
+      >
+        {/* Department selection page */}
+        <Route path="Department" element={<PrincipalStudentsPage />} />
+
+        {/* Year selection page */}
+        <Route path="Department/:department" element={<YearSelectionPage />} />
+
+        {/* Student list page */}
+        <Route path="Department/:department/year/:year/students" element={<StudentsListPage />} />
+      </Route>
 
       {/*ADMIN ROUTE */}
       <Route

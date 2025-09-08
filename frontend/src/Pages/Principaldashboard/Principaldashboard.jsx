@@ -1,99 +1,138 @@
-import { useEffect, useState, useRef, useCallback } from "react";
-import { BsPerson } from "react-icons/bs";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import Header from "../../Components/Header/Header.jsx";
-import AxiosInstance from "../../Api/AxiosInstance.js";
-import { AuthService } from "../../Api/AuthService.js";
-import { toast } from "react-toastify";
-import "./Principaldashboard.css";
-import Allbuttons from '../../Components/Allbuttons/Allbuttons.jsx';
+import React, { useEffect, useState } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import './Principaldashboard.css';
+import Header from '../../Components/Header/Header.jsx';
+import Profileicon from '../../Assets/profile.svg';
+import Logoutbtn from '../../Components/logoutbutton/Logoutbtn.jsx';
+import { BsPeople, BsPerson } from "react-icons/bs";
 import Logout from '../../Assets/logout.svg';
+import Allbuttons from '../../Components/Allbuttons/Allbuttons.jsx';
+import AxiosInstance from '../../Api/AxiosInstance.js';
+import { UtilityService } from '../../Utility/UtilityService.js';
+import { ToastContainer } from 'react-toastify';
 
-function PrincipalDashboard() {
-  const [principal, setPrincipal] = useState(null);
-  const [openProfile, setOpenProfile] = useState(false);
-  const [loading, setLoading] = useState(true);
-
+function Principaldashboard() {
   const location = useLocation();
   const navigate = useNavigate();
-  const principalEmail = location.state?.userId || localStorage.getItem("principalEmail");
 
-  const profileRef = useRef(null);
+  const [userId, setUserId] = useState('');
+  const [open, setOpen] = useState(false);
+  const [PrincipalData, setPrincipalData] = useState(null);
+  const [error, setError] = useState(null);
+  const [active, setActive] = useState(null);
 
   useEffect(() => {
-    if (location.state?.userId) {
-      localStorage.setItem("principalEmail", location.state.userId);
+    const idFromState = location.state?.userId;
+    const storedId = localStorage.getItem('principalEmail');
+
+    if (idFromState) {
+      setUserId(idFromState);
+      localStorage.setItem('principalEmail', idFromState);
+    } else if (storedId) {
+      setUserId(storedId);
+    } else {
+      setError('No user ID found.');
     }
-  }, [location.state?.userId]);
+  }, [location.state]);
 
-  const fetchPrincipal = useCallback(async () => {
-    if (!principalEmail) return;
-    try {
-      const response = await AxiosInstance.get(`/principal/getPrincipalByEmail/${principalEmail}`);
-      setPrincipal(response.data?.data || response.data);
-    } catch (error) {
-      console.error("Error fetching principal:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [principalEmail]);
-
+  // Fetch principal data using userId
   useEffect(() => {
-    fetchPrincipal();
-  }, [fetchPrincipal]);
+    if (!userId) return;
 
-  useEffect(() => {
-    function handleClickOutside(e) {
-      if (profileRef.current && !profileRef.current.contains(e.target)) {
-        setOpenProfile(false);
+    const fetchPrincipal = async () => {
+      try {
+        const res = await AxiosInstance.get(`/principal/getPrincipalByEmail/${encodeURIComponent(userId)}`);
+        setPrincipalData(res.data.data);
+        console.log("Principal:", res.data.data);
+      } catch (err) {
+        console.error('Error fetching Principal data:', err);
+        setError('Failed to fetch Principal data.');
       }
-    }
+    };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    fetchPrincipal();
+  }, [userId]);
+
+  useEffect(() => {
+    if (location.pathname === '/principal-dashboard') {
+      navigate('/principal-dashboard/Department', { state: { userId } });
+    }
+  }, [location.pathname, navigate, userId]);
 
   const handleLogoutClick = () => {
-    AuthService.logout();
-    toast.success("Logged out successfully");
-    setTimeout(() => {
-      navigate("/login-page");
-    }, 1000);
+    localStorage.removeItem('principalEmail');
+    navigate('/login-page');
   };
-
-  if (loading) return <p>Loading principal data...</p>;
-  if (!principal) return <p>No principal data available.</p>;
 
   return (
     <div>
       <Header />
+      <div className="principal-outer-container">
+        <div className="principal-whole">
+          <div className="principal-nav-sidebar">
+            <h2>Principal Dashboard</h2>
 
-      {/* Profile Icon Section */}
-      <div className="principal-profile-container" ref={profileRef}>
-        <div className="principal-profile-bar" onClick={() => setOpenProfile(!openProfile)}>
-          <BsPerson size={30} className="profile-icon" />
-        </div>
-
-        {openProfile && (
-          <div className="principal-profile-dropdown">
-            <div className="principal-profile">
-              <p className="field_background">
-                {principal.firstName} {principal.lastName}
+            <div className="principal-navigation-bar">
+              <p
+                className={`principal-nav-item ${active === "PrincipalProfile" ? "active" : ""}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setActive("PrincipalProfile");
+                  setOpen(!open);
+                }}
+              >
+                <BsPerson /> Profile
               </p>
-              <p className="field_background">{principal.email}</p>
-              <p className="field_background">{principal.mobileNumber}</p>
-              <Allbuttons value="LogOut" image={Logout} target={() => handleLogoutClick()} />
+
+              <p
+                className={`principal-nav-item ${active === "Students" ? "active" : ""}`}
+                onClick={() => {
+                  setActive("Students");
+                  navigate('/principal-dashboard/Department', { state: { userId } });
+                }}
+              >
+                <BsPeople /> Students
+              </p>
+            </div>
+
+            <Logoutbtn className='principal-logout' />
+          </div>
+
+          <div className="principal-inner-content">
+            <div className="headbar">
+              <div className="welcome-bar">
+                <p>Welcome!</p>
+                <p className="acadamic-year">Academic Year: {UtilityService.getAcademicYear()}</p>
+              </div>
+
+              <div className="principal_profile_icon" onClick={(e) => {
+                e.stopPropagation();
+                setOpen(!open);
+              }}>
+                <img id="profile_icon" src={Profileicon} alt="Profile Icon" />
+                {open && (
+                  <div className="principal_profile_details" onClick={(e) => e.stopPropagation()}>
+                    <div className="principal-profile">
+                      <p className="field_background">{PrincipalData?.firstName} {PrincipalData?.lastName}</p>
+                      <p className="field_background">{PrincipalData?.email}</p>
+                      <p className="field_background">{PrincipalData?.mobileNumber}</p>
+                      <Allbuttons value="Logout" image={Logout} target={handleLogoutClick} />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="principal-content-space">
+              <Outlet context={{ PrincipalData }} />
             </div>
           </div>
-        )}
+        </div>
       </div>
-
-      {/* Main Outlet Content */}
-      <div className="principal-dashboard-content">
-        <Outlet context={{ role: "PRINCIPAL" }} />
-      </div>
+      <ToastContainer />
     </div>
   );
 }
 
-export default PrincipalDashboard;
+export default Principaldashboard;
