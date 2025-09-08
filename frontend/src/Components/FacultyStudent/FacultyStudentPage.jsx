@@ -21,7 +21,7 @@ import { AuthService } from '../../Api/AuthService.js';
 import { toast, ToastContainer } from 'react-toastify';
 
 const FacultyStudentPage = () => {
-      const [faculty, setFaculty] = useState(null);
+  const [faculty, setFaculty] = useState(null);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [openProfile, setOpenProfile] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -132,13 +132,13 @@ const FacultyStudentPage = () => {
   const handleViewClick = async (student) => {
     const registerNo = student.registerNo?.trim();
     console.log("View clicked for:", registerNo);
-    
+
 
     try {
       setSelectedStudent(null);
       setOpenModal(true);
       setOpenProfile(false);
-      
+
       const response = await AxiosInstance.get(`/student/${registerNo}`);
       setSelectedStudent(response.data);
     } catch (error) {
@@ -169,86 +169,86 @@ const FacultyStudentPage = () => {
   const batchList = faculty.batch ? faculty.batch.split('#') : [];
   const maxLength = Math.max(subjectList.length, semesterList.length, deptList.length, batchList.length);
   return (
-    <div> 
-        <div className="top-container">
-          <div className="nav">
-            <div className="student-count">
-              <img src={stud} alt="Student Icon" />
-              <h3>Students</h3>
-            </div>
-            <div className="student-number">
-              <p>{faculty.students ? faculty.students.length : 0}</p>
-            </div>
-
-            <div className="student-search-bar">
-              <Search className="search-icon" />
-              <input
-                id="student_search"
-                type="text"
-                placeholder="Search Student..."
-                value={searchTerm}
-                onChange={handleSearchChange}
-                className="search-input"
-              />
-            </div>
-            <div className="class_add_button">
-              <Allbuttons image={Add} value="Add Class" target={() => setOpenExcelUploadModal(true)} />
-            </div>
-            <div className="class_add_button">
-              <Allbuttons image={Add} value="Add Student" target={() => setOpenAddClassModal(true)} />
-            </div>
-            <div className="faculty_profile_icon" onClick={(e) => {e.stopPropagation();setOpenProfile(!openProfile)}}>
-              <img id="profile_icon" src={Profileicon} alt="Profile Icon" />
-            </div>
+    <div>
+      <div className="top-container">
+        <div className="nav">
+          <div className="student-count">
+            <img src={stud} alt="Student Icon" />
+            <h3>Students</h3>
+          </div>
+          <div className="student-number">
+            <p>{faculty.students ? faculty.students.length : 0}</p>
           </div>
 
-          {openProfile && (
-            <div className="faculty_profile_details" onClick={(e) => e.stopPropagation()}>
-              <div className="faculty-profile">
-                <p className="field_background">{faculty.firstName} {faculty.lastName}</p>
-                <p className="field_background">{faculty.discipline}</p>
-                <p className="field_background">{faculty.email}</p>
-                <p className="field_background">{faculty.mobileNumber}</p>
-                <Allbuttons value="Logout" image={Logout} target={handleLogoutClick} />
-              </div>
-            </div>
-          )}
-          {openProfile && (document.onclick = () => setOpenProfile(false))}
-          {openAddClassModal && (
-            <Facultyfields
-              onClose={closeModal}
-              role="STUDENT"
-              fields={[
-                { label: 'Name', inputname: 'Name', fieldtype: 'text' },
-                { label: 'Register Number', inputname: 'RegisterNumber', fieldtype: 'text' },
-                { label: 'Mobile Number', inputname: 'MobileNumber', fieldtype: 'text' },
-                { label: 'Mail Id', inputname: 'MailId', fieldtype: 'text' },
-                { label: 'Aadhar Number', inputname: 'AadharNumber', fieldtype: 'text' }
-              ]}
+          <div className="student-search-bar">
+            <Search className="search-icon" />
+            <input
+              id="student_search"
+              type="text"
+              placeholder="Search Student..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="search-input"
             />
-          )}
-          {openExcelUploadModal && (
-            <ExcelFileUpload onClose={closeModal} />
-          )}
+          </div>
+          <div className="class_add_button">
+            <Allbuttons image={Add} value="Add Class" target={() => setOpenExcelUploadModal(true)} />
+          </div>
+          <div className="class_add_button">
+            <Allbuttons image={Add} value="Add Student" target={() => setOpenAddClassModal(true)} />
+          </div>
+          <div className="faculty_profile_icon" onClick={(e) => { e.stopPropagation(); setOpenProfile(!openProfile) }}>
+            <img id="profile_icon" src={Profileicon} alt="Profile Icon" />
+          </div>
+        </div>
 
-
-          {openExportPopup && (
-            <div className="export_option_popup">
-              <h3 id="export_popup_title">Select Fields to Export:</h3>
-              <label><input type="checkbox" name="firstName" checked={selectedFields.firstName} onChange={handleFieldChange} /> Name</label>
-              <label><input type="checkbox" name="registerNo" checked={selectedFields.registerNo} onChange={handleFieldChange} /> Register No</label>
-              <label><input type="checkbox" name="emailid" checked={selectedFields.emailid} onChange={handleFieldChange} /> Email ID</label>
-              {faculty.students?.[0]?.mobileNumber && (
-                <label><input type="checkbox" name="mobileNumber" checked={selectedFields.mobileNumber} onChange={handleFieldChange} /> Mobile Number</label>
-              )}
-              <div className="export_buttons">
-                <button id="export_cancel" onClick={() => setOpenExportPopup(false)}>Cancel</button>
-                <Allbuttons value="Submit" target={handleExport} />
-              </div>
+        {openProfile && (
+          <div className="faculty_profile_details" onClick={(e) => e.stopPropagation()}>
+            <div className="faculty-profile">
+              <p className="field_background">{faculty.firstName} {faculty.lastName}</p>
+              <p className="field_background">{faculty.discipline}</p>
+              <p className="field_background">{faculty.email}</p>
+              <p className="field_background">{faculty.mobileNumber}</p>
+              <Allbuttons value="Logout" image={Logout} target={handleLogoutClick} />
             </div>
-          )}
+          </div>
+        )}
+        {openProfile && (document.onclick = () => setOpenProfile(false))}
+        {openAddClassModal && (
+          <Facultyfields
+            onClose={closeModal}
+            role="STUDENT"
+            fields={[
+              // { label: 'Name', inputname: 'Name', fieldtype: 'text' },
+              { label: 'Register Number', inputname: 'RegisterNumber', fieldtype: 'text' },
+              // { label: 'Mobile Number', inputname: 'MobileNumber', fieldtype: 'text' },
+              // { label: 'Mail Id', inputname: 'MailId', fieldtype: 'text' },
+              { label: 'Aadhar Number', inputname: 'AadharNumber', fieldtype: 'text' }
+            ]}
+          />
+        )}
+        {openExcelUploadModal && (
+          <ExcelFileUpload onClose={closeModal} />
+        )}
 
-          {/* <div className="card-container">
+
+        {openExportPopup && (
+          <div className="export_option_popup">
+            <h3 id="export_popup_title">Select Fields to Export:</h3>
+            <label><input type="checkbox" name="firstName" checked={selectedFields.firstName} onChange={handleFieldChange} /> Name</label>
+            <label><input type="checkbox" name="registerNo" checked={selectedFields.registerNo} onChange={handleFieldChange} /> Register No</label>
+            <label><input type="checkbox" name="emailid" checked={selectedFields.emailid} onChange={handleFieldChange} /> Email ID</label>
+            {faculty.students?.[0]?.mobileNumber && (
+              <label><input type="checkbox" name="mobileNumber" checked={selectedFields.mobileNumber} onChange={handleFieldChange} /> Mobile Number</label>
+            )}
+            <div className="export_buttons">
+              <button id="export_cancel" onClick={() => setOpenExportPopup(false)}>Cancel</button>
+              <Allbuttons value="Submit" target={handleExport} />
+            </div>
+          </div>
+        )}
+
+        {/* <div className="card-container">
             {[...Array(maxLength)].map((_, index) => (
               <Card
                 key={index}
@@ -263,54 +263,54 @@ const FacultyStudentPage = () => {
             ))}
           </div> */}
 
-          <div className="student_table_options">
-            <button id="export_button" className="All-button" onClick={() => setOpenExportPopup(true)}>Export</button>
-          </div>
-
-          <div className="faculty_dashboard_container">
-            {faculty.students && faculty.students.length > 0 ? (
-              <table className="student_table">
-                <thead>
-                  <tr>
-                    <th>S.no</th>
-                    <th>Name</th>
-                    <th>Register Number</th>
-                    <th>Email ID</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {faculty.students.filter(student =>
-                    `${student.firstName} ${student.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                    student.registerNo.toLowerCase().includes(searchTerm.toLowerCase())
-                  ).map((student, index) => (
-                    <tr key={student.registerNo}>
-                      <td>{index + 1}</td>
-                      <td>{student.firstName} {student.lastName}</td>
-                      <td>{student.registerNo}</td>
-                      <td>{student.emailId}</td>
-                      <td>
-                        <Allbuttons
-                          value="View"
-                          image={View}
-                          target={() => handleViewClick(student)}
-                        />
-                      </td>
-                    </tr>
-                  ))}
-
-                </tbody>
-              </table>
-            ) : (
-              <p id='one'>No students available</p>
-            )}
-          </div>
-
-          {openModal && (
-            <StudentDetailModal student={selectedStudent} onClose={closeModal} />
-          )}
-          <ToastContainer />
+        <div className="student_table_options">
+          <button id="export_button" className="All-button" onClick={() => setOpenExportPopup(true)}>Export</button>
         </div>
+
+        <div className="faculty_dashboard_container">
+          {faculty.students && faculty.students.length > 0 ? (
+            <table className="student_table">
+              <thead>
+                <tr>
+                  <th>S.no</th>
+                  <th>Name</th>
+                  <th>Register Number</th>
+                  <th>Email ID</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {faculty.students.filter(student =>
+                  `${student.firstName} ${student.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                  student.registerNo.toLowerCase().includes(searchTerm.toLowerCase())
+                ).map((student, index) => (
+                  <tr key={student.registerNo}>
+                    <td>{index + 1}</td>
+                    <td>{student.firstName} {student.lastName}</td>
+                    <td>{student.registerNo}</td>
+                    <td>{student.emailId}</td>
+                    <td>
+                      <Allbuttons
+                        value="View"
+                        image={View}
+                        target={() => handleViewClick(student)}
+                      />
+                    </td>
+                  </tr>
+                ))}
+
+              </tbody>
+            </table>
+          ) : (
+            <p id='one'>No students available</p>
+          )}
+        </div>
+
+        {openModal && (
+          <StudentDetailModal student={selectedStudent} onClose={closeModal} />
+        )}
+      </div>
+      <ToastContainer />
     </div>
   )
 }

@@ -10,7 +10,7 @@ function App() {
   return (
     <div>
       <CustomRouter/>
-      <Footer/>
+      {/* <Footer/> */}
     </div>
   );
 }
