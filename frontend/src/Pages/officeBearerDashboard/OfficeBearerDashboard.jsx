@@ -1,100 +1,86 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Header from '../../Components/Header/Header.jsx';
-import Footer from '../../Components/Footer/Footer.jsx';
-import Profileicon from '../../Assets/profile.svg';
-import axios from 'axios';
-import Allbuttons from '../../Components/Allbuttons/Allbuttons.jsx';
-import Logout from '../../Assets/logout.svg';
-import BonafideCount from '../../Components/BonafideCounter/BonafideCount.jsx';
 import './OfficeBearerDashboard.css';
 import AxiosInstance from '../../Api/AxiosInstance.js';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; 
+import { AuthService } from '../../Api/AuthService.js';
 
 function OfficeBearerDashboard() {
-  const location = useLocation();
   const navigate = useNavigate();
-  const [userId, setUserId] = useState('Headofthedepartment');
-  const [open, setOpen] = useState(false);
-  const [Headofthedepartment, setHeadofthedepartment] = useState({});
-  const [error, setError] = useState(null);
+  const [officeBearer, setOfficeBearer] = useState(null);
 
   useEffect(() => {
-    const fetchHeadofthedepartment = async () => {
+    const fetchOfficeBearer = async () => {
       try {
-        const { userId } = location.state || {};
-        const response = await AxiosInstance.get(`/hod/getHodByEmail/${userId}`);
-        setHeadofthedepartment(response.data.data);
-        setUserId(userId);
-      } catch (error) {
-        console.error('Error fetching faculty:', error);
-        setError('Failed to fetch data. Please try again later.');
+        const currentUser = AuthService.getCurrentUser();
+        const email = currentUser?.userId;
+
+        if (!email) {
+          toast.error('You must be logged in');
+          navigate('/login-page');
+          return;
+        }
+
+        const response = await AxiosInstance.get('/office-bearer/get/email', {
+          params: { email }
+        });
+
+        setOfficeBearer(response.data.data);
+      } catch (err) {
+        console.error('Error fetching office bearer:', err);
+        toast.error('Failed to load office bearer data');
       }
     };
 
-    fetchHeadofthedepartment();
-  }, [location.state]);
+    fetchOfficeBearer();
+  }, []);
 
-  const handleLogoutClick = () => {
-    navigate('/login-page');
-  };
+  const handlePurposeAccess = (purpose) => {
+  if (officeBearer?.handlingPurpose === purpose) {
+    if (purpose === "BONAFIDE_TYPE_SECTION_B") {
+      navigate('/office-bearer-dashboard/ob-bonafide', {state: { bonafideType : "BONAFIDE_TYPE_SECTION_B" }});
+    } else {
+      navigate('/office-bearer-dashboard/ob-bonafide', {state: { bonafideType : "BONAFIDE_TYPE_SECTION_S" }});
+    }
+  } else {
+    toast.error('You are not allowed to handle this purpose', {
+      position: 'top-right',
+      autoClose: 3000,
+    });
+  }
+}
 
-  const gotofacultyinfohod = () => {
-    navigate('/facultyinfohod-page', { state: { userId } });
-  };
-
-  const gotostudentinfohod = () => {
-    navigate('/studentinfohod-page', { state: { userId } });
-  };
 
   return (
     <div>
       <Header />
-      {/* <div className="nav">
-        <div className="faculty_profile_icon" onClick={() => setOpen(!open)}>
-          <img id="profile_icon" src={Profileicon} alt="Profile Icon" />
+      <div className="hod-student-batch-box ob-whole">
+        <div className="ob-welcome-bar">
+          <h2>Welcome! Office Bearer Dashboard</h2>
         </div>
-      </div>
 
-      {open && (
-        <div className="faculty_profile_details">
-          <div className="faculty-profile">
-            <p className="field_background">{Headofthedepartment.firstName} {Headofthedepartment.lastName}</p>
-            <p className="field_background">{Headofthedepartment.discipline}</p>
-            <p className="field_background">{Headofthedepartment.email}</p>
-            <p className="field_background">{Headofthedepartment.mobileNumber}</p>
-            <Allbuttons value="Logout" image={Logout} target={handleLogoutClick} />
+        <div className="batchbox">
+          <div className="batch-card">
+
+            <h3>Bonafide Section - B</h3>
+            <button className="batch-carry-btn" onClick={() => handlePurposeAccess("BONAFIDE_TYPE_SECTION_B")}>
+              View
+            </button>
+          </div>
+
+          <div className="batch-card">
+
+            <h3>Bonafide Section - S</h3>
+            <button className="batch-carry-btn" onClick={() => handlePurposeAccess("BONAFIDE_TYPE_SECTION_S")}>
+              View
+            </button>
           </div>
         </div>
-      )} */}
-
-      {/* <button onClick={gotostudentinfohod}>Student</button>
-      <button onClick={gotofacultyinfohod}>Faculty</button> */}
-
-      <div className="ob-whole">        
-       
-
-        <div className="ob-navbar-content">
-         
-            <h2>Office Bearer Dashboard</h2>
-            <p>profile</p>
-            <p onClick={() => navigate('/office-bearer-dashboard', { state: { userId: userId } })}>Bonafide</p>
-            
-            
-            
-      
-          </div>
-          <div className="ob-top-dashboard">
-          <div className="ob-welcome-bar"><p>Welcome!</p></div>
-                   <h2>Office Bearer Dashboard</h2>
-
-
-        </div>
-          
       </div>
-
-      {/* <div className="Headofthedepartmentdashboard_footer">
-        <Footer />
-      </div> */}
+      {/* <Footer /> */}
+      <ToastContainer />
     </div>
   );
 }
