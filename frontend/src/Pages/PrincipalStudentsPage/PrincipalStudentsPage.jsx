@@ -10,12 +10,12 @@ import cse from "../../Assets/Departments/CSE.jpg";
 import it from "../../Assets/Departments/IT.jpg";
 
 const departments = [
-  { id: 1, name: "MECH", image: mech},
-  { id: 2, name: "CIVIL", image: civil },
-  { id: 3, name: "EEE", image: eee },
-  { id: 4, name: "ECE", image: ece },
-  { id: 5, name: "CSE", image: cse },
-  { id: 6, name: "IT", image: it },
+  { id: 1, name: "CIVIL", image: civil },
+  { id: 2, name: "CSE", image: cse },
+  { id: 3, name: "ECE", image: ece },
+  { id: 4, name: "EEE", image: eee },
+  { id: 5, name: "IT", image: it },
+  { id: 6, name: "MECH", image: mech },
 ];
 
 const PrincipalStudentsPage = () => {

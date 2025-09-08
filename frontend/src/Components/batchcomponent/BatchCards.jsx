@@ -13,7 +13,7 @@ const BatchCards = () => {
     'Electronics and Communication Engineering',
     'Civil Engineering',
   ];
-  const years = ['II YEAR', 'III YEAR', 'IV YEAR'];
+  const years = ['I YEAR','II YEAR', 'III YEAR', 'IV YEAR'];
   const sections = ['A', 'B'];
 
   const renderCards = useMemo(() => {
@@ -71,7 +71,7 @@ const BatchCards = () => {
       return years.flatMap(year =>
         sections.map(sec => (
           <div className="batch-card" key={`${year}-${sec}`}>
-            <img src={group} alt="icon" />
+            {/* <img src={group} alt="icon" /> */}
             <h3>{`${year} – Section ${sec}`}</h3>
             <button
               className="batch-carry-btn"
@@ -88,7 +88,7 @@ const BatchCards = () => {
 
     return years.map(year => (
       <div className="batch-card" key={year}>
-               <img className="group-icon" src={group} alt="icon" />
+               {/* <img className="group-icon" src={group} alt="icon" /> */}
 
         <h3>{year}</h3>
         <button

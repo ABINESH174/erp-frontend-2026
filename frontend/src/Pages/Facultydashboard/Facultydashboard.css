@@ -173,9 +173,10 @@ body {
   display: flex;
   justify-content: center;
   margin-left: 33rem;
-margin-top: 1rem;
+  margin-top: 1rem;
   border-radius: 10px;
-  background: linear-gradient(125deg,rgb(43, 195, 255),rgb(85, 105, 231),rgb(23, 70, 132));
+  background-color: whitesmoke;
+  border:1px solid #0a2361;
 }
 .field_background{
   font-size: 17px;

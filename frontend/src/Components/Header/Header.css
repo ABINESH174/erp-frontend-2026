@@ -1,16 +1,38 @@
 header{
 display: flex;
-margin: 10px;
+flex-direction: row;
+align-items: center;
+justify-content: space-around;
+padding: 10px;
+/* position: relative; */
+width: 100vw;
+background-color:rgb(255, 255, 255);
+z-index: 2001;
+height: 120px;
 }
+
+/* .non-fixed{
+display: flex;
+align-items: center;
+justify-content: space-around;
+padding: 10px;
+position:relative;
+width: 100vw;
+background-color:rgb(255, 255, 255);
+z-index: 2001;
+height: 120px;
+
+} */
+
 header:hover{
     cursor: default;
 }
-#header-line{
+/* #header-line{
     background-color: #002133;
     width: 96%;
     height: 2px;
     margin: auto;
-}
+} */
 .clg-name{
     text-align: center;
     font-family: outfit,popins;
@@ -19,12 +41,21 @@ header:hover{
     margin: auto;
 }
 .clglogo{
-    width: 110px;   
+    width: 110px;  
+    margin-left: 50px;
+}
+
+.tamilnadu-logo{
+    width: 90px;
+    margin-right: 70px;
 }
 
 @media (width<=600px) {
     .clglogo{
         width: 90px;   
+    }
+    .tamilnadu-logo{
+        width: 80px;
     }
    
 }
