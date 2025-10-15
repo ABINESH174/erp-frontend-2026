@@ -182,9 +182,6 @@ function Headofthedepartmentdashboard() {
               onClose={()=>{setOpenAddFacultyModal(false)}}
               role="FACULTY"
               fields={[
-                { label: 'Name', inputname: 'Name', fieldtype: 'text' },
-                // { label: 'Register Number', inputname: 'RegisterNumber', fieldtype: 'text' },
-                { label: 'Mobile Number', inputname: 'MobileNumber', fieldtype: 'text' },
                 { label: 'Mail Id', inputname: 'MailId', fieldtype: 'text' },
                 { label: 'Aadhar Number', inputname: 'AadharNumber', fieldtype: 'text' }
               ]}

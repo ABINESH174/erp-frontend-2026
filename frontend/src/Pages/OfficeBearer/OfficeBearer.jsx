@@ -13,6 +13,7 @@ import AxiosInstance from '../../Api/AxiosInstance';
 import Logoutbtn from '../../Components/logoutbutton/Logoutbtn';
 
 const OfficeBearer = () => {
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState('bonafides');
   const [data, setData] = useState([]);
   const [principalApprovedData, setPrincipalApprovedData] = useState([]);
@@ -25,6 +26,7 @@ const OfficeBearer = () => {
   const [rejectionMessage, setRejectionMessage] = useState("");
   const [downloadedBonafides, setDownloadedBonafides] = useState([]);
   const[active,setActive]=useState([]);
+
 
 /*   // Map NOTIFIED enum to friendly message
   const statusMessages = {
@@ -39,7 +41,14 @@ const OfficeBearer = () => {
   const fetchHodApprovedBonafides = async () => {
   setLoading(true);
   try {
-    const res = await AxiosInstance.get('/bonafide/getHodApproved');
+    const bonafideType = location.state?.bonafideType;
+
+    const res = await AxiosInstance.get('/bonafide/get/status/type',{
+      params:{
+        bonafideStatus:"HOD_APPROVED",
+        bonafideType
+      }
+    });
 
     const bonafides = res.data?.data || [];
 
@@ -71,7 +80,15 @@ const OfficeBearer = () => {
   const fetchPrincipalApproved = async () => {
     setLoading(true);
     try {
-      const res = await AxiosInstance.get('/bonafide/getPrincipalApproved');
+      const bonafideType = location.state?.bonafideType;
+
+      const res = await AxiosInstance.get('/bonafide/get/status/type',{
+      params:{
+        bonafideStatus:"PRINCIPAL_APPROVED",
+        bonafideType
+      }
+    });
+
       console.log('Principal Approved response:', res.data);
       setPrincipalApprovedData(res.data.data || []);
       setActiveTab('principalApproved');
@@ -85,7 +102,14 @@ const OfficeBearer = () => {
   const fetchNotifiedBonafides = async () => {
     setLoading(true);
     try{
-      const res = await AxiosInstance.get('/bonafide/getNotifiedBonafides');
+      const bonafideType = location.state?.bonafideType;
+
+      const res = await AxiosInstance.get('/bonafide/get/status/type',{
+      params:{
+        bonafideStatus:"NOTIFIED",
+        bonafideType
+      }
+    });
       console.log('Notified Bonafides response:', res.data);
       setPrincipalApprovedData(res.data.data || []);
       setActiveTab('notifiedBonafides');

@@ -95,6 +95,7 @@ const BonafideStatus = () => {
       formData.append("purpose", selectedBonafide.purpose);
       formData.append("date", selectedBonafide.date);
       formData.append("bonafideStatus", statusToSend);
+      formData.append("bonafideType", selectedBonafide.bonafideType);
 
       Object.entries(filesToUpload).forEach(([key, file]) => {
         formData.append(key, file);

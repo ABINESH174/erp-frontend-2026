@@ -97,7 +97,7 @@ const PreviousBonafides = () => {
         ) : (
           <div className="prev-bonafide-table-container">
             <h3>Previous Bonafides</h3>
-            <table className="prev-bonafide-table">
+            <table>
               <thead>
                 <tr>
                   <th>S.No</th>

@@ -1,9 +1,9 @@
 .batchbox {
-    width:75vw;
-    height: 33vh;
+    width:100%;
+    height: 55%;
     border-radius: 20px;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 40px;
     margin-left:2.5rem;
     padding: 10px;
@@ -20,7 +20,7 @@
     }
 }
 
-.batch-card {
+.batchbox .batch-card {
     background-color: #ffffff;
     border-radius: 12px;
     padding: 20px;
@@ -29,9 +29,9 @@
     display: flex;
     flex-direction: row;
     gap: 30px;
+    width: 300px;
+    height: 150px;
     align-items: center;
-    width: 90%;
-    height: 80%;
     margin-top: 25px;
 }
 .batch-carry-btn{

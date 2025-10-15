@@ -1,0 +1,58 @@
+.add-user-form {
+  background: #ffffff;
+  width: 400px;
+  margin: 2rem auto;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  animation: fadeInScale 0.5s ease;
+}
+
+.add-user-form h3 {
+  margin: 0;
+  font-size: 22px;
+  color: #0a2361;
+  text-align: center;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.add-user-form input {
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #dcdcdc;
+  outline: none;
+  font-size: 15px;
+  transition: all 0.3s ease;
+}
+
+.add-user-form input:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 6px rgba(74, 144, 226, 0.4);
+}
+
+.add-user-form button {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #0a2361, #18416e);
+  color: #fff;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.add-user-form button:hover {
+  background: linear-gradient(135deg, #18416e, #0a2361);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}

@@ -70,10 +70,10 @@ const BatchesPage = () => {
           discipline
         )}&year=${year}
         &classSection=${encodeURIComponent(section)}`;
-
+        
         const response = await AxiosInstance.get(url);
         const result = response.data;
-
+        console.log(result);
         if (!(response.status === 200)) {
           throw new Error(result.message || 'Failed to fetch students');
         }

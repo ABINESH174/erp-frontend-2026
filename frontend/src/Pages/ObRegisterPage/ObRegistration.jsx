@@ -103,7 +103,8 @@ function ObRegistration() {
           </div> */}
           <select name='handlingPurpose' className='dropdown' value={formData.handlingPurpose || ''} onChange={handleChange} required>
             <option value=''>Select</option>
-            <option value='Bonafide'>Bonafide</option>
+            <option value='BONAFIDE_TYPE_SECTION_B'>Bonafide-Type B</option>
+            <option value='BONAFIDE_TYPE_SECTION_S'>Bonafide-Type S</option>
           </select>
           </div>
 

@@ -63,6 +63,7 @@ const AdminDashboard = () => {
     if (!userList.length) return <p>No users found.</p>;
 
     return (
+      <div className="admin-table-container">
       <table className="admin-table">
         <thead>
           <tr>
@@ -94,48 +95,43 @@ const AdminDashboard = () => {
           ))}
         </tbody>
       </table>
+      </div>
     );
   };
 
   return (
     <div>
       <Header />
-      <div className="parent">
+      <div className="admin-parent">
         {/* Sidebar */}
-        <div className="full-container">
-          <p className="faculty-heading-tag">Admin Dashboard</p>
-          <div className="faculty-side">
-            <div className="faculty-profile-bar">
+        <div className="admin-full-container">
+          <p className="admin-heading-tag">Admin Dashboard</p>
+          <div className="admin-side">
+            <div className="admin-profile-bar">
               <BsPerson />
               <p>Profile</p>
             </div>
-
-            <div className="faculty-profile-bar" onClick={() => setActiveSection("students")}>
+            <div className="admin-profile-bar" onClick={() => setActiveSection("students")}>
               <FaUserTie />
               <p>STUDENTS</p>
             </div>
-
-            <div className="faculty-profile-bar" onClick={() => setActiveSection("facultys")}>
+            <div className="admin-profile-bar" onClick={() => setActiveSection("facultys")}>
               <FaChalkboardTeacher />
               <p>FACULTYS</p>
             </div>
-
-            <div className="faculty-profile-bar" onClick={() => setActiveSection("hods")}>
+            <div className="admin-profile-bar" onClick={() => setActiveSection("hods")}>
               <FaChalkboardTeacher />
               <p>HODs</p>
             </div>
-
-            <div className="faculty-profile-bar" onClick={() => setActiveSection("principals")}>
+            <div className="admin-profile-bar" onClick={() => setActiveSection("principals")}>
               <FaUserTie />
               <p>Principals</p>
             </div>
-
-            <div className="faculty-profile-bar" onClick={() => setActiveSection("officeBearers")}>
+            <div className="admin-profile-bar" onClick={() => setActiveSection("officeBearers")}>
               <FaUserTie />
               <p>Office Bearers</p>
             </div>
-
-            <div className="fa-logout">
+            <div className="admin-logout">
               <Logoutbtn onClick={() => {
                 localStorage.clear();
                 toast.success("Logged out");
@@ -146,7 +142,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Content */}
-        <div className="top-sidebox">
+        <div className="admin-top-sidebox">
           <div className="admin-topbar">
             <button onClick={() => handleAddClick("HOD")}>Add HOD</button>
             <button onClick={() => handleAddClick("PRINCIPAL")}>Add Principal</button>

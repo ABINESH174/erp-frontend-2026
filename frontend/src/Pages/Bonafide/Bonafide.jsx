@@ -56,6 +56,8 @@ function Bonafide() {
         "Bonafide for SC/ST/SCA Post Matric Scholarship": "scStScaPostMatricScholarship",
     };
 
+    const bonafideTypeSection_B_Purposes = ["Bonafide for Welfare Scholarship","Bonafide for TamilPudhalvan Scheme","Bonafide for Pudhumai Penn Scheme","Bonafide for Post Matric Scholarships"];
+
     useEffect(() => {
         const fetchApplicableBonafide = async () => {
             try {
@@ -169,6 +171,12 @@ function Bonafide() {
         formData.append('date', new Date().toISOString().split('T')[0]);
         formData.append('academicYear', UtilityService.getAcademicYear().toString());
 
+        if(bonafideTypeSection_B_Purposes.includes(uploads.selectedScholarship)) {
+            formData.append('bonafideType', 'BONAFIDE_TYPE_SECTION_B');
+        } else {
+            formData.append('bonafideType', 'BONAFIDE_TYPE_SECTION_S');
+        }
+
         console.log("acadamic year:", formData.academicYear);
 
         if (uploads.companyName) {
@@ -193,7 +201,7 @@ function Bonafide() {
             setUploads(prev => ({ ...prev, selectedScholarship: "" }));
             setTimeout(() => {
                 navigate('/profile-page', { state: { userId } });
-            }, 3000);
+            }, 1500);
 
         } catch (err) {
             toast.error("Failed to submit Bonafide request.");
